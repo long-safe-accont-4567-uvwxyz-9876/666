@@ -1419,8 +1419,11 @@
         function rejectCall() {
             heavyVibrate();
             playBeep();
-            setTimeout(startDeleteMode, 800);
             document.getElementById('call-screen').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('delete-screen').style.display = 'block';
+                startDeleteMode();
+            }, 3000);
         }
         
         function answerCall() {
@@ -1436,7 +1439,11 @@
             document.body.classList.remove('heavy-shake');
             document.onclick = () => {
                 document.onclick = null;
-                setTimeout(startDeleteMode, 500);
+                document.getElementById('call-screen').style.display = 'none';
+                setTimeout(() => {
+                    document.getElementById('delete-screen').style.display = 'block';
+                    startDeleteMode();
+                }, 2500);
             };
         }
         
