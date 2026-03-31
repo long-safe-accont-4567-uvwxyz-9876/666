@@ -1416,8 +1416,19 @@
         }
         
         function exitPrank() {
-            window.location.href = 'about:blank';
-            window.close();
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                alert('👋 请关闭浏览器标签页来退出恶作剧\n\n或者返回上一层页面～');
+                document.getElementById('final-screen').innerHTML = `
+                    <div class="prank-icon">👋</div>
+                    <div class="prank-title">再见啦！</div>
+                    <div class="prank-subtitle">请关闭浏览器标签页退出</div>
+                    <div style="margin-top:30px;color:#888;font-size:14px;">感谢体验纳西妲的愚人节恶作剧～🎊</div>
+                `;
+            } else {
+                window.location.href = 'about:blank';
+                window.close();
+            }
         }
         
         function showJoke() {
