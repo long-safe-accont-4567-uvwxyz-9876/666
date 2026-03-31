@@ -975,8 +975,6 @@
         </div>
     </div>
     
-    <div class="exit-tip" id="exit-tip">按 <kbd>ESC</kbd> 键退出恶作剧</div>
-    
     <div id="final-screen">
         <div class="prank-icon">🎊</div>
         <div class="prank-title">愚人节快乐！😄</div>
@@ -1219,7 +1217,6 @@
             document.getElementById('status-bar').style.display = 'flex';
             document.getElementById('nav-bar').style.display = 'flex';
             document.getElementById('home-screen').style.display = 'block';
-            document.getElementById('exit-tip').style.display = 'block';
             updateTime();
             const timeInterval = setInterval(updateTime, 1000);
             intervals.push(timeInterval);
@@ -1454,7 +1451,7 @@
             intervals = [];
             document.body.classList.remove('shake');
             document.body.classList.remove('heavy-shake');
-            ['april-fool-intro','loading','status-bar','nav-bar','home-screen','notification-panel','crash-screen','camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup','delete-screen','call-screen','exit-tip','final-screen'].forEach(id => {
+            ['april-fool-intro','loading','status-bar','nav-bar','home-screen','notification-panel','crash-screen','camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup','delete-screen','call-screen','final-screen'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
