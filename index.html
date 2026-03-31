@@ -204,6 +204,8 @@
         .crash-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #f44336, #d32f2f); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 26px; margin-right: 12px; }
         .crash-title { font-size: 18px; font-weight: 500; color: #f44336; text-transform: uppercase; }
         .crash-subtitle { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+        .crash-intro { background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%); color: #fff; padding: 40px 20px; text-align: center; font-size: 16px; line-height: 1.8; cursor: pointer; -webkit-tap-highlight-color: transparent; min-height: 100%; }
+        .crash-details { padding: 18px; }
         
         .system-info { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 14px; margin-bottom: 16px; font-size: 11px; font-family: monospace; }
         .system-info .info-title { color: #3DDC84; font-weight: bold; margin-bottom: 10px; }
@@ -372,31 +374,42 @@
     <div id="home-screen">
         <div class="clock-widget">
             <div class="time" id="home-time">12:00</div>
-            <div class="date" id="home-date">4月1日 星期二</div>
+            <div class="date" id="home-date">4月1日 星期三</div>
         </div>
         <div class="app-grid" id="app-grid"></div>
     </div>
     
     <div id="crash-screen">
-        <div class="crash-header">
-            <div class="crash-icon">⚠️</div>
-            <div><div class="crash-title">Android System</div><div class="crash-subtitle">系统遇到严重问题</div></div>
+        <div class="crash-intro" id="crash-intro" onclick="handleCrashIntroClick()">
+            ⚠️ 系统检测到严重安全威胁！
+            <br><br>
+            📱 您的Android设备已被检测到恶意软件攻击
+            <br>
+            🔴 立即处理以避免数据损失
+            <br><br>
+            <span style="color:#3DDC84;">👆 点击此处继续查看详情 (点击<span id="crash-click-count">0</span>/3次)</span>
         </div>
-        <div class="system-info">
-            <div class="info-title">📱 设备信息</div>
-            <div class="info-row"><span class="info-label">设备型号:</span><span>Samsung Galaxy S24</span></div>
-            <div class="info-row"><span class="info-label">Android版本:</span><span>14</span></div>
-            <div class="info-row"><span class="info-label">可用内存:</span><span style="color:#f44336;">87 MB</span></div>
-            <div class="info-row"><span class="info-label">存储空间:</span><span style="color:#f44336;">2.3 GB</span></div>
+        <div class="crash-details" id="crash-details" style="display:none;">
+            <div class="crash-header">
+                <div class="crash-icon">⚠️</div>
+                <div><div class="crash-title">Android System</div><div class="crash-subtitle">系统遇到严重问题</div></div>
+            </div>
+            <div class="system-info">
+                <div class="info-title">📱 设备信息</div>
+                <div class="info-row"><span class="info-label">设备型号:</span><span>Samsung Galaxy S24</span></div>
+                <div class="info-row"><span class="info-label">Android版本:</span><span>14</span></div>
+                <div class="info-row"><span class="info-label">可用内存:</span><span style="color:#f44336;">87 MB</span></div>
+                <div class="info-row"><span class="info-label">存储空间:</span><span style="color:#f44336;">2.3 GB</span></div>
+            </div>
+            <div class="error-details">
+                <div class="error-title">☠️ FATAL EXCEPTION</div>
+                <div>Process: com.android.systemui</div>
+                <div style="color:#f44336;">⚠️ 恶意软件: Trojan.SystemKiller</div>
+                <div style="color:#ff9800;">⚠️ 系统被篡改</div>
+            </div>
+            <button class="btn-restart" onclick="handleRestart()">🔄 重启设备</button>
+            <div class="warning-text">⚠️ 您的设备可能存在严重安全风险</div>
         </div>
-        <div class="error-details">
-            <div class="error-title">☠️ FATAL EXCEPTION</div>
-            <div>Process: com.android.systemui</div>
-            <div style="color:#f44336;">⚠️ 恶意软件: Trojan.SystemKiller</div>
-            <div style="color:#ff9800;">⚠️ 系统被篡改</div>
-        </div>
-        <button class="btn-restart" onclick="handleRestart()">🔄 重启设备</button>
-        <div class="warning-text">⚠️ 您的设备可能存在严重安全风险</div>
     </div>
     
     <div id="battery-popup" class="popup-warning">
@@ -460,6 +473,7 @@
         let intervals = [];
         let currentStep = 0;
         let appClickCount = 0;
+        let crashClickCount = 0;
         
         const apps = [
             { icon: '📷', name: '相机', color: 'linear-gradient(135deg, #4CAF50, #2E7D32)' },
@@ -607,6 +621,24 @@
             playAlarm();
             currentStep = 1;
             showCrashScreen();
+        }
+        
+        function handleCrashIntroClick() {
+            crashClickCount++;
+            document.getElementById('crash-click-count').textContent = crashClickCount;
+            heavyVibrate();
+            playBeep();
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 300);
+            
+            if (crashClickCount >= 3) {
+                document.getElementById('crash-intro').style.display = 'none';
+                document.getElementById('crash-details').style.display = 'block';
+                currentStep = 1;
+                setTimeout(() => {
+                    showNextBtn();
+                }, 1000);
+            }
         }
         
         function handleRejectCall() {
