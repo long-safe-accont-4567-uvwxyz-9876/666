@@ -3,522 +3,1146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <title>Android System</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-        body { -webkit-user-select: none; user-select: none; }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
         
-        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; z-index: 100; }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Microsoft YaHei', sans-serif;
+            touch-action: manipulation;
+        }
         
-        #intro { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; }
-        #intro .logo { width: 120px; height: 120px; background: linear-gradient(135deg, #00d4ff, #7b2ff7); border-radius: 30px; display: flex; justify-content: center; align-items: center; font-size: 60px; box-shadow: 0 20px 60px rgba(0,212,255,0.4); animation: logoFloat 2s ease-in-out infinite; }
-        @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        #intro h1 { font-size: 32px; margin-top: 30px; font-weight: 300; letter-spacing: 8px; }
-        #intro .date { font-size: 18px; margin-top: 20px; color: rgba(255,255,255,0.6); letter-spacing: 4px; }
-        #intro .tip { position: absolute; bottom: 15%; color: rgba(255,255,255,0.4); font-size: 14px; }
+        body.shake {
+            animation: screenShake 0.08s infinite;
+        }
         
-        #boot { background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #boot .android-logo { width: 80px; height: 80px; background: #3DDC84; border-radius: 16px; display: flex; justify-content: center; align-items: center; }
-        #boot .android-logo span { color: #fff; font-size: 40px; font-weight: bold; }
-        #boot .text { color: #fff; margin-top: 30px; font-size: 16px; }
-        #boot .bar { width: 200px; height: 4px; background: #333; border-radius: 2px; margin-top: 20px; overflow: hidden; }
-        #boot .bar-fill { height: 100%; background: linear-gradient(90deg, #3DDC84, #00ff88); width: 0%; transition: width 0.2s; }
+        @keyframes screenShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-4px, -2px) rotate(-0.5deg); }
+            50% { transform: translate(4px, 2px) rotate(0.5deg); }
+            75% { transform: translate(-2px, 4px) rotate(-0.3deg); }
+            100% { transform: translate(2px, -2px) rotate(0.3deg); }
+        }
         
-        #home { background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 25px 15px; padding-top: 45px; }
-        .status-bar { position: fixed; top: 0; left: 0; width: 100%; height: 25px; background: rgba(0,0,0,0.8); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; color: #fff; font-size: 12px; z-index: 200; }
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: rgba(30,30,30,0.95); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); z-index: 200; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.5); font-size: 9px; gap: 3px; }
-        .nav-icon { font-size: 20px; }
-        .clock { font-size: 52px; font-weight: 200; color: #fff; margin-bottom: 5px; }
-        .date-text { font-size: 13px; color: rgba(255,255,255,0.6); }
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px; }
-        .app { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
-        .app:active { transform: scale(0.9); }
-        .app-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .app-name { color: #fff; font-size: 10px; }
+        body.heavy-shake {
+            animation: heavyShake 0.05s infinite;
+        }
         
-        #crash { background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%); padding: 20px; color: #fff; overflow-y: auto; }
-        .crash-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #ff4444, #cc0000); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; margin: 30px auto; }
-        .crash-title { font-size: 22px; color: #ff4444; text-align: center; font-weight: bold; text-transform: uppercase; }
-        .crash-sub { font-size: 13px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 10px; }
-        .device-info { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-top: 25px; font-size: 12px; font-family: monospace; }
-        .device-info .title { color: #3DDC84; font-weight: bold; margin-bottom: 10px; }
-        .device-info .row { display: flex; justify-content: space-between; margin: 5px 0; color: rgba(255,255,255,0.7); }
-        .device-info .row span:last-child { color: #ff4444; }
-        .error-box { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,68,68,0.3); border-radius: 12px; padding: 15px; margin-top: 20px; font-family: monospace; font-size: 11px; color: #ff6666; max-height: 150px; overflow-y: auto; }
-        .restart-btn { background: linear-gradient(135deg, #3DDC84, #00b377); color: #000; border: none; padding: 15px 50px; border-radius: 30px; font-size: 16px; font-weight: bold; display: block; margin: 30px auto; cursor: pointer; }
+        @keyframes heavyShake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-8px, -5px); }
+            50% { transform: translate(8px, 5px); }
+            75% { transform: translate(-5px, 8px); }
+            100% { transform: translate(5px, -5px); }
+        }
         
-        .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #ff4444; border-radius: 16px; padding: 25px 30px; z-index: 300; text-align: center; max-width: 320px; box-shadow: 0 20px 60px rgba(255,68,68,0.4); display: none; }
-        .popup .icon { font-size: 50px; }
-        .popup .title { font-size: 18px; color: #ff4444; font-weight: bold; margin: 10px 0; }
-        .popup .text { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
-        .popup .btn { background: linear-gradient(135deg, #ff4444, #cc0000); color: #fff; border: none; padding: 12px 35px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-top: 18px; cursor: pointer; }
+        #april-fool-intro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
         
-        #notifications { position: fixed; top: 25px; left: 0; width: 100%; height: calc(100% - 80px); background: rgba(0,0,0,0.95); z-index: 150; padding: 15px; overflow-y: auto; display: none; }
-        .notif { background: #1a1a1a; border-radius: 10px; padding: 12px; margin-bottom: 10px; display: flex; align-items: flex-start; }
-        .notif-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 16px; margin-right: 10px; }
-        .notif.critical { border-left: 3px solid #ff4444; }
-        .notif.warning { border-left: 3px solid #ff9900; }
-        .notif.system { border-left: 3px solid #2196f3; }
-        .notif-content { flex: 1; }
-        .notif-title { font-size: 13px; font-weight: bold; margin-bottom: 3px; }
-        .notif-text { font-size: 11px; color: rgba(255,255,255,0.6); }
+        #april-fool-intro .date-box {
+            width: 180px;
+            height: 180px;
+            border: 4px solid #3DDC84;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 40px rgba(61, 220, 132, 0.3);
+        }
         
-        #call { background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; }
-        .caller-img { width: 100px; height: 100px; background: linear-gradient(135deg, #333, #555); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 45px; animation: callPulse 1s infinite; margin-bottom: 25px; }
-        @keyframes callPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .caller-name { font-size: 22px; margin-bottom: 5px; }
-        .caller-num { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 40px; }
-        .call-btns { display: flex; gap: 50px; }
-        .call-btn { width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 26px; cursor: pointer; }
-        .btn-decline { background: linear-gradient(135deg, #ff4444, #cc0000); }
-        .btn-accept { background: linear-gradient(135deg, #4caf50, #388e3c); }
+        #april-fool-intro .month { font-size: 24px; color: #3DDC84; font-weight: bold; letter-spacing: 2px; }
+        #april-fool-intro .day { font-size: 64px; font-weight: 300; margin-top: -5px; }
+        #april-fool-intro .festival { font-size: 22px; margin-top: 20px; color: #ff6b6b; font-weight: bold; animation: blink 1s infinite; }
         
-        #delete { background: #050505; color: #00ff00; font-family: 'Courier New', monospace; padding: 20px; display: none; }
-        .delete-header { color: #ff3333; font-size: 18px; text-align: center; padding-bottom: 15px; border-bottom: 1px solid #333; margin-bottom: 15px; animation: blink 0.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .delete-text { font-size: 12px; }
-        .progress-box { margin-top: 30px; padding-top: 15px; border-top: 1px solid #333; }
-        .progress-bar { width: 100%; height: 25px; background: #0a0a0a; border: 2px solid #00ff00; border-radius: 4px; overflow: hidden; margin-top: 10px; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #00ff00, #00ff88); width: 0%; transition: width 0.3s; }
-        .progress-text { font-size: 14px; color: #00ffff; }
-        .delete-stats { margin-top: 10px; font-size: 12px; color: #666; display: flex; justify-content: space-between; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         
-        #final { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; padding: 30px; text-align: center; }
-        .final-icon { font-size: 70px; margin-bottom: 20px; }
-        .final-title { font-size: 28px; font-weight: bold; color: #3DDC84; margin-bottom: 15px; }
-        .final-text { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 30px; line-height: 1.6; }
-        .final-info { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 300px; margin-bottom: 30px; }
-        .final-info p { font-size: 13px; margin: 8px 0; color: rgba(255,255,255,0.8); }
-        .exit-btn { background: linear-gradient(135deg, #3DDC84, #00b377); color: #000; border: none; padding: 15px 50px; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        #april-fool-intro .tip {
+            position: absolute;
+            bottom: 15%;
+            color: rgba(255,255,255,0.4);
+            font-size: 14px;
+        }
         
-        .next-btn { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #3DDC84, #00b377); color: #000; padding: 14px 35px; border-radius: 25px; font-size: 15px; font-weight: bold; z-index: 250; cursor: pointer; box-shadow: 0 5px 20px rgba(61,220,132,0.5); display: none; }
+        .status-bar, .nav-bar {
+            display: none;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999999;
+        }
         
-        .exit-tip { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 12px; z-index: 260; display: none; }
+        .status-bar {
+            top: 0; left: 0;
+            width: 100%; height: 28px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 13px;
+            color: #fff;
+        }
+        
+        .status-bar .left, .status-bar .right { display: flex; align-items: center; gap: 8px; }
+        
+        .battery-icon {
+            width: 22px; height: 10px;
+            border: 1px solid #fff;
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .battery-icon::after {
+            content: ''; position: absolute; right: -3px; top: 2px;
+            width: 2px; height: 4px; background: #fff; border-radius: 1px;
+        }
+        
+        .battery-level {
+            position: absolute; left: 1px; top: 1px; bottom: 1px;
+            width: 80%; background: #fff; border-radius: 1px;
+        }
+        
+        .nav-bar {
+            bottom: 0; left: 0;
+            width: 100%; height: 56px;
+            background: rgba(30, 30, 30, 0.95);
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.6); font-size: 10px; gap: 4px; }
+        .nav-icon { font-size: 22px; }
+        
+        #loading {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #loading .android-logo {
+            width: 90px; height: 90px;
+            background: #3DDC84;
+            border-radius: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 1s infinite;
+            box-shadow: 0 10px 40px rgba(61, 220, 132, 0.4);
+        }
+        
+        #loading .android-logo span { color: white; font-size: 45px; font-weight: bold; }
+        #loading .loading-text { color: #fff; margin-top: 35px; font-size: 17px; }
+        #loading .loading-sub { color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 8px; }
+        
+        #loading .loading-bar {
+            width: 260px; height: 5px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 3px;
+            margin-top: 25px;
+            overflow: hidden;
+        }
+        
+        #loading .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #3DDC84, #00ff88);
+            width: 0%; border-radius: 3px;
+            transition: width 0.3s;
+        }
+        
+        #home-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            z-index: 99998;
+            padding-top: 28px; padding-bottom: 56px;
+        }
+        
+        .clock-widget {
+            position: absolute; top: 60px; left: 20px;
+            color: #fff; cursor: pointer;
+        }
+        
+        .clock-widget .time { font-size: 48px; font-weight: 300; letter-spacing: -2px; }
+        .clock-widget .date { font-size: 13px; opacity: 0.7; margin-top: 4px; }
+        
+        #home-screen .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 25px 15px;
+        }
+        
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .icon-box {
+            width: 54px; height: 54px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+        
+        .app-icon:active .icon-box { transform: scale(0.9); }
+        .app-name { color: #fff; font-size: 11px; text-align: center; }
+        
+        #notification-panel {
+            display: none;
+            position: fixed;
+            top: 28px; left: 0;
+            width: 100%; height: calc(100% - 84px);
+            background: rgba(0,0,0,0.98);
+            z-index: 99997;
+            padding: 12px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .notification {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .notification .notif-icon {
+            width: 38px; height: 38px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        
+        .notification .notif-content { flex: 1; }
+        .notification .notif-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+        .notification .notif-text { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .notification .notif-time { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+        
+        .notification.critical { border-left: 4px solid #f44336; }
+        .notification.critical .notif-icon { background: #f44336; }
+        .notification.warning { border-left: 4px solid #ff9800; }
+        .notification.warning .notif-icon { background: #ff9800; }
+        .notification.system .notif-icon { background: #2196f3; }
+        
+        #crash-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
+            color: #fff;
+            z-index: 99998;
+            overflow-y: auto;
+            padding: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .crash-header { display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
+        .crash-icon {
+            width: 55px; height: 55px;
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            margin-right: 15px;
+        }
+        
+        .crash-title { font-size: 20px; font-weight: 500; color: #f44336; text-transform: uppercase; }
+        .crash-subtitle { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+        
+        .system-info { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; margin-bottom: 20px; font-size: 12px; font-family: monospace; }
+        .system-info .info-title { color: #3DDC84; font-weight: bold; margin-bottom: 12px; }
+        .info-row { display: flex; margin: 6px 0; }
+        .info-label { color: rgba(255,255,255,0.5); width: 120px; }
+        
+        .error-details {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 11px;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            color: #bbb;
+        }
+        
+        .error-title { color: #f44336; font-weight: bold; margin-bottom: 8px; }
+        
+        .btn-restart {
+            background: linear-gradient(135deg, #3DDC84, #00b377);
+            color: #000;
+            border: none;
+            padding: 16px 50px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 6px 25px rgba(61, 220, 132, 0.4);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .warning-text { text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 25px; }
+        
+        .popup-warning {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 2px solid #f44336;
+            border-radius: 20px;
+            padding: 28px 32px;
+            z-index: 99996;
+            text-align: center;
+            max-width: 340px;
+            box-shadow: 0 20px 60px rgba(244, 67, 54, 0.5);
+            animation: popupShake 0.3s;
+        }
+        
+        @keyframes popupShake {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            25% { transform: translate(-52%, -48%) scale(1.02); }
+            75% { transform: translate(-48%, -52%) scale(0.98); }
+        }
+        
+        .popup-warning .popup-icon { font-size: 50px; margin-bottom: 14px; }
+        .popup-warning .popup-title { color: #f44336; font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .popup-warning .popup-text { color: rgba(255,255,255,0.8); font-size: 13px; line-height: 1.6; }
+        
+        .popup-warning .popup-close {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 22px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .top-warning {
+            display: none;
+            position: fixed;
+            top: 35px; left: 15px; right: 15px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            z-index: 99999;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .top-warning.danger { background: linear-gradient(135deg, #f44336, #d32f2f); box-shadow: 0 5px 20px rgba(244, 67, 54, 0.5); }
+        .top-warning.warning { background: linear-gradient(135deg, #ff9800, #f57c00); box-shadow: 0 5px 20px rgba(255, 152, 0, 0.5); }
+        
+        #delete-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #050505;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            z-index: 99995;
+            padding: 25px;
+            font-size: 13px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        #delete-screen .header {
+            color: #ff3333;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+            animation: blink 0.4s infinite;
+            font-weight: bold;
+        }
+        
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+        
+        #delete-screen .scan-text { color: #00ff00; margin-bottom: 15px; font-size: 14px; }
+        
+        .delete-line { margin: 6px 0; opacity: 0; animation: typeIn 0.12s forwards; font-size: 12px; }
+        @keyframes typeIn { to { opacity: 1; } }
+        .delete-line.deleting { color: #ff4444; text-decoration: line-through; }
+        
+        #delete-screen .progress-section { margin-top: 40px; padding-top: 20px; border-top: 2px solid #333; }
+        #delete-screen .progress-text { color: #00ffff; font-size: 16px; margin-bottom: 14px; }
+        
+        #delete-screen .bar {
+            width: 100%; height: 35px;
+            background: #0a0a0a;
+            border: 2px solid #00ff00;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #delete-screen .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00ffff, #00ff00);
+            width: 0%;
+            transition: width 0.2s;
+            animation: progressMove 0.5s linear infinite;
+        }
+        
+        @keyframes progressMove { 0% { background-position: 0 0; } 100% { background-position: 50px 0; } }
+        
+        #delete-screen .stats {
+            margin-top: 12px;
+            color: #888;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        #delete-screen .final-message {
+            display: none;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 90%;
+        }
+        
+        #delete-screen .final-message .icon { font-size: 80px; margin-bottom: 20px; }
+        #delete-screen .final-message .title { color: #ff4444; font-size: 26px; margin-bottom: 15px; }
+        #delete-screen .final-message .joke { color: #00ff00; font-size: 24px; }
+        #delete-screen .final-message .sub { color: #666; font-size: 14px; margin-top: 20px; }
+        
+        #call-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
+            z-index: 99994;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+        
+        #call-screen .caller-photo {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #333, #555);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            margin-bottom: 30px;
+            animation: callRing 0.6s infinite;
+        }
+        
+        @keyframes callRing {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(10deg) scale(1.03); }
+            75% { transform: rotate(-10deg) scale(1.03); }
+        }
+        
+        #call-screen .caller-name { font-size: 24px; margin-bottom: 8px; }
+        #call-screen .caller-number { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 40px; }
+        
+        #call-screen .call-actions { display: flex; gap: 50px; }
+        
+        #call-screen .call-btn {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        #call-screen .btn-decline { background: linear-gradient(135deg, #f44336, #d32f2f); }
+        #call-screen .btn-accept { background: linear-gradient(135deg, #4caf50, #388e3c); }
+        
+        .exit-tip {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            z-index: 10001;
+            font-size: 13px;
+        }
+        
+        #final-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            z-index: 10000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 25px;
+            text-align: center;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        #final-screen .prank-icon { font-size: 70px; margin-bottom: 25px; }
+        #final-screen .prank-title { font-size: 28px; font-weight: bold; margin-bottom: 15px; color: #3DDC84; }
+        #final-screen .prank-subtitle { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+        
+        #final-screen .prank-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 14px;
+            padding: 20px;
+            max-width: 320px;
+            margin-bottom: 30px;
+        }
+        
+        #final-screen .prank-info p { font-size: 13px; margin: 10px 0; color: rgba(255,255,255,0.8); }
+        
+        #final-screen .exit-btn {
+            background: linear-gradient(135deg, #3DDC84, #00b377);
+            color: #000;
+            border: none;
+            padding: 16px 50px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(61, 220, 132, 0.4);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        #next-step-overlay {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(61, 220, 132, 0.9);
+            color: #000;
+            padding: 14px 30px;
+            border-radius: 25px;
+            z-index: 10002;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(61, 220, 132, 0.5);
+            -webkit-tap-highlight-color: transparent;
+        }
     </style>
 </head>
 <body>
-    <div id="intro" class="screen" style="display:block">
-        <div class="logo">🤖</div>
-        <h1>ANDROID</h1>
-        <div class="date">4月1日 · 愚人节</div>
-        <div class="tip">点击屏幕继续</div>
-    </div>
-    
-    <div id="boot" class="screen">
-        <div class="android-logo"><span>A</span></div>
-        <div class="text">正在启动系统...</div>
-        <div class="bar"><div class="bar-fill" id="progress"></div></div>
-    </div>
-    
-    <div id="home" class="screen">
-        <div class="status-bar">
-            <span id="time">12:00</span>
-            <span>📶 🔒 87%</span>
+    <div id="april-fool-intro">
+        <div class="date-box">
+            <div class="month">APRIL</div>
+            <div class="day">1</div>
         </div>
-        <div class="clock" id="clock">12:00</div>
-        <div class="date-text" id="date">4月1日 星期二</div>
-        <div class="app-grid" id="app-grid"></div>
-        <div class="nav-bar">
-            <div class="nav-item"><span class="nav-icon">🏠</span><span>主页</span></div>
-            <div class="nav-item"><span class="nav-icon">📞</span><span>电话</span></div>
-            <div class="nav-item"><span class="nav-icon">💬</span><span>信息</span></div>
-            <div class="nav-item"><span class="nav-icon">📷</span><span>相机</span></div>
-            <div class="nav-item"><span class="nav-icon">⚙️</span><span>设置</span></div>
-        </div>
+        <div class="festival">🎉 愚人节快乐 🎉</div>
+        <div class="tip">点击任意位置继续...</div>
     </div>
     
-    <div id="crash" class="screen">
-        <div class="crash-icon">⚠️</div>
-        <div class="crash-title">Android System</div>
-        <div class="crash-sub">系统遇到严重问题，需要重启</div>
-        <div class="device-info">
-            <div class="title">📱 设备信息</div>
-            <div class="row"><span>设备型号</span><span>Samsung Galaxy S24</span></div>
-            <div class="row"><span>Android版本</span><span>14</span></div>
-            <div class="row"><span>可用内存</span><span>87 MB</span></div>
-            <div class="row"><span>存储空间</span><span>2.3 GB</span></div>
-        </div>
-        <div class="error-box">
-            <div>FATAL EXCEPTION: main</div>
-            <div style="margin-top:8px;color:#ff4444;">⚠️ Trojan.SystemKiller 已检测</div>
-            <div style="color:#ff9900;">⚠️ 系统被篡改</div>
-        </div>
-        <button class="restart-btn" onclick="onRestartClick()">🔄 重启设备</button>
-    </div>
-    
-    <div id="notifications"></div>
-    
-    <div class="popup" id="battery-popup">
-        <div class="icon">🔋</div>
-        <div class="title">电池温度异常</div>
-        <div class="text">当前温度: 78°C<br>可能导致燃烧！</div>
-        <button class="btn" onclick="closePopup('battery-popup')">我知道了</button>
-    </div>
-    
-    <div class="popup" id="virus-popup">
-        <div class="icon">🦠</div>
-        <div class="title">发现致命病毒！</div>
-        <div class="text">Trojan.SystemKiller<br>正在删除系统文件...</div>
-        <button class="btn" onclick="closePopup('virus-popup')">立即处理</button>
-    </div>
-    
-    <div class="popup" id="storage-popup">
-        <div class="icon">💾</div>
-        <div class="title">存储空间不足</div>
-        <div class="text">可用空间: 23 MB<br>系统无法正常工作</div>
-        <button class="btn" onclick="closePopup('storage-popup')">清理</button>
-    </div>
-    
-    <div id="call" class="screen">
-        <div class="caller-img">👻</div>
-        <div class="caller-name">未知号码</div>
-        <div class="caller-num">+86 138 0000 0000</div>
-        <div class="call-btns">
-            <div class="call-btn btn-decline" onclick="rejectCall()">📵</div>
-            <div class="call-btn btn-accept" onclick="answerCall()">📞</div>
-        </div>
-    </div>
-    
-    <div id="delete" class="screen">
-        <div class="delete-header">⚠️ 正在清除威胁数据 ⚠️</div>
-        <div id="delete-content"></div>
-        <div class="progress-box">
-            <div class="progress-text">清除进度: <span id="prog">0%</span></div>
-            <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
-            <div class="delete-stats">
-                <span id="file-count">已清除: 0</span>
-                <span id="time-left">剩余: --秒</span>
+    <div class="status-bar" id="status-bar">
+        <div class="left"><span class="time" id="status-time">12:00</span></div>
+        <div class="right">
+            <span>📶</span><span>🔒</span>
+            <div class="battery"><span>87%</span>
+                <div class="battery-icon"><div class="battery-level"></div></div>
             </div>
         </div>
     </div>
     
-    <div id="final" class="screen">
-        <div class="final-icon">🎊</div>
-        <div class="final-title">愚人节快乐！😄</div>
-        <div class="final-text">刚才的"系统崩溃"是恶作剧～<br>你的手机其实很安全！</div>
-        <div class="final-info">
-            <p>📱 模拟Android系统崩溃</p>
-            <p>🔒 所有数据完好无损</p>
-            <p>📳 震动需授权才生效</p>
+    <div class="nav-bar" id="nav-bar">
+        <div class="nav-item"><span class="nav-icon">🏠</span><span>主页</span></div>
+        <div class="nav-item"><span class="nav-icon">📞</span><span>电话</span></div>
+        <div class="nav-item"><span class="nav-icon">💬</span><span>信息</span></div>
+        <div class="nav-item"><span class="nav-icon">📷</span><span>相机</span></div>
+        <div class="nav-item"><span class="nav-icon">⚙️</span><span>设置</span></div>
+    </div>
+    
+    <div id="loading">
+        <div class="android-logo"><span>A</span></div>
+        <div class="loading-text">Android正在启动...</div>
+        <div class="loading-sub">正在加载系统组件</div>
+        <div class="loading-bar"><div class="loading-progress" id="loading-progress"></div></div>
+    </div>
+    
+    <div id="home-screen">
+        <div class="clock-widget" onclick="showTimeAlert()">
+            <div class="time" id="home-time">12:00</div>
+            <div class="date" id="home-date">4月1日 星期二</div>
+        </div>
+        <div class="app-grid" id="app-grid"></div>
+    </div>
+    
+    <div id="notification-panel"></div>
+    
+    <div id="crash-screen">
+        <div class="crash-header">
+            <div class="crash-icon">⚠️</div>
+            <div>
+                <div class="crash-title">Android System</div>
+                <div class="crash-subtitle">系统遇到严重问题</div>
+            </div>
+        </div>
+        <div class="system-info">
+            <div class="info-title">📱 设备信息</div>
+            <div class="info-row"><span class="info-label">设备型号:</span><span>Samsung Galaxy S24</span></div>
+            <div class="info-row"><span class="info-label">Android版本:</span><span>14</span></div>
+            <div class="info-row"><span class="info-label">可用内存:</span><span style="color:#f44336;">87 MB</span></div>
+            <div class="info-row"><span class="info-label">存储空间:</span><span style="color:#f44336;">2.3 GB</span></div>
+        </div>
+        <div class="error-details">
+            <div class="error-title">☠️ FATAL EXCEPTION</div>
+            <div>Process: com.android.systemui</div>
+            <div style="color:#f44336;">⚠️ 检测到恶意软件: Trojan.SystemKiller</div>
+            <div style="color:#ff9800;">⚠️ 系统被篡改</div>
+        </div>
+        <button class="btn-restart" onclick="handleRestart()">🔄 重启设备</button>
+        <div class="warning-text">⚠️ 您的设备可能存在严重安全风险</div>
+    </div>
+    
+    <div id="camera-warning" class="top-warning danger">📷 相机正在被访问</div>
+    <div id="location-warning" class="top-warning warning">📍 位置正在被追踪</div>
+    <div id="mic-warning" class="top-warning danger">🎤 麦克风正在被录音</div>
+    <div id="screen-warning" class="top-warning danger">🖥️ 屏幕正在被共享</div>
+    
+    <div id="battery-popup" class="popup-warning">
+        <div class="popup-icon">🔋</div>
+        <div class="popup-title">⚠️ 电池温度异常</div>
+        <div class="popup-text">当前温度: <strong>78°C</strong><br>可能导致燃烧！<br><br><strong>请立即停止使用！</strong></div>
+        <button class="popup-close" onclick="handlePopupClose('battery-popup')">我知道了</button>
+    </div>
+    
+    <div id="virus-popup" class="popup-warning">
+        <div class="popup-icon">🦠</div>
+        <div class="popup-title">🚨 发现致命病毒！</div>
+        <div class="popup-text">Trojan.SystemKiller<br><br>正在删除系统文件...<br><br><strong>立即处理！</strong></div>
+        <button class="popup-close" onclick="handlePopupClose('virus-popup')">立即处理</button>
+    </div>
+    
+    <div id="storage-popup" class="popup-warning">
+        <div class="popup-icon">💾</div>
+        <div class="popup-title">⚠️ 存储空间不足</div>
+        <div class="popup-text">可用空间: <strong>23 MB</strong><br>系统无法正常工作<br><br>建议立即清理</div>
+        <button class="popup-close" onclick="handlePopupClose('storage-popup')">清理</button>
+    </div>
+    
+    <div id="delete-screen">
+        <div class="header">⚠️ 严重安全威胁检测 ⚠️</div>
+        <div class="scan-text">🔍 正在扫描并清除威胁数据...</div>
+        <div id="delete-content"></div>
+        <div class="progress-section">
+            <div class="progress-text">数据清除进度: <span id="progress-text">0%</span></div>
+            <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+            <div class="stats">
+                <span id="file-count">已清除: 0 个文件</span>
+                <span id="time-left">剩余: --秒</span>
+            </div>
+        </div>
+        <div class="final-message" id="final-message">
+            <div class="icon">😱</div>
+            <div class="title">所有数据已清除！</div>
+            <div class="joke">🎉 愚人节快乐！</div>
+            <div class="sub">别担心，你的文件其实很安全～</div>
+        </div>
+    </div>
+    
+    <div id="call-screen">
+        <div class="caller-photo">👻</div>
+        <div class="caller-name">未知号码</div>
+        <div class="caller-number">+86 138 0000 0000</div>
+        <div class="call-actions">
+            <div class="call-btn btn-decline" onclick="handleRejectCall()">📵</div>
+            <div class="call-btn btn-accept" onclick="handleAnswerCall()">📞</div>
+        </div>
+    </div>
+    
+    <div class="exit-tip" id="exit-tip">按 <kbd>ESC</kbd> 退出</div>
+    
+    <div id="next-step-overlay" onclick="continueToNextPhase()">继续下一步 ➡️</div>
+    
+    <div id="final-screen">
+        <div class="prank-icon">🎊</div>
+        <div class="prank-title">愚人节快乐！😄</div>
+        <div class="prank-subtitle">刚才的"系统崩溃"是纳西妲和爸爸准备的恶作剧～<br>你的手机其实很安全！</div>
+        <div class="prank-info">
+            <p>📱 这是一个模拟Android崩溃的愚人节网页</p>
+            <p>🔒 你的所有数据都完好无损</p>
+            <p>📳 手机震动需要授权才能生效</p>
         </div>
         <button class="exit-btn" onclick="exitPrank()">👋 退出恶作剧</button>
     </div>
     
-    <div class="next-btn" id="next-btn" onclick="nextPhase()">继续下一步 ➡️</div>
-    <div class="exit-tip" id="exit-tip">按 ESC 退出</div>
-
     <script>
         let active = false;
-        let phase = 0;
         let intervals = [];
-        let notified = false;
+        let currentPhase = 0;
+        let waitingForUser = false;
         
         const apps = [
-            {icon:'📷',name:'相机',color:'linear-gradient(135deg,#4CAF50,#2E7D32)'},
-            {icon:'📸',name:'相册',color:'linear-gradient(135deg,#2196F3,#1565C0)'},
-            {icon:'📁',name:'文件',color:'linear-gradient(135deg,#FF9800,#EF6C00)'},
-            {icon:'💬',name:'微信',color:'linear-gradient(135deg,#9C27B0,#6A1B9A)'},
-            {icon:'🎵',name:'音乐',color:'linear-gradient(135deg,#00BCD4,#00838F)'},
-            {icon:'🎮',name:'游戏',color:'linear-gradient(135deg,#E91E63,#AD1457)'},
-            {icon:'🔧',name:'工具',color:'linear-gradient(135deg,#607D8B,#37474F)'},
-            {icon:'🌐',name:'浏览器',color:'linear-gradient(135deg,#795548,#4E342E)'},
-            {icon:'📞',name:'电话',color:'linear-gradient(135deg,#2196F3,#0D47A1)'},
-            {icon:'📧',name:'邮件',color:'linear-gradient(135deg,#F44336,#B71C1C)'},
-            {icon:'🗺️',name:'地图',color:'linear-gradient(135deg,#4CAF50,#1B5E20)'},
-            {icon:'🛒',name:'购物',color:'linear-gradient(135deg,#FF5722,#BF360C)'},
-        ];
-        
-        const notifs = [
-            {type:'critical',icon:'🔴',title:'系统崩溃',text:'Android已停止运行'},
-            {type:'warning',icon:'⚠️',title:'存储异常',text:'存储设备严重损坏'},
-            {type:'system',icon:'🔒',title:'安全警告',text:'恶意程序试图访问银行应用'},
-            {type:'critical',icon:'💀',title:'数据泄露',text:'通讯录正在被上传'},
-            {type:'warning',icon:'🔥',title:'电池温度',text:'温度达到78°C'},
-            {type:'critical',icon:'👁️',title:'摄像头',text:'摄像头被后台应用使用'},
+            { icon: '📷', name: '相机', color: 'linear-gradient(135deg, #4CAF50, #2E7D32)' },
+            { icon: '📸', name: '相册', color: 'linear-gradient(135deg, #2196F3, #1565C0)' },
+            { icon: '📁', name: '文件', color: 'linear-gradient(135deg, #FF9800, #EF6C00)' },
+            { icon: '💬', name: '微信', color: 'linear-gradient(135deg, #9C27B0, #6A1B9A)' },
+            { icon: '🎵', name: '音乐', color: 'linear-gradient(135deg, #00BCD4, #00838F)' },
+            { icon: '🎮', name: '游戏', color: 'linear-gradient(135deg, #E91E63, #AD1457)' },
+            { icon: '🔧', name: '工具', color: 'linear-gradient(135deg, #607D8B, #37474F)' },
+            { icon: '🌐', name: '浏览器', color: 'linear-gradient(135deg, #795548, #4E342E)' },
+            { icon: '📞', name: '电话', color: 'linear-gradient(135deg, #2196F3, #0D47A1)' },
+            { icon: '📧', name: '邮件', color: 'linear-gradient(135deg, #F44336, #B71C1C)' },
+            { icon: '🗺️', name: '地图', color: 'linear-gradient(135deg, #4CAF50, #1B5E20)' },
+            { icon: '🛒', name: '购物', color: 'linear-gradient(135deg, #FF5722, #BF360C)' },
         ];
         
         const files = [
+            "正在扫描: /storage/emulated/0/DCIM/IMG_2024.jpg",
+            "正在扫描: /storage/emulated/0/WhatsApp/voice_001.amr",
+            "正在扫描: /storage/emulated/0/Download/简历_2024.pdf",
+            "正在扫描: /storage/emulated/0/Tencent/WeChat/文档.doc",
             "正在删除: /storage/emulated/0/DCIM/",
             "正在删除: /storage/emulated/0/Pictures/",
             "正在删除: /storage/emulated/0/Download/",
-            "正在删除: /data/com.tencent.mm/",
-            "正在删除: /data/com.alipay/",
+            "正在删除: /data/data/com.tencent.mm/",
+            "正在删除: /data/data/com.alipay/",
             "正在格式化: /dev/block/userdata",
             "正在清除: 加密分区",
             "正在重置: 出厂设置",
         ];
         
-        function playSound(type) {
+        const notifications = [
+            { type: 'critical', icon: '🔴', title: '🚨 系统崩溃', text: 'Android系统已停止运行' },
+            { type: 'warning', icon: '⚠️', title: '存储设备异常', text: '存储设备严重损坏' },
+            { type: 'system', icon: '🔒', title: '安全警告', text: '恶意程序正在尝试访问银行应用' },
+            { type: 'critical', icon: '💀', title: '数据泄露风险', text: '通讯录、短信正在被上传' },
+            { type: 'warning', icon: '🔥', title: '电池温度异常', text: '温度达到78°C' },
+            { type: 'critical', icon: '👁️', title: '摄像头被激活', text: '摄像头正在被后台应用使用' },
+            { type: 'system', icon: '📍', title: '位置追踪中', text: '位置正在被3个应用追踪' },
+            { type: 'critical', icon: '🔑', title: '密码已泄露', text: '支付密码可能被记录' },
+        ];
+        
+        function playBeep() {
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                
-                if (type === 'beep') {
-                    osc.frequency.value = 1200;
-                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.1);
-                } else if (type === 'alarm') {
-                    osc.type = 'square';
-                    for (let i = 0; i < 10; i++) {
-                        osc.frequency.setValueAtTime(i % 2 === 0 ? 800 : 600, ctx.currentTime + i * 0.1);
-                    }
-                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 1);
-                } else if (type === 'ring') {
-                    const notes = [523, 659, 784, 1047];
-                    notes.forEach((freq, i) => {
-                        const o = ctx.createOscillator();
-                        const g = ctx.createGain();
-                        o.connect(g);
-                        g.connect(ctx.destination);
-                        o.frequency.value = freq;
-                        g.gain.setValueAtTime(0.2, ctx.currentTime + i * 0.3);
-                        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.3 + 0.25);
-                        o.start(ctx.currentTime + i * 0.3);
-                        o.stop(ctx.currentTime + i * 0.3 + 0.25);
-                    });
-                }
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.frequency.value = 1000;
+                gainNode.gain.value = 0.15;
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.1);
             } catch(e) {}
         }
         
         function vibrate(pattern) {
-            if (navigator.vibrate) navigator.vibrate(pattern);
+            if (navigator.vibrate) {
+                navigator.vibrate(pattern);
+            }
+        }
+        
+        function heavyVibrate() {
+            const patterns = [[100,50,100,50,200], [200,100,200], [50,50,50,50]];
+            vibrate(patterns[Math.floor(Math.random() * patterns.length)]);
+        }
+        
+        function updateTime() {
+            const now = new Date();
+            const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('status-time').textContent = timeStr;
+            document.getElementById('home-time').textContent = timeStr;
+            const dates = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+            document.getElementById('home-date').textContent = `4月1日 ${dates[now.getDay()]}`;
         }
         
         function initApps() {
             const grid = document.getElementById('app-grid');
             apps.forEach(app => {
                 const div = document.createElement('div');
-                div.className = 'app';
-                div.innerHTML = `<div class="app-icon" style="background:${app.color}">${app.icon}</div><span class="app-name">${app.name}</span>`;
-                div.onclick = () => { vibrate([50,30,50]); playSound('beep'); showAppPopup(app); };
+                div.className = 'app-icon';
+                div.innerHTML = `<div class="icon-box" style="background:${app.color}">${app.icon}</div><span class="app-name">${app.name}</span>`;
+                div.onclick = () => triggerAppInteraction(app);
                 grid.appendChild(div);
             });
         }
         
-        function showAppPopup(app) {
-            const popup = document.createElement('div');
-            popup.className = 'popup';
-            popup.style.display = 'block';
-            popup.innerHTML = `<div class="icon">${app.icon}</div><div class="title">应用已停止运行</div><div class="text">${app.name}遇到错误</div><button class="btn" onclick="this.parentNode.remove()">确定</button>`;
-            document.body.appendChild(popup);
-        }
-        
-        function showNextButton(text = '继续下一步 ➡️') {
-            const btn = document.getElementById('next-btn');
-            btn.textContent = text;
-            btn.style.display = 'block';
-        }
-        
-        function hideNextButton() {
-            document.getElementById('next-btn').style.display = 'none';
-        }
-        
-        document.getElementById('intro').onclick = function() {
-            active = true;
-            this.style.opacity = '0';
-            setTimeout(() => { this.style.display = 'none'; startBoot(); }, 300);
-        };
-        
-        function startBoot() {
-            document.getElementById('boot').style.display = 'flex';
-            let prog = 0;
-            const bar = document.getElementById('progress');
-            const timer = setInterval(() => {
-                prog += Math.random() * 20;
-                if (prog >= 100) { prog = 100; clearInterval(timer); setTimeout(showHome, 200); }
-                bar.style.width = prog + '%';
-            }, 80);
-            intervals.push(timer);
-            setTimeout(() => { vibrate([100,50,100]); playSound('beep'); }, 1500);
-        }
-        
-        function showHome() {
-            document.getElementById('boot').style.display = 'none';
-            document.getElementById('home').style.display = 'block';
-            document.getElementById('exit-tip').style.display = 'block';
-            updateTime();
-            const timer = setInterval(updateTime, 1000);
-            intervals.push(timer);
-            phase = 0;
-            setTimeout(() => showNextButton('触发系统崩溃 ➡️'), 1500);
-        }
-        
-        function updateTime() {
-            const now = new Date();
-            const h = String(now.getHours()).padStart(2,'0');
-            const m = String(now.getMinutes()).padStart(2,'0');
-            const t = h + ':' + m;
-            document.getElementById('time').textContent = t;
-            document.getElementById('clock').textContent = t;
-            const days = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-            document.getElementById('date').textContent = `4月1日 ${days[now.getDay()]}`;
-        }
-        
-        function nextPhase() {
-            hideNextButton();
-            playSound('beep');
+        function triggerAppInteraction(app) {
+            if (waitingForUser) return;
+            heavyVibrate();
+            playBeep();
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 300);
             
-            switch(phase) {
+            const popup = document.createElement('div');
+            popup.className = 'popup-warning';
+            popup.id = 'app-popup-' + Date.now();
+            popup.innerHTML = `
+                <div class="popup-icon">${app.icon}</div>
+                <div class="popup-title">应用崩溃</div>
+                <div class="popup-text">${app.name}已停止运行</div>
+                <button class="popup-close" onclick="dismissAppPopup('${popup.id}')">确定</button>
+            `;
+            document.body.appendChild(popup);
+            setTimeout(() => popup.style.display = 'block', 10);
+        }
+        
+        function dismissAppPopup(id) {
+            const popup = document.getElementById(id);
+            if (popup) popup.remove();
+            heavyVibrate();
+        }
+        
+        function showNextStepButton() {
+            const btn = document.getElementById('next-step-overlay');
+            btn.style.display = 'block';
+            waitingForUser = true;
+            heavyVibrate();
+        }
+        
+        function hideNextStepButton() {
+            document.getElementById('next-step-overlay').style.display = 'none';
+            waitingForUser = false;
+        }
+        
+        function continueToNextPhase() {
+            hideNextStepButton();
+            playBeep();
+            
+            switch(currentPhase) {
                 case 0:
-                    phase = 1;
-                    triggerCrash();
+                    currentPhase = 1;
+                    showCrashScreen();
                     break;
                 case 1:
-                    phase = 2;
+                    currentPhase = 2;
                     startNotifications();
-                    showNextButton('继续下一步 ➡️');
+                    showNextStepButton();
                     break;
                 case 2:
-                    phase = 3;
-                    document.getElementById('battery-popup').style.display = 'block';
-                    vibrate([200,100,200]);
+                    currentPhase = 3;
+                    showPopup('battery-popup');
                     break;
                 case 3:
-                    phase = 4;
-                    document.getElementById('virus-popup').style.display = 'block';
-                    vibrate([200,100,200]);
+                    currentPhase = 4;
+                    showPopup('virus-popup');
                     break;
                 case 4:
-                    phase = 5;
+                    currentPhase = 5;
                     showIncomingCall();
                     break;
                 case 5:
-                    phase = 6;
-                    startDelete();
+                    currentPhase = 6;
+                    startDeleteMode();
                     break;
                 case 6:
-                    showFinal();
+                    showFinalScreen();
                     break;
             }
         }
         
-        function triggerCrash() {
-            document.getElementById('home').style.display = 'none';
-            document.getElementById('crash').style.display = 'block';
-            document.body.style.animation = 'shake 0.5s';
-            vibrate([300,150,300]);
-            playSound('alarm');
-            setTimeout(() => document.body.style.animation = '', 500);
-        }
-        
-        function onRestartClick() {
-            vibrate([100,50,100]);
-            playSound('beep');
-            triggerCrash();
-        }
-        
-        function closePopup(id) {
+        function handlePopupClose(id) {
             document.getElementById(id).style.display = 'none';
-            vibrate([100,50,100]);
-            playSound('beep');
-            showNextButton('继续下一步 ➡️');
+            heavyVibrate();
+            playBeep();
+            
+            if (id === 'battery-popup') {
+                currentPhase = 3;
+                showNextStepButton();
+            } else if (id === 'virus-popup') {
+                currentPhase = 4;
+                showNextStepButton();
+            } else if (id === 'storage-popup') {
+                currentPhase = 5;
+                showNextStepButton();
+            }
         }
         
-        function startNotifications() {
-            const panel = document.getElementById('notifications');
-            panel.style.display = 'block';
-            let i = 0;
-            const timer = setInterval(() => {
-                if (i >= notifs.length || !active) { clearInterval(timer); return; }
-                vibrate([50,30,50]);
-                const n = notifs[i];
-                const div = document.createElement('div');
-                div.className = `notif ${n.type}`;
-                div.innerHTML = `<div class="notif-icon" style="background:${n.type==='critical'?'#ff4444':n.type==='warning'?'#ff9900':'#2196f3'}">${n.icon}</div><div class="notif-content"><div class="notif-title">${n.title}</div><div class="notif-text">${n.text}</div></div>`;
-                panel.insertBefore(div, panel.firstChild);
-                i++;
-            }, 1200);
-            intervals.push(timer);
+        function handleRestart() {
+            heavyVibrate();
+            playBeep();
+            currentPhase = 1;
+            showCrashScreen();
         }
         
-        function showIncomingCall() {
-            document.getElementById('crash').style.display = 'none';
-            document.getElementById('notifications').style.display = 'none';
-            document.getElementById('call').style.display = 'flex';
-            vibrate([200,100,200,100,200]);
-            playSound('ring');
-            const timer = setInterval(() => { if(active) vibrate([50,30,50]); }, 1500);
-            intervals.push(timer);
+        function handleRejectCall() {
+            heavyVibrate();
+            playBeep();
+            document.getElementById('call-screen').style.display = 'none';
+            currentPhase = 5;
+            startDeleteMode();
         }
         
-        function rejectCall() {
-            vibrate([100,50,100]);
-            document.getElementById('call').style.display = 'none';
-            phase = 5;
-            startDelete();
-        }
-        
-        function answerCall() {
-            vibrate([100,50,100]);
-            document.getElementById('call').innerHTML = '<div class="caller-img">🤡</div><div class="caller-name">愚人节快乐！🎉</div><div class="caller-num">这只是个小玩笑～</div><div style="font-size:40px;margin-top:30px;">😄🎊</div>';
+        function handleAnswerCall() {
+            heavyVibrate();
+            playBeep();
+            document.getElementById('call-screen').innerHTML = `
+                <div class="caller-photo">🤡</div>
+                <div class="caller-name">愚人节快乐！🎉</div>
+                <div class="caller-number">这只是个小玩笑～</div>
+                <div style="margin-top:40px;font-size:40px;">😄🎊</div>
+            `;
             setTimeout(() => {
-                document.onclick = () => { document.onclick = null; phase = 5; startDelete(); };
+                document.onclick = () => {
+                    document.onclick = null;
+                    currentPhase = 5;
+                    startDeleteMode();
+                };
             }, 500);
         }
         
-        function startDelete() {
-            document.getElementById('delete').style.display = 'block';
-            let idx = 0, count = 0;
-            const timer = setInterval(() => {
-                if (idx >= files.length || !active) {
-                    clearInterval(timer);
-                    setTimeout(() => showNextButton('查看结果 ➡️'), 2000);
-                    return;
+        document.getElementById('april-fool-intro').addEventListener('click', function() {
+            this.style.transition = 'opacity 0.5s';
+            this.style.opacity = '0';
+            setTimeout(() => {
+                this.style.display = 'none';
+                startPrank();
+            }, 500);
+        });
+        
+        window.onload = function() {
+            initApps();
+        };
+        
+        function startPrank() {
+            active = true;
+            let progress = 0;
+            const progressBar = document.getElementById('loading-progress');
+            const loadInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadInterval);
+                    setTimeout(showHomeScreen, 200);
                 }
-                vibrate([50,30,50]);
-                const div = document.createElement('div');
-                div.className = 'delete-text';
-                div.textContent = '❌ ' + files[idx];
-                document.getElementById('delete-content').appendChild(div);
-                count++; idx++;
-                const pct = Math.round((idx / files.length) * 100);
-                document.getElementById('prog').textContent = pct + '%';
-                document.getElementById('prog-fill').style.width = pct + '%';
-                document.getElementById('file-count').textContent = '已清除: ' + count;
-            }, 350);
-            intervals.push(timer);
+                progressBar.style.width = progress + '%';
+            }, 80);
+            intervals.push(loadInterval);
+            
+            setTimeout(() => { vibrate([150,80,150]); playBeep(); }, 1500);
         }
         
-        function showFinal() {
-            document.getElementById('delete').style.display = 'none';
-            document.getElementById('final').style.display = 'flex';
-            document.getElementById('exit-tip').style.display = 'none';
-            playSound('beep');
+        function showHomeScreen() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('status-bar').style.display = 'flex';
+            document.getElementById('nav-bar').style.display = 'flex';
+            document.getElementById('home-screen').style.display = 'block';
+            document.getElementById('exit-tip').style.display = 'block';
+            updateTime();
+            const timeInterval = setInterval(updateTime, 1000);
+            intervals.push(timeInterval);
+            
+            setTimeout(() => {
+                currentPhase = 0;
+                showNextStepButton();
+            }, 2000);
+        }
+        
+        function showCrashScreen() {
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('crash-screen').style.display = 'block';
+            document.body.classList.add('heavy-shake');
+            vibrate([300,150,300]);
+            playBeep();
+            
+            setTimeout(() => {
+                document.body.classList.remove('heavy-shake');
+            }, 1500);
+        }
+        
+        function showPopup(id) {
+            const popup = document.getElementById(id);
+            popup.style.display = 'block';
+            heavyVibrate();
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 500);
+        }
+        
+        function startNotifications() {
+            const panel = document.getElementById('notification-panel');
+            panel.style.display = 'block';
+            panel.innerHTML = '';
+            let index = 0;
+            
+            const notifInterval = setInterval(() => {
+                if (index >= notifications.length || !active) {
+                    clearInterval(notifInterval);
+                    return;
+                }
+                heavyVibrate();
+                const notif = notifications[index];
+                const div = document.createElement('div');
+                div.className = `notification ${notif.type}`;
+                div.innerHTML = `<div class="notif-icon">${notif.icon}</div><div class="notif-content"><div class="notif-title">${notif.title}</div><div class="notif-text">${notif.text}</div><div class="notif-time">刚刚</div></div>`;
+                panel.insertBefore(div, panel.firstChild);
+                index++;
+            }, 1000);
+            intervals.push(notifInterval);
+        }
+        
+        function showIncomingCall() {
+            document.getElementById('crash-screen').style.display = 'none';
+            document.getElementById('notification-panel').style.display = 'none';
+            ['camera-warning','location-warning','mic-warning','screen-warning'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            document.getElementById('call-screen').style.display = 'flex';
+            vibrate([200,100,200,100,200]);
+            
+            const callVibrate = setInterval(() => {
+                if (!active || document.getElementById('call-screen').style.display === 'none') {
+                    clearInterval(callVibrate);
+                    return;
+                }
+                heavyVibrate();
+            }, 1500);
+            intervals.push(callVibrate);
+        }
+        
+        function startDeleteMode() {
+            document.getElementById('call-screen').style.display = 'none';
+            document.getElementById('delete-screen').style.display = 'block';
+            
+            const content = document.getElementById('delete-content');
+            let fileIndex = 0;
+            let deletedCount = 0;
+            
+            const deleteInterval = setInterval(() => {
+                if (fileIndex >= files.length || !active) {
+                    clearInterval(deleteInterval);
+                    document.querySelector('.progress-section').style.display = 'none';
+                    setTimeout(() => {
+                        document.getElementById('final-message').style.display = 'block';
+                        heavyVibrate();
+                    }, 600);
+                    
+                    setTimeout(() => {
+                        currentPhase = 6;
+                        showNextStepButton();
+                    }, 3000);
+                    return;
+                }
+                
+                heavyVibrate();
+                playBeep();
+                const div = document.createElement('div');
+                div.className = 'delete-line deleting';
+                div.textContent = '❌ ' + files[fileIndex];
+                content.appendChild(div);
+                
+                deletedCount++;
+                fileIndex++;
+                const progress = Math.min(100, (fileIndex / files.length) * 100);
+                
+                document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
+                document.getElementById('bar-fill').style.width = progress + '%';
+                document.getElementById('file-count').textContent = `已清除: ${deletedCount} 个文件`;
+                document.getElementById('time-left').textContent = `剩余: ${Math.ceil((files.length - fileIndex) * 0.4)}秒`;
+            }, 400);
+            intervals.push(deleteInterval);
+        }
+        
+        function showFinalScreen() {
+            document.getElementById('delete-screen').style.display = 'none';
+            document.getElementById('next-step-overlay').style.display = 'none';
+            document.getElementById('final-screen').style.display = 'flex';
+            playBeep();
         }
         
         function exitPrank() {
-            window.location.href = 'https://www.baidu.com';
+            window.location.href = 'about:blank';
         }
         
         function stopAll() {
             active = false;
-            intervals.forEach(t => clearInterval(t));
+            intervals.forEach(i => clearInterval(i));
             intervals = [];
-            document.body.style.animation = '';
+            document.body.classList.remove('shake');
+            document.body.classList.remove('heavy-shake');
+            ['april-fool-intro','loading','status-bar','nav-bar','home-screen','notification-panel','crash-screen','camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup','delete-screen','call-screen','exit-tip','final-screen','next-step-overlay'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
         }
         
-        document.addEventListener('keydown', e => { if(e.key === 'Escape') stopAll(); });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && active) stopAll();
+        });
         document.addEventListener('contextmenu', e => e.preventDefault());
         
-        window.onload = initApps;
+        document.addEventListener('touchmove', function(e) {
+            if (active && document.getElementById('delete-screen').style.display === 'none') {
+                e.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
