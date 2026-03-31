@@ -929,6 +929,27 @@
         <button class="popup-close" onclick="dismissPopup('storage-popup')">清理</button>
     </div>
     
+    <div id="memory-popup" class="popup-warning">
+        <div class="popup-icon">🧠</div>
+        <div class="popup-title">⚠️ 内存严重不足</div>
+        <div class="popup-text">可用内存: <strong>87 MB</strong><br>系统运行极度缓慢<br><br>建议关闭后台应用</div>
+        <button class="popup-close" onclick="dismissPopup('memory-popup')">关闭应用</button>
+    </div>
+    
+    <div id="network-popup" class="popup-warning">
+        <div class="popup-icon">📡</div>
+        <div class="popup-title">⚠️ 网络异常</div>
+        <div class="popup-text">检测到可疑网络活动<br>加密货币挖矿进程正在运行<br><br>您的设备可能被入侵！</div>
+        <button class="popup-close" onclick="dismissPopup('network-popup')">断开网络</button>
+    </div>
+    
+    <div id="security-popup" class="popup-warning">
+        <div class="popup-icon">🛡️</div>
+        <div class="popup-title">🚨 安全防护已关闭</div>
+        <div class="popup-text">您的设备防护已被未知程序禁用<br><br>检测到<strong>俄罗斯IP</strong>的后门连接<br>设备可能被远程控制！</div>
+        <button class="popup-close" onclick="dismissPopup('security-popup')">启用防护</button>
+    </div>
+    
     <div id="delete-screen">
         <div class="header">⚠️ 严重安全威胁检测 ⚠️</div>
         <div class="scan-text">🔍 正在扫描并清除威胁数据...</div>
@@ -1253,19 +1274,25 @@
         
         function triggerAttack() {
             vibrate([500,200,500]);
-            playBeep();
+            generateAlarmSound();
             document.body.classList.add('heavy-shake');
             
             setTimeout(() => {
                 document.getElementById('home-screen').style.display = 'none';
                 document.getElementById('crash-screen').style.display = 'block';
+                playPopSound();
                 vibrate([100,50,100,50,200]);
             }, 1500);
             
             setTimeout(() => {
                 startNotifications();
+                playBeep();
+            }, 2500);
+            
+            setTimeout(() => {
+                showPopup('memory-popup');
                 generateAlarmSound();
-            }, 3000);
+            }, 4000);
             
             setTimeout(() => {
                 showPopup('battery-popup');
@@ -1278,44 +1305,55 @@
             }, 7000);
             
             setTimeout(() => {
-                document.getElementById('camera-warning').style.display = 'block';
+                showPopup('network-popup');
                 heavyVibrate();
                 generateAlarmSound();
             }, 8500);
             
             setTimeout(() => {
-                document.getElementById('location-warning').style.display = 'block';
+                document.getElementById('camera-warning').style.display = 'block';
+                playPopSound();
                 heavyVibrate();
-                generateAlarmSound();
             }, 10000);
             
             setTimeout(() => {
-                document.getElementById('mic-warning').style.display = 'block';
+                document.getElementById('location-warning').style.display = 'block';
+                playPopSound();
                 heavyVibrate();
-                generateAlarmSound();
             }, 11500);
             
             setTimeout(() => {
-                document.getElementById('screen-warning').style.display = 'block';
+                document.getElementById('mic-warning').style.display = 'block';
+                playPopSound();
                 heavyVibrate();
-                generateAlarmSound();
             }, 13000);
+            
+            setTimeout(() => {
+                document.getElementById('screen-warning').style.display = 'block';
+                playPopSound();
+                heavyVibrate();
+            }, 14500);
             
             setTimeout(() => {
                 showPopup('virus-popup');
                 generateAlarmSound();
-            }, 14500);
+            }, 16000);
+            
+            setTimeout(() => {
+                showPopup('security-popup');
+                generateAlarmSound();
+            }, 18000);
             
             setTimeout(() => {
                 hideAllWarnings();
-                setTimeout(showIncomingCall, 1000);
-            }, 20000);
+                setTimeout(showIncomingCall, 1500);
+            }, 22000);
             
-            setTimeout(startDeleteMode, 30000);
+            setTimeout(startDeleteMode, 32000);
         }
         
         function hideAllWarnings() {
-            ['camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup'].forEach(id => {
+            ['camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup','memory-popup','network-popup','security-popup'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
@@ -1356,10 +1394,7 @@
         function showIncomingCall() {
             document.getElementById('crash-screen').style.display = 'none';
             document.getElementById('notification-panel').style.display = 'none';
-            ['camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = 'none';
-            });
+            hideAllWarnings();
             document.getElementById('call-screen').style.display = 'flex';
             
             document.body.classList.remove('heavy-shake');
