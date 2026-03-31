@@ -1281,75 +1281,83 @@
                 document.getElementById('home-screen').style.display = 'none';
                 document.getElementById('crash-screen').style.display = 'block';
                 playPopSound();
-                vibrate([100,50,100,50,200]);
+                heavyVibrate();
             }, 1500);
             
             setTimeout(() => {
+                document.getElementById('notification-panel').style.display = 'block';
                 startNotifications();
                 playBeep();
-            }, 2500);
+            }, 3000);
             
             setTimeout(() => {
                 showPopup('memory-popup');
                 generateAlarmSound();
-            }, 4000);
+                heavyVibrate();
+            }, 5000);
             
             setTimeout(() => {
                 showPopup('battery-popup');
                 generateAlarmSound();
-            }, 5500);
+                heavyVibrate();
+            }, 7000);
             
             setTimeout(() => {
                 showPopup('storage-popup');
                 generateAlarmSound();
-            }, 7000);
+                heavyVibrate();
+            }, 9000);
             
             setTimeout(() => {
                 showPopup('network-popup');
                 heavyVibrate();
                 generateAlarmSound();
-            }, 8500);
+            }, 11000);
             
             setTimeout(() => {
                 document.getElementById('camera-warning').style.display = 'block';
                 playPopSound();
                 heavyVibrate();
-            }, 10000);
+            }, 13000);
             
             setTimeout(() => {
                 document.getElementById('location-warning').style.display = 'block';
                 playPopSound();
                 heavyVibrate();
-            }, 11500);
+            }, 14500);
             
             setTimeout(() => {
                 document.getElementById('mic-warning').style.display = 'block';
                 playPopSound();
                 heavyVibrate();
-            }, 13000);
+            }, 16000);
             
             setTimeout(() => {
                 document.getElementById('screen-warning').style.display = 'block';
                 playPopSound();
                 heavyVibrate();
-            }, 14500);
+            }, 17500);
             
             setTimeout(() => {
                 showPopup('virus-popup');
                 generateAlarmSound();
-            }, 16000);
+                heavyVibrate();
+            }, 19000);
             
             setTimeout(() => {
                 showPopup('security-popup');
                 generateAlarmSound();
-            }, 18000);
+                heavyVibrate();
+            }, 21000);
             
             setTimeout(() => {
                 hideAllWarnings();
+                document.getElementById('crash-screen').style.display = 'none';
+                document.getElementById('notification-panel').style.display = 'none';
                 setTimeout(showIncomingCall, 1500);
-            }, 22000);
+            }, 25000);
             
-            setTimeout(startDeleteMode, 32000);
+            setTimeout(startDeleteMode, 35000);
         }
         
         function hideAllWarnings() {
