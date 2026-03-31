@@ -459,6 +459,7 @@
         let active = false;
         let intervals = [];
         let currentStep = 0;
+        let appClickCount = 0;
         
         const apps = [
             { icon: '📷', name: '相机', color: 'linear-gradient(135deg, #4CAF50, #2E7D32)' },
@@ -534,8 +535,7 @@
             const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
             document.getElementById('status-time').textContent = timeStr;
             document.getElementById('home-time').textContent = timeStr;
-            const dates = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-            document.getElementById('home-date').textContent = `4月1日 ${dates[now.getDay()]}`;
+            document.getElementById('home-date').textContent = '4月1日 星期三';
         }
         
         function initApps() {
@@ -545,11 +545,19 @@
                 div.className = 'app-icon';
                 div.innerHTML = `<div class="icon-box" style="background:${app.color}">${app.icon}</div><span class="app-name">${app.name}</span>`;
                 div.onclick = () => {
+                    appClickCount++;
                     heavyVibrate();
                     playBeep();
                     document.body.classList.add('shake');
                     setTimeout(() => document.body.classList.remove('shake'), 300);
                     showAppPopup(app);
+                    
+                    if (appClickCount >= 5 && currentStep === 0) {
+                        setTimeout(() => {
+                            currentStep = 1;
+                            showCrashScreen();
+                        }, 800);
+                    }
                 };
                 grid.appendChild(div);
             });
@@ -660,11 +668,6 @@
             updateTime();
             const timeInterval = setInterval(updateTime, 1000);
             intervals.push(timeInterval);
-            
-            setTimeout(() => {
-                currentStep = 0;
-                showNextBtn();
-            }, 2500);
         }
         
         function showCrashScreen() {
