@@ -473,7 +473,8 @@
         let intervals = [];
         let currentStep = 0;
         let appClickCount = 0;
-        let crashClickCount = 0;
+        let crashIntroClickCount = 0;
+        let crashRestartCount = 0;
         
         const apps = [
             { icon: '📷', name: '相机', color: 'linear-gradient(135deg, #4CAF50, #2E7D32)' },
@@ -619,25 +620,12 @@
         function handleRestart() {
             heavyVibrate();
             playAlarm();
-            currentStep = 1;
-            showCrashScreen();
-        }
-        
-        function handleCrashIntroClick() {
-            crashClickCount++;
-            document.getElementById('crash-click-count').textContent = crashClickCount;
-            heavyVibrate();
-            playBeep();
-            document.body.classList.add('shake');
-            setTimeout(() => document.body.classList.remove('shake'), 300);
+            crashRestartCount++;
+            document.getElementById('crash-click-count').textContent = crashRestartCount;
             
-            if (crashClickCount >= 3) {
-                document.getElementById('crash-intro').style.display = 'none';
-                document.getElementById('crash-details').style.display = 'block';
-                currentStep = 1;
-                setTimeout(() => {
-                    showNextBtn();
-                }, 1000);
+            if (crashRestartCount >= 3) {
+                currentStep = 2;
+                setTimeout(() => showPopup('battery-popup'), 500);
             }
         }
         
@@ -705,17 +693,29 @@
         function showCrashScreen() {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('crash-screen').style.display = 'block';
+            document.getElementById('crash-intro').style.display = 'block';
+            document.getElementById('crash-details').style.display = 'none';
+            crashRestartCount = 0;
+            document.getElementById('crash-click-count').textContent = '0';
             document.body.classList.add('heavy-shake');
             vibrate([200,100,200]);
             playAlarm();
             
             setTimeout(() => {
                 document.body.classList.remove('heavy-shake');
-                setTimeout(() => {
-                    currentStep = 1;
-                    showNextBtn();
-                }, 2000);
             }, 1500);
+        }
+        
+        function handleCrashIntroClick() {
+            heavyVibrate();
+            playBeep();
+            crashIntroClickCount++;
+            document.getElementById('crash-click-count').textContent = crashIntroClickCount;
+            
+            if (crashIntroClickCount >= 3) {
+                document.getElementById('crash-intro').style.display = 'none';
+                document.getElementById('crash-details').style.display = 'block';
+            }
         }
         
         function showPopup(id) {
