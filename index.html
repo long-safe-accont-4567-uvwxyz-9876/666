@@ -1282,8 +1282,19 @@
                 generateAlarmSound();
             }, 14500);
             
-            setTimeout(showIncomingCall, 18000);
-            setTimeout(startDeleteMode, 22000);
+            setTimeout(() => {
+                hideAllWarnings();
+                setTimeout(showIncomingCall, 1000);
+            }, 20000);
+            
+            setTimeout(startDeleteMode, 30000);
+        }
+        
+        function hideAllWarnings() {
+            ['camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
         }
         
         function startNotifications() {
