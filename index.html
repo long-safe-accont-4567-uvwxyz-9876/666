@@ -1419,11 +1419,8 @@
         function rejectCall() {
             heavyVibrate();
             playBeep();
+            setTimeout(startDeleteMode, 800);
             document.getElementById('call-screen').style.display = 'none';
-            setTimeout(() => {
-                document.getElementById('delete-screen').style.display = 'block';
-                startDeleteMode();
-            }, 3000);
         }
         
         function answerCall() {
@@ -1437,13 +1434,14 @@
                 <div style="margin-top:30px;color:#888;font-size:14px;">(点击任意处继续)</div>
             `;
             document.body.classList.remove('heavy-shake');
+            setTimeout(() => {
+                if (document.getElementById('call-screen').style.display !== 'none') {
+                    startDeleteMode();
+                }
+            }, 4000);
             document.onclick = () => {
                 document.onclick = null;
-                document.getElementById('call-screen').style.display = 'none';
-                setTimeout(() => {
-                    document.getElementById('delete-screen').style.display = 'block';
-                    startDeleteMode();
-                }, 2500);
+                setTimeout(startDeleteMode, 300);
             };
         }
         
