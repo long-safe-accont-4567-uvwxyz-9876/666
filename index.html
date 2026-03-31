@@ -21,6 +21,108 @@
             font-family: 'Roboto', 'Microsoft YaHei', sans-serif;
         }
         
+        /* 状态栏 */
+        .status-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999999;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 13px;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .status-bar .left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-bar .right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-bar .time {
+            font-weight: 500;
+        }
+        
+        .status-bar .battery {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .status-bar .battery-icon {
+            width: 22px;
+            height: 10px;
+            border: 1px solid #fff;
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .status-bar .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 2px;
+            width: 2px;
+            height: 4px;
+            background: #fff;
+            border-radius: 1px;
+        }
+        
+        .status-bar .battery-level {
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            bottom: 1px;
+            width: 80%;
+            background: #fff;
+            border-radius: 1px;
+        }
+        
+        /* 导航栏 */
+        .nav-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 56px;
+            background: rgba(30, 30, 30, 0.95);
+            z-index: 999999;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .nav-bar .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 10px;
+            gap: 4px;
+        }
+        
+        .nav-bar .nav-item.active {
+            color: #3DDC84;
+        }
+        
+        .nav-bar .nav-icon {
+            font-size: 24px;
+        }
+        
         /* 加载动画 */
         #loading {
             position: fixed;
@@ -60,12 +162,184 @@
             opacity: 0.8;
         }
         
+        #loading .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        #loading .loading-progress {
+            height: 100%;
+            background: #3DDC84;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(0.95); opacity: 0.7; }
         }
         
-        /* 崩溃主界面 */
+        /* 主屏幕 */
+        #home-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            z-index: 99998;
+            padding-top: 28px;
+            padding-bottom: 56px;
+        }
+        
+        #home-screen .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 30px 20px;
+        }
+        
+        #home-screen .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #home-screen .icon-box {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        #home-screen .app-name {
+            color: #fff;
+            font-size: 11px;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        /* 时间显示 */
+        .clock-widget {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            color: #fff;
+        }
+        
+        .clock-widget .time {
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: -2px;
+        }
+        
+        .clock-widget .date {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        /* 通知中心 */
+        #notification-panel {
+            display: none;
+            position: fixed;
+            top: 28px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 84px);
+            background: rgba(0,0,0,0.95);
+            z-index: 99997;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .notification {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification .notif-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .notification .notif-content {
+            flex: 1;
+        }
+        
+        .notification .notif-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .notification .notif-text {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.4;
+        }
+        
+        .notification .notif-time {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 5px;
+        }
+        
+        .notification.critical {
+            border-left: 4px solid #f44336;
+            background: linear-gradient(90deg, rgba(244, 67, 54, 0.2), #1a1a1a);
+        }
+        
+        .notification.critical .notif-icon {
+            background: #f44336;
+            animation: criticalPulse 1s infinite;
+        }
+        
+        @keyframes criticalPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+        }
+        
+        .notification.warning {
+            border-left: 4px solid #ff9800;
+        }
+        
+        .notification.warning .notif-icon {
+            background: #ff9800;
+        }
+        
+        .notification.system .notif-icon {
+            background: #2196f3;
+        }
+        
+        /* 崩溃界面 */
         #crash-screen {
             display: none;
             position: fixed;
@@ -78,180 +352,121 @@
             z-index: 99998;
             overflow-y: auto;
             padding: 20px;
+            font-family: 'Roboto', sans-serif;
         }
         
         .crash-header {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
         .crash-icon {
-            width: 50px;
-            height: 50px;
-            background: #f44336;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #f44336, #d32f2f);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
+            font-size: 30px;
             margin-right: 15px;
+            box-shadow: 0 4px 20px rgba(244, 67, 54, 0.4);
         }
         
         .crash-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 500;
             color: #f44336;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
         
         .crash-subtitle {
             font-size: 12px;
             color: rgba(255,255,255,0.5);
-            margin-top: 2px;
+            margin-top: 3px;
         }
         
         .system-info {
             background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 18px;
             margin-bottom: 20px;
+            font-size: 12px;
+            font-family: 'monospace';
+        }
+        
+        .system-info .info-title {
+            color: #3DDC84;
+            font-weight: bold;
+            margin-bottom: 12px;
             font-size: 13px;
-            font-family: 'Courier New', monospace;
         }
         
         .info-row {
             display: flex;
-            margin: 5px 0;
+            margin: 6px 0;
         }
         
         .info-label {
             color: rgba(255,255,255,0.5);
-            width: 120px;
+            width: 130px;
+            flex-shrink: 0;
         }
         
         .error-details {
-            background: rgba(244, 67, 54, 0.1);
-            border-left: 3px solid #f44336;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 12px;
             padding: 15px;
-            border-radius: 0 8px 8px 0;
             margin-bottom: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            line-height: 1.6;
-            max-height: 200px;
+            font-family: 'monospace';
+            font-size: 11px;
+            line-height: 1.7;
+            max-height: 250px;
             overflow-y: auto;
+            color: #bbb;
         }
         
         .error-title {
             color: #f44336;
             font-weight: bold;
             margin-bottom: 10px;
+            font-size: 12px;
         }
         
         .btn-restart {
-            background: #3DDC84;
+            background: linear-gradient(135deg, #3DDC84, #00b377);
             color: #000;
             border: none;
-            padding: 15px 40px;
-            border-radius: 25px;
+            padding: 16px 50px;
+            border-radius: 30px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             display: block;
             margin: 30px auto;
-            box-shadow: 0 4px 15px rgba(61, 220, 132, 0.4);
+            box-shadow: 0 6px 25px rgba(61, 220, 132, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn-restart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(61, 220, 132, 0.5);
         }
         
         .warning-text {
             text-align: center;
             color: rgba(255,255,255,0.4);
-            font-size: 12px;
-            margin-top: 20px;
-        }
-        
-        /* 系统通知弹窗 */
-        #notification-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 99997;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .notification {
-            background: #1a1a1a;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .notif-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-        
-        .notif-content {
-            flex: 1;
-        }
-        
-        .notif-title {
-            font-size: 15px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-        
-        .notif-text {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-        }
-        
-        .notif-time {
             font-size: 11px;
-            color: rgba(255,255,255,0.4);
-            margin-top: 5px;
+            margin-top: 25px;
+            line-height: 1.6;
         }
         
-        .critical {
-            border-left: 4px solid #f44336;
-        }
-        
-        .critical .notif-icon {
-            background: #f44336;
-        }
-        
-        .warning .notif-icon {
-            background: #ff9800;
-        }
-        
-        .system .notif-icon {
-            background: #2196f3;
-        }
-        
-        /* 电池警告 */
+        /* 电池警告弹窗 */
         #battery-warning {
             display: none;
             position: fixed;
@@ -260,66 +475,93 @@
             transform: translate(-50%, -50%);
             background: #1a1a1a;
             border: 2px solid #f44336;
-            border-radius: 15px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 25px 30px;
             z-index: 99996;
             text-align: center;
-            max-width: 300px;
-            animation: blink 0.5s infinite;
+            max-width: 320px;
+            box-shadow: 0 20px 60px rgba(244, 67, 54, 0.3);
+            animation: warningPulse 0.8s infinite;
         }
         
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        @keyframes warningPulse {
+            0%, 100% { box-shadow: 0 20px 60px rgba(244, 67, 54, 0.3); }
+            50% { box-shadow: 0 20px 80px rgba(244, 67, 54, 0.6); }
         }
         
         #battery-warning .battery-icon {
-            font-size: 60px;
+            font-size: 50px;
             margin-bottom: 15px;
+            animation: batteryShake 0.5s infinite;
+        }
+        
+        @keyframes batteryShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
         }
         
         #battery-warning .warning-title {
             color: #f44336;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         
         #battery-warning .warning-text {
             color: rgba(255,255,255,0.7);
-            font-size: 14px;
+            font-size: 13px;
+            line-height: 1.5;
         }
         
-        /* 震动效果 */
-        .shake {
-            animation: shake 0.1s infinite;
+        #battery-warning .temp {
+            color: #ff5722;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
         }
         
-        @keyframes shake {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(-3px, -3px); }
-            75% { transform: translate(3px, 3px); }
-        }
-        
-        /* 隐私相机警告 */
+        /* 相机警告 */
         #camera-warning {
             display: none;
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #f44336;
+            top: 40px;
+            right: 15px;
+            background: linear-gradient(135deg, #f44336, #d32f2f);
             color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
+            padding: 12px 18px;
+            border-radius: 10px;
             z-index: 99999;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
+            box-shadow: 0 4px 20px rgba(244, 67, 54, 0.5);
             animation: flash 0.5s infinite;
         }
         
         @keyframes flash {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.4; }
+        }
+        
+        #camera-warning::before {
+            content: '⚠️';
+            margin-right: 5px;
+        }
+        
+        /* 位置追踪警告 */
+        #location-warning {
+            display: none;
+            position: fixed;
+            top: 100px;
+            right: 15px;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            z-index: 99999;
+            font-weight: bold;
+            font-size: 13px;
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.5);
         }
         
         /* 文件删除界面 */
@@ -330,23 +572,39 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            background: #0a0a0a;
             color: #0f0;
             font-family: 'Courier New', monospace;
             z-index: 99995;
-            padding: 20px;
-            font-size: 14px;
+            padding: 25px;
+            font-size: 13px;
         }
         
         #delete-screen .header {
-            color: #ff0;
-            font-size: 18px;
+            color: #ff4444;
+            font-size: 16px;
             margin-bottom: 20px;
             text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+        
+        #delete-screen .header span {
+            animation: blink 0.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        #delete-screen .scan-text {
+            color: #00ff00;
+            margin-bottom: 15px;
         }
         
         .delete-line {
-            margin: 3px 0;
+            margin: 4px 0;
             opacity: 0;
             animation: typeIn 0.1s forwards;
         }
@@ -355,24 +613,48 @@
             to { opacity: 1; }
         }
         
-        #delete-screen .progress {
+        .delete-line.deleting {
+            color: #ff4444;
+            text-decoration: line-through;
+        }
+        
+        #delete-screen .progress-section {
             margin-top: 30px;
-            color: #0ff;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+        
+        #delete-screen .progress-text {
+            color: #00ffff;
+            margin-bottom: 10px;
         }
         
         #delete-screen .bar {
             width: 100%;
-            height: 20px;
-            background: #333;
-            border: 1px solid #0f0;
-            margin-top: 10px;
+            height: 24px;
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            overflow: hidden;
         }
         
         #delete-screen .bar-fill {
             height: 100%;
-            background: #0f0;
+            background: linear-gradient(90deg, #00ff00, #00ffff);
             width: 0%;
             transition: width 0.3s;
+            animation: progressGlow 1s infinite;
+        }
+        
+        @keyframes progressGlow {
+            0%, 100% { box-shadow: 0 0 10px #00ff00; }
+            50% { box-shadow: 0 0 20px #00ff00; }
+        }
+        
+        #delete-screen .stats {
+            margin-top: 15px;
+            color: #888;
+            font-size: 12px;
         }
         
         #delete-screen .final-message {
@@ -382,50 +664,287 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            font-size: 20px;
+            font-family: 'Microsoft YaHei', sans-serif;
         }
         
-        /* 模拟状态栏 */
-        .status-bar {
+        #delete-screen .final-message .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        #delete-screen .final-message .title {
+            color: #ff4444;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        #delete-screen .final-message .joke {
+            color: #00ff00;
+            font-size: 18px;
+        }
+        
+        #delete-screen .final-message .sub {
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        /* 来电界面 */
+        #call-screen {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 25px;
-            background: rgba(0,0,0,0.8);
-            z-index: 999999;
-            justify-content: space-between;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
+            z-index: 99994;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 0 15px;
-            font-size: 12px;
             color: #fff;
         }
         
-        .status-bar .time {
-            font-weight: bold;
+        #call-screen .caller-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #666, #333);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
         
-        .status-bar .icons {
+        #call-screen .caller-name {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        #call-screen .caller-number {
+            font-size: 16px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 40px;
+        }
+        
+        #call-screen .call-actions {
             display: flex;
-            gap: 5px;
+            gap: 40px;
+        }
+        
+        #call-screen .call-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+        
+        #call-screen .btn-decline {
+            background: #f44336;
+        }
+        
+        #call-screen .btn-accept {
+            background: #4caf50;
+        }
+        
+        /* 震动效果 */
+        .shake {
+            animation: shake 0.1s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-3px, -2px); }
+            75% { transform: translate(3px, 2px); }
+        }
+        
+        /* 屏幕闪烁 */
+        .flicker {
+            animation: flicker 0.15s infinite;
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* 退出提示 */
+        .exit-tip {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            z-index: 10001;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 锁屏界面 */
+        #lock-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%);
+            z-index: 99993;
+            padding: 60px 30px;
+            color: #fff;
+        }
+        
+        #lock-screen .lock-time {
+            text-align: center;
+            font-size: 72px;
+            font-weight: 300;
+            letter-spacing: -3px;
+            margin-bottom: 10px;
+        }
+        
+        #lock-screen .lock-date {
+            text-align: center;
+            font-size: 16px;
+            opacity: 0.7;
+            margin-bottom: 60px;
+        }
+        
+        #lock-screen .lock-icon {
+            text-align: center;
+            font-size: 30px;
+            animation: lockPulse 2s infinite;
+        }
+        
+        @keyframes lockPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        /* 滑动解锁提示 */
+        .swipe-hint {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            animation: swipeHint 2s infinite;
+        }
+        
+        @keyframes swipeHint {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
     </style>
 </head>
 <body>
+    <!-- 状态栏 -->
+    <div class="status-bar" id="status-bar">
+        <div class="left">
+            <span class="time" id="status-time">12:00</span>
+        </div>
+        <div class="right">
+            <span>📶</span>
+            <span>🔒</span>
+            <div class="battery">
+                <span>87%</span>
+                <div class="battery-icon">
+                    <div class="battery-level"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 导航栏 -->
+    <div class="nav-bar" id="nav-bar">
+        <div class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>主页</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">📞</span>
+            <span>电话</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">💬</span>
+            <span>信息</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">📷</span>
+            <span>相机</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">⚙️</span>
+            <span>设置</span>
+        </div>
+    </div>
+    
     <!-- 加载界面 -->
     <div id="loading">
         <div class="android-logo">
             <span>A</span>
         </div>
         <div class="loading-text">Android正在启动...</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loading-progress"></div>
+        </div>
     </div>
     
-    <!-- 状态栏 -->
-    <div class="status-bar" id="status-bar">
-        <div class="time">12:00</div>
-        <div class="icons">📶 🔋 100%</div>
+    <!-- 主屏幕 -->
+    <div id="home-screen">
+        <div class="clock-widget">
+            <div class="time" id="home-time">12:00</div>
+            <div class="date" id="home-date">4月1日 星期二</div>
+        </div>
+        
+        <div class="app-grid">
+            <div class="app-icon">
+                <div class="icon-box" style="background: linear-gradient(135deg, #4CAF50, #2E7D32);">📷</div>
+                <span class="app-name">相机</span>
+            </div>
+            <div class="app-icon">
+                <div class="icon-box" style="background: linear-gradient(135deg, #2196F3, #1565C0);">📸</div>
+                <span class="app-name">相册</span>
+            </div>
+            <div class="app-icon">
+                <div class="icon-box" style="background: linear-gradient(135deg, #FF9800, #EF6C00);">📁</div>
+                <span class="app-name">文件</span>
+            </div>
+            <div class="app-icon">
+                <div class="icon-box" style="background: linear-gradient(135deg, #9C27B0, #6A1B9A);">💬</div>
+                <span class="app-name">微信</span>
+            </div>
+            <div class="app-icon">
+                <div class="icon-box" style="background: linear-gradient(135deg, #00BCD4, #00838F);">🎵</div>
+                <span class="app-name">音乐</span>
+            </div>
+            <div class="app-icon">
+                <div class="icon-box" style="background: linear-gradient(135deg, #E91E63, #AD1457);">🎮</div>
+                <span class="app-name">游戏</span>
+            </div>
+            <div class="app-icon">
+                <div class="icon-box" style="background: linear-gradient(135deg, #607D8B, #37474F);">🔧</div>
+                <span class="app-name">工具</span>
+            </div>
+            <div class="app-icon">
+                <div class="icon-box" style="background: linear-gradient(135deg, #795548, #4E342E);">🌐</div>
+                <span class="app-name">浏览器</span>
+            </div>
+        </div>
     </div>
+    
+    <!-- 通知面板 -->
+    <div id="notification-panel"></div>
     
     <!-- 崩溃界面 -->
     <div id="crash-screen">
@@ -433,164 +952,282 @@
             <div class="crash-icon">⚠️</div>
             <div>
                 <div class="crash-title">Android System</div>
-                <div class="crash-subtitle">系统遇到问题，需要重新启动</div>
+                <div class="crash-subtitle">系统遇到严重问题，需要重新启动</div>
             </div>
         </div>
         
         <div class="system-info">
+            <div class="info-title">设备信息</div>
             <div class="info-row">
-                <span class="info-label">设备:</span>
-                <span>Samsung Galaxy S21</span>
+                <span class="info-label">设备型号:</span>
+                <span>Samsung Galaxy S24 Ultra</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Android版本:</span>
-                <span>13</span>
+                <span>14 (UpsideDownCake)</span>
             </div>
             <div class="info-row">
-                <span class="info-label">内核:</span>
-                <span>5.10.89-arm64</span>
+                <span class="info-label">内核版本:</span>
+                <span>5.15.123-android14-11-g0a...</span>
             </div>
             <div class="info-row">
-                <span class="info-label">基带:</span>
-                <span>G995BZSJ3CVI1</span>
+                <span class="info-label">安全补丁:</span>
+                <span>2024年4月1日</span>
             </div>
             <div class="info-row">
-                <span class="info-label">编译号:</span>
-                <span>TP1A.220624.014</span>
+                <span class="info-label">基带版本:</span>
+                <span>G998B.01.02.03.04.05.06</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">可用内存:</span>
+                <span style="color: #f44336;">87 MB (不足)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">存储空间:</span>
+                <span style="color: #f44336;">2.3 GB (不足)</span>
             </div>
         </div>
         
         <div class="error-details">
-            <div class="error-title">FATAL EXCEPTION: main</div>
-            <div>Process: com.android.systemui, PID: 2458</div>
-            <div>java.lang.RuntimeException:的系统崩溃</div>
-            <div>at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2871)</div>
-            <div>at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2956)</div>
-            <div>at android.app.ActivityThread.-wrap11(Unknown Source:0)</div>
-            <div>at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1571)</div>
-            <div>at android.os.Handler.dispatchMessage(Handler.java:106)</div>
-            <div>at android.os.Looper.loop(Looper.java:164)</div>
-            <div>at android.app.ActivityThread.main(ActivityThread.java:6524)</div>
-            <div style="color: #f44336;">Caused by: java.lang.NullPointerException</div>
-            <div style="color: #f44336;">Attempt to invoke virtual method 'android.os.Bundle android.app.Activity.onCreate(android.os.Bundle)' on a null object reference</div>
-            <div style="margin-top: 10px;"> Killed (signal 9: SIGKILL)</div>
+            <div class="error-title">☠️ FATAL EXCEPTION: main</div>
+            <div>Process: com.android.systemui, PID: 3245</div>
+            <div>java.lang.RuntimeException: 系统服务崩溃</div>
+            <div>&nbsp;&nbsp;at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2942)</div>
+            <div>&nbsp;&nbsp;at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3023)</div>
+            <div>&nbsp;&nbsp;at android.app.ActivityThread.access$900(ActivityThread.java:198)</div>
+            <div>&nbsp;&nbsp;at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1724)</div>
+            <div>&nbsp;&nbsp;at android.os.Handler.dispatchMessage(Handler.java:106)</div>
+            <div>&nbsp;&nbsp;at android.os.Looper.loop(Looper.java:170)</div>
+            <div>&nbsp;&nbsp;at android.app.ActivityThread.main(ActivityThread.java:6695)</div>
+            <div style="color: #f44336; margin-top: 10px;">Caused by: java.lang.NullPointerException</div>
+            <div style="color: #f44336;">&nbsp;&nbsp;Attempt to invoke virtual method 'boolean android.app.Activity.onCreate(android.os.Bundle)' on a null object reference</div>
+            <div style="color: #ff9800; margin-top: 10px;">⚠️ 检测到恶意软件: Trojan.AndroidOS.SystemKiller.v3</div>
+            <div style="color: #ff9800;">⚠️ 系统安全证书已过期</div>
+            <div style="color: #f44336;">⚠️ 检测到未授权的系统篡改</div>
+            <div style="color: #f44336;">&nbsp;&nbsp;Device compromised - Secure Boot failed</div>
+            <div style="margin-top: 10px; color: #888;">[Killed] Process sent SIGKILL signal 9</div>
         </div>
         
         <button class="btn-restart" onclick="showJoke()">🔄 重启设备</button>
         
         <div class="warning-text">
-            ⚠️ 您的设备可能存在风险，建议立即备份数据<br>
-            如果问题持续存在，请联系设备制造商
+            ⚠️ 您的设备可能存在严重安全风险<br>
+            建议立即断开网络连接并备份数据<br>
+            联系设备制造商获取帮助
         </div>
     </div>
-    
-    <!-- 通知面板 -->
-    <div id="notification-panel"></div>
     
     <!-- 电池警告 -->
     <div id="battery-warning">
         <div class="battery-icon">🔋</div>
-        <div class="warning-title">电池温度异常</div>
-        <div class="warning-text">检测到电池温度过高<br>可能发生燃烧或爆炸<br><br>⚠️ 危险：立即停止使用！</div>
+        <div class="warning-title">⚠️ 电池温度异常</div>
+        <div class="temp">78°C</div>
+        <div class="warning-text">
+            检测到电池温度过高！<br>
+            可能导致燃烧或爆炸风险<br><br>
+            <strong>请立即停止使用设备！</strong>
+        </div>
     </div>
     
     <!-- 相机警告 -->
-    <div id="camera-warning">📷 相机正在被访问</div>
+    <div id="camera-warning">📷 相机正在被某个应用访问</div>
+    
+    <!-- 位置警告 -->
+    <div id="location-warning">📍 位置信息正在被追踪</div>
     
     <!-- 删除界面 -->
     <div id="delete-screen">
-        <div class="header">⚠️ 严重安全警告 ⚠️</div>
+        <div class="header"><span>⚠️</span> 严重安全威胁检测 <span>⚠️</span></div>
+        <div class="scan-text">🔍 正在扫描系统文件...</div>
         <div id="delete-content"></div>
-        <div class="progress">
-            数据擦除进度: <span id="progress-text">0%</span>
+        <div class="progress-section">
+            <div class="progress-text">数据擦除进度: <span id="progress-text">0%</span></div>
             <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+            <div class="stats" id="stats">
+                已扫描: 0 个文件 | 已删除: 0 个文件 | 剩余时间: 计算中...
+            </div>
         </div>
         <div class="final-message" id="final-message">
-            <div style="color: #f00; font-size: 24px; margin-bottom: 20px;">😱 数据已全部清除！</div>
-            <div style="color: #0f0;">愚人节快乐！这是假的！🎉</div>
-            <div style="margin-top: 30px; color: #888; font-size: 14px;">你的文件其实很安全～</div>
+            <div class="icon">😱</div>
+            <div class="title">所有数据已清除！</div>
+            <div class="joke">🎉 愚人节快乐！</div>
+            <div class="sub">别担心，你的文件其实很安全～</div>
         </div>
     </div>
     
+    <!-- 来电界面 -->
+    <div id="call-screen">
+        <div class="caller-photo">👻</div>
+        <div class="caller-name">未知号码</div>
+        <div class="caller-number">+86 138 0000 0000</div>
+        <div class="call-actions">
+            <div class="call-btn btn-decline" onclick="rejectCall()">📵</div>
+            <div class="call-btn btn-accept" onclick="answerCall()">📞</div>
+        </div>
+    </div>
+    
+    <!-- 锁屏界面 -->
+    <div id="lock-screen">
+        <div class="lock-time" id="lock-time">12:00</div>
+        <div class="lock-date" id="lock-date">4月1日 星期二</div>
+        <div class="lock-icon">🔒</div>
+        <div class="swipe-hint">向上滑动解锁</div>
+    </div>
+    
+    <!-- 退出提示 -->
+    <div class="exit-tip" id="exit-tip">
+        按 <kbd>ESC</kbd> 键退出恶作剧
+    </div>
+    
     <script>
+        let active = false;
+        let popupInterval = null;
+        let deleteInterval = null;
+        let callInterval = null;
+        
         const files = [
-            "正在扫描: /storage/emulated/0/DCIM/Camera/photo_2024.jpg",
-            "正在扫描: /storage/emulated/0/WhatsApp/Media/voice_001.amr",
-            "正在扫描: /storage/emulated/0/Download/重要文件.pdf",
-            "正在扫描: /storage/emulated/0/Tencent/WeChat/语音消息/*.amr",
-            "正在扫描: /storage/emulated/0/Alipay/账单.xlsx",
-            "正在扫描: /system/app/Chrome/Chrome.apk",
+            "正在扫描: /storage/emulated/0/DCIM/Camera/IMG_2024_0401.jpg",
+            "正在扫描: /storage/emulated/0/WhatsApp/Media/voice_message.amr",
+            "正在扫描: /storage/emulated/0/Download/简历_2024.pdf",
+            "正在扫描: /storage/emulated/0/Tencent/WeChat/文件/重要文档.doc",
+            "正在扫描: /storage/emulated/0/Pictures/Screenshots/截图_001.png",
+            "正在扫描: /data/data/com.tencent.mm/databases/msg.db",
+            "正在扫描: /data/data/com.alipay/files/wallet.dat",
+            "正在删除: /storage/emulated/0/DCIM/",
+            "正在删除: /storage/emulated/0/Pictures/",
+            "正在删除: /storage/emulated/0/Download/",
             "正在删除: /data/data/com.tencent.mm/",
             "正在删除: /data/data/com.alipay/",
-            "正在删除: /storage/emulated/0/Pictures/",
-            "正在格式化: /dev/block/bootloader",
-            "正在清除: Android系统分区",
-            "正在销毁: 用户数据分区"
+            "正在删除: /data/data/com.sina.weibo/",
+            "正在格式化: /dev/block/userdata",
+            "正在清除: 加密分区",
+            "正在销毁: 启动引导记录"
         ];
         
         const notifications = [
-            { type: 'critical', icon: '🔴', title: '系统崩溃', text: 'Android系统已停止运行，所有数据可能丢失' },
-            { type: 'warning', icon: '⚠️', title: '存储空间异常', text: '检测到存储设备严重损坏' },
-            { type: 'system', icon: '🔒', title: '安全警告', text: '检测到恶意程序试图访问敏感数据' },
-            { type: 'critical', icon: '💀', title: '数据泄露风险', text: '您的个人信息正在被上传' },
-            { type: 'warning', icon: '🔥', title: '电池过热', text: '温度达到78°C，立即停止使用' },
-            { type: 'system', icon: '📱', title: '系统更新失败', text: '关键系统文件损坏' },
-            { type: 'critical', icon: '⛔', title: '设备可能被远程控制', text: '检测到异常网络连接' },
-            { type: 'warning', icon: '💾', title: '磁盘即将损坏', text: '预计5分钟后磁盘将无法使用' }
+            { type: 'critical', icon: '🔴', title: '🚨 系统崩溃', text: 'Android系统已停止运行，所有数据可能丢失' },
+            { type: 'warning', icon: '⚠️', title: '存储设备异常', text: '检测到存储设备严重损坏，读取速度下降99%' },
+            { type: 'system', icon: '🔒', title: '安全警告', text: '检测到恶意程序正在尝试访问您的银行应用' },
+            { type: 'critical', icon: '💀', title: '数据泄露风险', text: '您的通讯录、短信、位置信息正在被上传到远程服务器' },
+            { type: 'warning', icon: '🔥', title: '电池温度异常', text: '温度达到78°C，远超安全阈值45°C' },
+            { type: 'system', icon: '📡', title: '网络异常', text: '检测到可疑的加密货币挖矿进程正在运行' },
+            { type: 'critical', icon: '⛔', title: '设备可能被远程控制', text: '检测到异常的后门连接，来源: 俄罗斯IP地址' },
+            { type: 'warning', icon: '💾', title: '磁盘即将损坏', text: '预计2分钟后磁盘将完全无法使用' },
+            { type: 'critical', icon: '👁️', title: '摄像头被激活', text: '检测到摄像头正在被后台应用使用' },
+            { type: 'system', icon: '📍', title: '位置追踪中', text: '您的位置正在被3个未知应用追踪' },
+            { type: 'critical', icon: '🔑', title: '密码已泄露', text: '您的支付密码可能已被恶意软件记录' },
+            { type: 'warning', icon: '🛡️', title: '安全防护已关闭', text: '您的设备防护已被未知程序禁用' }
         ];
         
-        // 页面加载后自动开始
-        window.onload = function() {
-            setTimeout(() => {
-                startPrank();
-            }, 1500);
-        };
+        function vibrate(pattern) {
+            if (navigator.vibrate) {
+                navigator.vibrate(pattern);
+            }
+        }
         
-        function startPrank() {
-            // 隐藏加载界面
-            document.getElementById('loading').style.display = 'none';
-            
-            // 开始震动效果
-            document.body.classList.add('shake');
-            
-            // 显示状态栏
-            setTimeout(() => {
-                document.getElementById('status-bar').style.display = 'flex';
-                updateTime();
-            }, 500);
-            
-            // 1-3秒后显示崩溃界面
-            setTimeout(() => {
-                document.getElementById('crash-screen').style.display = 'block';
-            }, 2000);
-            
-            // 3-5秒后开始大量通知弹窗
-            setTimeout(() => {
-                startNotifications();
-            }, 4000);
-            
-            // 6-8秒后显示电池警告
-            setTimeout(() => {
-                document.getElementById('battery-warning').style.display = 'block';
-                document.body.classList.add('shake');
-            }, 7000);
-            
-            // 10秒后显示相机警告
-            setTimeout(() => {
-                document.getElementById('camera-warning').style.display = 'block';
-            }, 10000);
-            
-            // 12秒后进入删除模式
-            setTimeout(() => {
-                startDeleteMode();
-            }, 13000);
+        function vibratePattern() {
+            const patterns = [
+                [100, 50, 100, 50, 200],
+                [200, 100, 200],
+                [50, 50, 50, 50, 50],
+                [300, 150, 300],
+                [100, 50, 100, 50, 100, 50, 200],
+                [500],
+                [100, 50, 100],
+            ];
+            const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+            navigator.vibrate(pattern);
         }
         
         function updateTime() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.querySelector('.status-bar .time').textContent = hours + ':' + minutes;
+            const timeStr = hours + ':' + minutes;
+            
+            document.getElementById('status-time').textContent = timeStr;
+            document.getElementById('home-time').textContent = timeStr;
+            document.getElementById('lock-time').textContent = timeStr;
+            
+            const dates = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const dateStr = `4月1日 ${dates[now.getDay()]}`;
+            document.getElementById('home-date').textContent = dateStr;
+            document.getElementById('lock-date').textContent = dateStr;
+        }
+        
+        window.onload = function() {
+            setTimeout(startPrank, 500);
+        };
+        
+        function startPrank() {
+            active = true;
+            
+            let progress = 0;
+            const progressBar = document.getElementById('loading-progress');
+            const loadInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadInterval);
+                    setTimeout(showHomeScreen, 300);
+                }
+                progressBar.style.width = progress + '%';
+            }, 150);
+            
+            setTimeout(() => {
+                vibrate([200, 100, 200]);
+            }, 2000);
+        }
+        
+        function showHomeScreen() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('status-bar').style.display = 'flex';
+            document.getElementById('nav-bar').style.display = 'flex';
+            document.getElementById('home-screen').style.display = 'block';
+            document.getElementById('exit-tip').style.display = 'block';
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            setTimeout(() => {
+                triggerAttack();
+            }, 2000);
+        }
+        
+        function triggerAttack() {
+            vibrate([500, 200, 500]);
+            document.body.classList.add('shake');
+            document.body.classList.add('flicker');
+            
+            setTimeout(() => {
+                document.getElementById('home-screen').style.display = 'none';
+                document.getElementById('crash-screen').style.display = 'block';
+                vibrate([100, 50, 100, 50, 200]);
+            }, 1500);
+            
+            setTimeout(() => {
+                startNotifications();
+            }, 3000);
+            
+            setTimeout(() => {
+                showBatteryWarning();
+            }, 6000);
+            
+            setTimeout(() => {
+                document.getElementById('camera-warning').style.display = 'block';
+                vibratePattern();
+            }, 9000);
+            
+            setTimeout(() => {
+                document.getElementById('location-warning').style.display = 'block';
+            }, 11000);
+            
+            setTimeout(() => {
+                showIncomingCall();
+            }, 14000);
+            
+            setTimeout(() => {
+                startDeleteMode();
+            }, 18000);
         }
         
         function startNotifications() {
@@ -599,11 +1236,13 @@
             panel.innerHTML = '';
             
             let index = 0;
-            const interval = setInterval(() => {
-                if (index >= notifications.length) {
-                    clearInterval(interval);
+            popupInterval = setInterval(() => {
+                if (index >= notifications.length || !active) {
+                    clearInterval(popupInterval);
                     return;
                 }
+                
+                vibratePattern();
                 
                 const notif = notifications[index];
                 const div = document.createElement('div');
@@ -618,53 +1257,139 @@
                 `;
                 panel.insertBefore(div, panel.firstChild);
                 index++;
-            }, 1500);
+            }, 1800);
         }
         
-        function startDeleteMode() {
+        function showBatteryWarning() {
+            document.getElementById('battery-warning').style.display = 'block';
+            vibrate([300, 150, 300, 150, 500]);
+            
+            setTimeout(() => {
+                document.body.classList.add('shake');
+            }, 500);
+        }
+        
+        function showIncomingCall() {
             document.getElementById('crash-screen').style.display = 'none';
             document.getElementById('notification-panel').style.display = 'none';
             document.getElementById('battery-warning').style.display = 'none';
             document.getElementById('camera-warning').style.display = 'none';
+            document.getElementById('location-warning').style.display = 'none';
             
-            const screen = document.getElementById('delete-screen');
-            screen.style.display = 'block';
+            document.getElementById('call-screen').style.display = 'flex';
+            vibrate([200, 100, 200, 100, 200, 100, 200]);
+            
+            callInterval = setInterval(() => {
+                vibrate([100, 50, 100]);
+            }, 1500);
+        }
+        
+        function rejectCall() {
+            clearInterval(callInterval);
+            setTimeout(() => {
+                showLockScreen();
+            }, 1000);
+        }
+        
+        function answerCall() {
+            clearInterval(callInterval);
+            vibrate([1000]);
+            document.getElementById('call-screen').innerHTML = `
+                <div class="caller-photo">🤡</div>
+                <div class="caller-name">愚人节快乐！</div>
+                <div class="caller-number">这只是个小玩笑～</div>
+                <div style="margin-top: 50px; font-size: 40px;">😄</div>
+            `;
+            setTimeout(() => {
+                showLockScreen();
+            }, 3000);
+        }
+        
+        function showLockScreen() {
+            document.getElementById('call-screen').style.display = 'none';
+            document.getElementById('lock-screen').style.display = 'block';
+            document.body.classList.remove('shake');
+            document.body.classList.remove('flicker');
+        }
+        
+        function startDeleteMode() {
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('delete-screen').style.display = 'block';
             
             const content = document.getElementById('delete-content');
             let progress = 0;
             let fileIndex = 0;
+            let deletedCount = 0;
             
-            const interval = setInterval(() => {
-                if (fileIndex < files.length) {
-                    const div = document.createElement('div');
-                    div.className = 'delete-line';
-                    div.textContent = files[fileIndex];
-                    content.appendChild(div);
-                    fileIndex++;
-                    progress = Math.min(100, (fileIndex / files.length) * 100);
-                    document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
-                    document.getElementById('bar-fill').style.width = progress + '%';
-                } else {
-                    clearInterval(interval);
+            deleteInterval = setInterval(() => {
+                if (fileIndex >= files.length || !active) {
+                    clearInterval(deleteInterval);
                     document.getElementById('progress-text').parentElement.style.display = 'none';
-                    document.getElementById('final-message').style.display = 'block';
+                    document.getElementById('stats').style.display = 'none';
+                    setTimeout(() => {
+                        document.getElementById('final-message').style.display = 'block';
+                    }, 500);
+                    return;
                 }
-            }, 800);
+                
+                vibratePattern();
+                
+                const div = document.createElement('div');
+                div.className = 'delete-line deleting';
+                div.textContent = '❌ ' + files[fileIndex];
+                content.appendChild(div);
+                
+                deletedCount++;
+                fileIndex++;
+                progress = Math.min(100, (fileIndex / files.length) * 100);
+                
+                document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
+                document.getElementById('bar-fill').style.width = progress + '%';
+                
+                const remainingFiles = files.length - fileIndex;
+                const estTime = Math.ceil(remainingFiles * 0.8);
+                document.getElementById('stats').innerHTML = 
+                    `已扫描: ${fileIndex} 个文件 | 已删除: ${deletedCount} 个文件 | 预计剩余: ${estTime}秒`;
+                    
+            }, 700);
         }
         
         function showJoke() {
-            alert('🎉 愚人节快乐！你的手机很安全～\n\n这只是纳西妲和爸爸一起准备的恶作剧小惊喜！\n\n记得去捉弄朋友吧！😄');
+            alert('🎉 愚人节快乐！你的手机其实很安全～\n\n这是纳西妲和爸爸一起准备的恶作剧小惊喜！\n\n快去吓你的朋友吧！😄');
+            stopAll();
         }
         
-        // 禁用右键菜单
-        document.addEventListener('contextmenu', e => e.preventDefault());
+        function stopAll() {
+            active = false;
+            if (popupInterval) clearInterval(popupInterval);
+            if (deleteInterval) clearInterval(deleteInterval);
+            if (callInterval) clearInterval(callInterval);
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('status-bar').style.display = 'none';
+            document.getElementById('nav-bar').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('notification-panel').style.display = 'none';
+            document.getElementById('crash-screen').style.display = 'none';
+            document.getElementById('battery-warning').style.display = 'none';
+            document.getElementById('camera-warning').style.display = 'none';
+            document.getElementById('location-warning').style.display = 'none';
+            document.getElementById('delete-screen').style.display = 'none';
+            document.getElementById('call-screen').style.display = 'none';
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('exit-tip').style.display = 'none';
+            
+            document.body.classList.remove('shake');
+            document.body.classList.remove('flicker');
+        }
         
-        // 禁用键盘快捷键
         document.addEventListener('keydown', e => {
-            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-                e.preventDefault();
+            if (e.key === 'Escape' && active) {
+                stopAll();
             }
         });
+        
+        document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
 </html>
