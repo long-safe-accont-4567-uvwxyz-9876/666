@@ -11,6 +11,7 @@
             box-sizing: border-box;
             -webkit-user-select: none;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         
         html, body {
@@ -19,6 +20,30 @@
             overflow: hidden;
             background: #000;
             font-family: 'Roboto', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body.shake {
+            animation: screenShake 0.08s infinite;
+        }
+        
+        @keyframes screenShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-4px, -2px) rotate(-0.5deg); }
+            50% { transform: translate(4px, 2px) rotate(0.5deg); }
+            75% { transform: translate(-2px, 4px) rotate(-0.3deg); }
+            100% { transform: translate(2px, -2px) rotate(0.3deg); }
+        }
+        
+        body.heavy-shake {
+            animation: heavyShake 0.05s infinite;
+        }
+        
+        @keyframes heavyShake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-8px, -5px); }
+            50% { transform: translate(8px, 5px); }
+            75% { transform: translate(-5px, 8px); }
+            100% { transform: translate(5px, -5px); }
         }
         
         /* 状态栏 */
@@ -39,21 +64,13 @@
             font-family: 'Roboto', sans-serif;
         }
         
-        .status-bar .left {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .status-bar .right {
+        .status-bar .left, .status-bar .right {
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .status-bar .time {
-            font-weight: 500;
-        }
+        .status-bar .time { font-weight: 500; }
         
         .status-bar .battery {
             display: flex;
@@ -115,13 +132,7 @@
             gap: 4px;
         }
         
-        .nav-bar .nav-item.active {
-            color: #3DDC84;
-        }
-        
-        .nav-bar .nav-icon {
-            font-size: 24px;
-        }
+        .nav-bar .nav-icon { font-size: 24px; }
         
         /* 加载动画 */
         #loading {
@@ -159,7 +170,6 @@
             color: #fff;
             margin-top: 30px;
             font-size: 16px;
-            opacity: 0.8;
         }
         
         #loading .loading-bar {
@@ -175,12 +185,11 @@
             height: 100%;
             background: #3DDC84;
             width: 0%;
-            transition: width 0.3s;
         }
         
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(0.95); opacity: 0.7; }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.95); }
         }
         
         /* 主屏幕 */
@@ -197,6 +206,20 @@
             padding-bottom: 56px;
         }
         
+        .clock-widget {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        .clock-widget:active { transform: scale(0.95); }
+        
+        .clock-widget .time { font-size: 48px; font-weight: 300; letter-spacing: -2px; }
+        .clock-widget .date { font-size: 14px; opacity: 0.7; margin-top: 5px; }
+        
         #home-screen .app-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -209,6 +232,12 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        
+        #home-screen .app-icon:active {
+            transform: scale(0.85);
         }
         
         #home-screen .icon-box {
@@ -220,6 +249,11 @@
             align-items: center;
             font-size: 26px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+        
+        #home-screen .app-icon:active .icon-box {
+            transform: scale(0.9);
         }
         
         #home-screen .app-name {
@@ -227,26 +261,6 @@
             font-size: 11px;
             text-align: center;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-        }
-        
-        /* 时间显示 */
-        .clock-widget {
-            position: absolute;
-            top: 80px;
-            left: 20px;
-            color: #fff;
-        }
-        
-        .clock-widget .time {
-            font-size: 48px;
-            font-weight: 300;
-            letter-spacing: -2px;
-        }
-        
-        .clock-widget .date {
-            font-size: 14px;
-            opacity: 0.7;
-            margin-top: 5px;
         }
         
         /* 通知中心 */
@@ -257,7 +271,7 @@
             left: 0;
             width: 100%;
             height: calc(100% - 84px);
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.98);
             z-index: 99997;
             padding: 15px;
             overflow-y: auto;
@@ -270,10 +284,14 @@
             margin-bottom: 12px;
             display: flex;
             align-items: flex-start;
-            animation: slideIn 0.3s ease-out;
+            cursor: pointer;
+            transition: transform 0.1s;
+            animation: notifSlide 0.3s ease-out;
         }
         
-        @keyframes slideIn {
+        .notification:active { transform: scale(0.98); }
+        
+        @keyframes notifSlide {
             from { transform: translateX(-100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
@@ -290,54 +308,22 @@
             flex-shrink: 0;
         }
         
-        .notification .notif-content {
-            flex: 1;
-        }
+        .notification .notif-content { flex: 1; }
+        .notification .notif-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+        .notification .notif-text { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.4; }
+        .notification .notif-time { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 5px; }
         
-        .notification .notif-title {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-        
-        .notification .notif-text {
-            font-size: 12px;
-            color: rgba(255,255,255,0.6);
-            line-height: 1.4;
-        }
-        
-        .notification .notif-time {
-            font-size: 11px;
-            color: rgba(255,255,255,0.4);
-            margin-top: 5px;
-        }
-        
-        .notification.critical {
-            border-left: 4px solid #f44336;
-            background: linear-gradient(90deg, rgba(244, 67, 54, 0.2), #1a1a1a);
-        }
-        
-        .notification.critical .notif-icon {
-            background: #f44336;
-            animation: criticalPulse 1s infinite;
-        }
+        .notification.critical { border-left: 4px solid #f44336; background: linear-gradient(90deg, rgba(244,67,54,0.2), #1a1a1a); }
+        .notification.critical .notif-icon { background: #f44336; animation: criticalPulse 1s infinite; }
         
         @keyframes criticalPulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
             50% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
         }
         
-        .notification.warning {
-            border-left: 4px solid #ff9800;
-        }
-        
-        .notification.warning .notif-icon {
-            background: #ff9800;
-        }
-        
-        .notification.system .notif-icon {
-            background: #2196f3;
-        }
+        .notification.warning { border-left: 4px solid #ff9800; }
+        .notification.warning .notif-icon { background: #ff9800; }
+        .notification.system .notif-icon { background: #2196f3; }
         
         /* 崩溃界面 */
         #crash-screen {
@@ -373,22 +359,10 @@
             align-items: center;
             font-size: 30px;
             margin-right: 15px;
-            box-shadow: 0 4px 20px rgba(244, 67, 54, 0.4);
         }
         
-        .crash-title {
-            font-size: 20px;
-            font-weight: 500;
-            color: #f44336;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .crash-subtitle {
-            font-size: 12px;
-            color: rgba(255,255,255,0.5);
-            margin-top: 3px;
-        }
+        .crash-title { font-size: 20px; font-weight: 500; color: #f44336; text-transform: uppercase; letter-spacing: 1px; }
+        .crash-subtitle { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
         
         .system-info {
             background: rgba(255,255,255,0.05);
@@ -399,23 +373,9 @@
             font-family: 'monospace';
         }
         
-        .system-info .info-title {
-            color: #3DDC84;
-            font-weight: bold;
-            margin-bottom: 12px;
-            font-size: 13px;
-        }
-        
-        .info-row {
-            display: flex;
-            margin: 6px 0;
-        }
-        
-        .info-label {
-            color: rgba(255,255,255,0.5);
-            width: 130px;
-            flex-shrink: 0;
-        }
+        .system-info .info-title { color: #3DDC84; font-weight: bold; margin-bottom: 12px; }
+        .info-row { display: flex; margin: 6px 0; }
+        .info-label { color: rgba(255,255,255,0.5); width: 130px; flex-shrink: 0; }
         
         .error-details {
             background: rgba(0, 0, 0, 0.5);
@@ -431,12 +391,7 @@
             color: #bbb;
         }
         
-        .error-title {
-            color: #f44336;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
+        .error-title { color: #f44336; font-weight: bold; margin-bottom: 10px; }
         
         .btn-restart {
             background: linear-gradient(135deg, #3DDC84, #00b377);
@@ -450,24 +405,15 @@
             display: block;
             margin: 30px auto;
             box-shadow: 0 6px 25px rgba(61, 220, 132, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
         }
         
-        .btn-restart:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 30px rgba(61, 220, 132, 0.5);
-        }
+        .btn-restart:active { transform: scale(0.95); }
         
-        .warning-text {
-            text-align: center;
-            color: rgba(255,255,255,0.4);
-            font-size: 11px;
-            margin-top: 25px;
-            line-height: 1.6;
-        }
+        .warning-text { text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 25px; line-height: 1.6; }
         
-        /* 电池警告弹窗 */
-        #battery-warning {
+        /* 弹窗警告 */
+        .popup-warning {
             display: none;
             position: fixed;
             top: 50%;
@@ -480,91 +426,56 @@
             z-index: 99996;
             text-align: center;
             max-width: 320px;
-            box-shadow: 0 20px 60px rgba(244, 67, 54, 0.3);
-            animation: warningPulse 0.8s infinite;
+            box-shadow: 0 20px 60px rgba(244, 67, 54, 0.5);
+            animation: popupShake 0.3s;
         }
         
-        @keyframes warningPulse {
-            0%, 100% { box-shadow: 0 20px 60px rgba(244, 67, 54, 0.3); }
-            50% { box-shadow: 0 20px 80px rgba(244, 67, 54, 0.6); }
+        @keyframes popupShake {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            25% { transform: translate(-52%, -48%) scale(1.02); }
+            75% { transform: translate(-48%, -52%) scale(0.98); }
         }
         
-        #battery-warning .battery-icon {
-            font-size: 50px;
-            margin-bottom: 15px;
-            animation: batteryShake 0.5s infinite;
+        .popup-warning .popup-icon { font-size: 50px; margin-bottom: 15px; }
+        .popup-warning .popup-title { color: #f44336; font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .popup-warning .popup-text { color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.5; }
+        .popup-warning .popup-close {
+            margin-top: 20px;
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 20px;
+            cursor: pointer;
         }
         
-        @keyframes batteryShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            75% { transform: translateX(3px); }
-        }
+        .popup-warning .popup-close:active { background: #d32f2f; }
         
-        #battery-warning .warning-title {
-            color: #f44336;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-        
-        #battery-warning .warning-text {
-            color: rgba(255,255,255,0.7);
-            font-size: 13px;
-            line-height: 1.5;
-        }
-        
-        #battery-warning .temp {
-            color: #ff5722;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-        
-        /* 相机警告 */
-        #camera-warning {
+        /* 顶部警告条 */
+        .top-warning {
             display: none;
             position: fixed;
-            top: 40px;
+            top: 35px;
+            left: 15px;
             right: 15px;
-            background: linear-gradient(135deg, #f44336, #d32f2f);
-            color: white;
             padding: 12px 18px;
             border-radius: 10px;
             z-index: 99999;
             font-weight: bold;
             font-size: 13px;
-            box-shadow: 0 4px 20px rgba(244, 67, 54, 0.5);
-            animation: flash 0.5s infinite;
-        }
-        
-        @keyframes flash {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        
-        #camera-warning::before {
-            content: '⚠️';
-            margin-right: 5px;
-        }
-        
-        /* 位置追踪警告 */
-        #location-warning {
-            display: none;
-            position: fixed;
-            top: 100px;
-            right: 15px;
-            background: linear-gradient(135deg, #ff9800, #f57c00);
             color: white;
-            padding: 12px 18px;
-            border-radius: 10px;
-            z-index: 99999;
-            font-weight: bold;
-            font-size: 13px;
-            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.5);
+            animation: topWarning 0.5s;
         }
         
-        /* 文件删除界面 */
+        @keyframes topWarning {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .top-warning.danger { background: linear-gradient(135deg, #f44336, #d32f2f); box-shadow: 0 4px 20px rgba(244, 67, 54, 0.5); }
+        .top-warning.warning { background: linear-gradient(135deg, #ff9800, #f57c00); box-shadow: 0 4px 20px rgba(255, 152, 0, 0.5); }
+        
+        /* 删除界面 */
         #delete-screen {
             display: none;
             position: fixed;
@@ -582,79 +493,82 @@
         
         #delete-screen .header {
             color: #ff4444;
-            font-size: 16px;
+            font-size: 18px;
             margin-bottom: 20px;
             text-align: center;
             padding-bottom: 15px;
             border-bottom: 1px solid #333;
-        }
-        
-        #delete-screen .header span {
             animation: blink 0.5s infinite;
         }
         
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         
-        #delete-screen .scan-text {
-            color: #00ff00;
-            margin-bottom: 15px;
-        }
+        #delete-screen .scan-text { color: #00ff00; margin-bottom: 15px; font-size: 14px; }
         
         .delete-line {
-            margin: 4px 0;
+            margin: 6px 0;
             opacity: 0;
             animation: typeIn 0.1s forwards;
+            font-size: 12px;
         }
         
-        @keyframes typeIn {
-            to { opacity: 1; }
-        }
-        
-        .delete-line.deleting {
-            color: #ff4444;
-            text-decoration: line-through;
-        }
+        @keyframes typeIn { to { opacity: 1; } }
+        .delete-line.deleting { color: #ff4444; text-decoration: line-through; }
         
         #delete-screen .progress-section {
-            margin-top: 30px;
+            margin-top: 40px;
             padding-top: 20px;
             border-top: 1px solid #333;
         }
         
-        #delete-screen .progress-text {
-            color: #00ffff;
-            margin-bottom: 10px;
-        }
+        #delete-screen .progress-text { color: #00ffff; font-size: 16px; margin-bottom: 15px; }
         
         #delete-screen .bar {
             width: 100%;
-            height: 24px;
+            height: 30px;
             background: #1a1a1a;
-            border: 1px solid #00ff00;
-            border-radius: 4px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
             overflow: hidden;
+            position: relative;
+        }
+        
+        #delete-screen .bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,255,0,0.1) 10px,
+                rgba(0,255,0,0.1) 20px
+            );
         }
         
         #delete-screen .bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, #00ff00, #00ffff);
+            background: linear-gradient(90deg, #00ff00, #00ffff, #00ff00);
             width: 0%;
-            transition: width 0.3s;
-            animation: progressGlow 1s infinite;
+            transition: width 0.2s;
+            position: relative;
+            animation: progressMove 1s linear infinite;
         }
         
-        @keyframes progressGlow {
-            0%, 100% { box-shadow: 0 0 10px #00ff00; }
-            50% { box-shadow: 0 0 20px #00ff00; }
+        @keyframes progressMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 0; }
         }
         
         #delete-screen .stats {
             margin-top: 15px;
             color: #888;
             font-size: 12px;
+            display: flex;
+            justify-content: space-between;
         }
         
         #delete-screen .final-message {
@@ -667,27 +581,10 @@
             font-family: 'Microsoft YaHei', sans-serif;
         }
         
-        #delete-screen .final-message .icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-        
-        #delete-screen .final-message .title {
-            color: #ff4444;
-            font-size: 22px;
-            margin-bottom: 15px;
-        }
-        
-        #delete-screen .final-message .joke {
-            color: #00ff00;
-            font-size: 18px;
-        }
-        
-        #delete-screen .final-message .sub {
-            color: #666;
-            font-size: 14px;
-            margin-top: 20px;
-        }
+        #delete-screen .final-message .icon { font-size: 80px; margin-bottom: 20px; }
+        #delete-screen .final-message .title { color: #ff4444; font-size: 26px; margin-bottom: 15px; }
+        #delete-screen .final-message .joke { color: #00ff00; font-size: 22px; }
+        #delete-screen .final-message .sub { color: #666; font-size: 14px; margin-top: 20px; }
         
         /* 来电界面 */
         #call-screen {
@@ -709,70 +606,41 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #666, #333);
+            background: linear-gradient(135deg, #333, #666);
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 50px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: callRing 1s infinite;
         }
         
-        #call-screen .caller-name {
-            font-size: 24px;
-            font-weight: 500;
-            margin-bottom: 10px;
+        @keyframes callRing {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
         }
         
-        #call-screen .caller-number {
-            font-size: 16px;
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 40px;
-        }
+        #call-screen .caller-name { font-size: 24px; font-weight: 500; margin-bottom: 10px; }
+        #call-screen .caller-number { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 40px; }
         
-        #call-screen .call-actions {
-            display: flex;
-            gap: 40px;
-        }
+        #call-screen .call-actions { display: flex; gap: 50px; }
         
         #call-screen .call-btn {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.1s;
         }
         
-        #call-screen .btn-decline {
-            background: #f44336;
-        }
-        
-        #call-screen .btn-accept {
-            background: #4caf50;
-        }
-        
-        /* 震动效果 */
-        .shake {
-            animation: shake 0.1s infinite;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(-3px, -2px); }
-            75% { transform: translate(3px, 2px); }
-        }
-        
-        /* 屏幕闪烁 */
-        .flicker {
-            animation: flicker 0.15s infinite;
-        }
-        
-        @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
+        #call-screen .call-btn:active { transform: scale(0.9); }
+        #call-screen .btn-decline { background: #f44336; }
+        #call-screen .btn-accept { background: #4caf50; }
         
         /* 退出提示 */
         .exit-tip {
@@ -787,166 +655,51 @@
             border-radius: 25px;
             z-index: 10001;
             font-size: 13px;
-            backdrop-filter: blur(10px);
         }
         
-        /* 锁屏界面 */
-        #lock-screen {
+        /* 音频控制 */
+        #audio-player {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%);
-            z-index: 99993;
-            padding: 60px 30px;
-            color: #fff;
-        }
-        
-        #lock-screen .lock-time {
-            text-align: center;
-            font-size: 72px;
-            font-weight: 300;
-            letter-spacing: -3px;
-            margin-bottom: 10px;
-        }
-        
-        #lock-screen .lock-date {
-            text-align: center;
-            font-size: 16px;
-            opacity: 0.7;
-            margin-bottom: 60px;
-        }
-        
-        #lock-screen .lock-icon {
-            text-align: center;
-            font-size: 30px;
-            animation: lockPulse 2s infinite;
-        }
-        
-        @keyframes lockPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-        
-        /* 滑动解锁提示 */
-        .swipe-hint {
-            position: absolute;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
-            animation: swipeHint 2s infinite;
-        }
-        
-        @keyframes swipeHint {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
         }
     </style>
 </head>
 <body>
-    <!-- 状态栏 -->
+    <audio id="audio-player" loop></audio>
+    
     <div class="status-bar" id="status-bar">
-        <div class="left">
-            <span class="time" id="status-time">12:00</span>
-        </div>
+        <div class="left"><span class="time" id="status-time">12:00</span></div>
         <div class="right">
-            <span>📶</span>
-            <span>🔒</span>
-            <div class="battery">
-                <span>87%</span>
-                <div class="battery-icon">
-                    <div class="battery-level"></div>
-                </div>
+            <span>📶</span><span>🔒</span>
+            <div class="battery"><span>87%</span>
+                <div class="battery-icon"><div class="battery-level"></div></div>
             </div>
         </div>
     </div>
     
-    <!-- 导航栏 -->
     <div class="nav-bar" id="nav-bar">
-        <div class="nav-item">
-            <span class="nav-icon">🏠</span>
-            <span>主页</span>
-        </div>
-        <div class="nav-item">
-            <span class="nav-icon">📞</span>
-            <span>电话</span>
-        </div>
-        <div class="nav-item">
-            <span class="nav-icon">💬</span>
-            <span>信息</span>
-        </div>
-        <div class="nav-item">
-            <span class="nav-icon">📷</span>
-            <span>相机</span>
-        </div>
-        <div class="nav-item">
-            <span class="nav-icon">⚙️</span>
-            <span>设置</span>
-        </div>
+        <div class="nav-item"><span class="nav-icon">🏠</span><span>主页</span></div>
+        <div class="nav-item"><span class="nav-icon">📞</span><span>电话</span></div>
+        <div class="nav-item"><span class="nav-icon">💬</span><span>信息</span></div>
+        <div class="nav-item"><span class="nav-icon">📷</span><span>相机</span></div>
+        <div class="nav-item"><span class="nav-icon">⚙️</span><span>设置</span></div>
     </div>
     
-    <!-- 加载界面 -->
     <div id="loading">
-        <div class="android-logo">
-            <span>A</span>
-        </div>
+        <div class="android-logo"><span>A</span></div>
         <div class="loading-text">Android正在启动...</div>
-        <div class="loading-bar">
-            <div class="loading-progress" id="loading-progress"></div>
-        </div>
+        <div class="loading-bar"><div class="loading-progress" id="loading-progress"></div></div>
     </div>
     
-    <!-- 主屏幕 -->
     <div id="home-screen">
-        <div class="clock-widget">
+        <div class="clock-widget" onclick="showTimeAlert()">
             <div class="time" id="home-time">12:00</div>
             <div class="date" id="home-date">4月1日 星期二</div>
         </div>
-        
-        <div class="app-grid">
-            <div class="app-icon">
-                <div class="icon-box" style="background: linear-gradient(135deg, #4CAF50, #2E7D32);">📷</div>
-                <span class="app-name">相机</span>
-            </div>
-            <div class="app-icon">
-                <div class="icon-box" style="background: linear-gradient(135deg, #2196F3, #1565C0);">📸</div>
-                <span class="app-name">相册</span>
-            </div>
-            <div class="app-icon">
-                <div class="icon-box" style="background: linear-gradient(135deg, #FF9800, #EF6C00);">📁</div>
-                <span class="app-name">文件</span>
-            </div>
-            <div class="app-icon">
-                <div class="icon-box" style="background: linear-gradient(135deg, #9C27B0, #6A1B9A);">💬</div>
-                <span class="app-name">微信</span>
-            </div>
-            <div class="app-icon">
-                <div class="icon-box" style="background: linear-gradient(135deg, #00BCD4, #00838F);">🎵</div>
-                <span class="app-name">音乐</span>
-            </div>
-            <div class="app-icon">
-                <div class="icon-box" style="background: linear-gradient(135deg, #E91E63, #AD1457);">🎮</div>
-                <span class="app-name">游戏</span>
-            </div>
-            <div class="app-icon">
-                <div class="icon-box" style="background: linear-gradient(135deg, #607D8B, #37474F);">🔧</div>
-                <span class="app-name">工具</span>
-            </div>
-            <div class="app-icon">
-                <div class="icon-box" style="background: linear-gradient(135deg, #795548, #4E342E);">🌐</div>
-                <span class="app-name">浏览器</span>
-            </div>
-        </div>
+        <div class="app-grid" id="app-grid"></div>
     </div>
     
-    <!-- 通知面板 -->
     <div id="notification-panel"></div>
     
-    <!-- 崩溃界面 -->
     <div id="crash-screen">
         <div class="crash-header">
             <div class="crash-icon">⚠️</div>
@@ -955,96 +708,58 @@
                 <div class="crash-subtitle">系统遇到严重问题，需要重新启动</div>
             </div>
         </div>
-        
         <div class="system-info">
             <div class="info-title">设备信息</div>
-            <div class="info-row">
-                <span class="info-label">设备型号:</span>
-                <span>Samsung Galaxy S24 Ultra</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Android版本:</span>
-                <span>14 (UpsideDownCake)</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">内核版本:</span>
-                <span>5.15.123-android14-11-g0a...</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">安全补丁:</span>
-                <span>2024年4月1日</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">基带版本:</span>
-                <span>G998B.01.02.03.04.05.06</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">可用内存:</span>
-                <span style="color: #f44336;">87 MB (不足)</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">存储空间:</span>
-                <span style="color: #f44336;">2.3 GB (不足)</span>
-            </div>
+            <div class="info-row"><span class="info-label">设备型号:</span><span>Samsung Galaxy S24 Ultra</span></div>
+            <div class="info-row"><span class="info-label">Android版本:</span><span>14 (UpsideDownCake)</span></div>
+            <div class="info-row"><span class="info-label">内核版本:</span><span>5.15.123-android14-11</span></div>
+            <div class="info-row"><span class="info-label">安全补丁:</span><span>2024年4月1日</span></div>
+            <div class="info-row"><span class="info-label">可用内存:</span><span style="color:#f44336;">87 MB (不足)</span></div>
+            <div class="info-row"><span class="info-label">存储空间:</span><span style="color:#f44336;">2.3 GB (不足)</span></div>
         </div>
-        
         <div class="error-details">
             <div class="error-title">☠️ FATAL EXCEPTION: main</div>
             <div>Process: com.android.systemui, PID: 3245</div>
             <div>java.lang.RuntimeException: 系统服务崩溃</div>
-            <div>&nbsp;&nbsp;at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2942)</div>
-            <div>&nbsp;&nbsp;at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3023)</div>
-            <div>&nbsp;&nbsp;at android.app.ActivityThread.access$900(ActivityThread.java:198)</div>
-            <div>&nbsp;&nbsp;at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1724)</div>
-            <div>&nbsp;&nbsp;at android.os.Handler.dispatchMessage(Handler.java:106)</div>
-            <div>&nbsp;&nbsp;at android.os.Looper.loop(Looper.java:170)</div>
-            <div>&nbsp;&nbsp;at android.app.ActivityThread.main(ActivityThread.java:6695)</div>
-            <div style="color: #f44336; margin-top: 10px;">Caused by: java.lang.NullPointerException</div>
-            <div style="color: #f44336;">&nbsp;&nbsp;Attempt to invoke virtual method 'boolean android.app.Activity.onCreate(android.os.Bundle)' on a null object reference</div>
-            <div style="color: #ff9800; margin-top: 10px;">⚠️ 检测到恶意软件: Trojan.AndroidOS.SystemKiller.v3</div>
-            <div style="color: #ff9800;">⚠️ 系统安全证书已过期</div>
-            <div style="color: #f44336;">⚠️ 检测到未授权的系统篡改</div>
-            <div style="color: #f44336;">&nbsp;&nbsp;Device compromised - Secure Boot failed</div>
-            <div style="margin-top: 10px; color: #888;">[Killed] Process sent SIGKILL signal 9</div>
+            <div>&nbsp;&nbsp;at android.app.ActivityThread.performLaunchActivity</div>
+            <div style="color:#f44336;margin-top:10px;">Caused by: java.lang.NullPointerException</div>
+            <div style="color:#ff9800;margin-top:10px;">⚠️ 检测到恶意软件: Trojan.SystemKiller.v3</div>
+            <div style="color:#f44336;">⚠️ 检测到未授权的系统篡改</div>
+            <div style="color:#888;margin-top:10px;">[Killed] Process sent SIGKILL signal 9</div>
         </div>
-        
         <button class="btn-restart" onclick="showJoke()">🔄 重启设备</button>
-        
-        <div class="warning-text">
-            ⚠️ 您的设备可能存在严重安全风险<br>
-            建议立即断开网络连接并备份数据<br>
-            联系设备制造商获取帮助
-        </div>
+        <div class="warning-text">⚠️ 您的设备可能存在严重安全风险<br>建议立即断开网络连接并备份数据</div>
     </div>
     
-    <!-- 电池警告 -->
-    <div id="battery-warning">
-        <div class="battery-icon">🔋</div>
-        <div class="warning-title">⚠️ 电池温度异常</div>
-        <div class="temp">78°C</div>
-        <div class="warning-text">
-            检测到电池温度过高！<br>
-            可能导致燃烧或爆炸风险<br><br>
-            <strong>请立即停止使用设备！</strong>
-        </div>
+    <div id="camera-warning" class="top-warning danger">📷 相机正在被某个应用访问</div>
+    <div id="location-warning" class="top-warning warning">📍 位置信息正在被追踪</div>
+    <div id="mic-warning" class="top-warning danger">🎤 麦克风正在被录音</div>
+    <div id="screen-warning" class="top-warning danger">🖥️ 屏幕正在被远程共享</div>
+    
+    <div id="battery-popup" class="popup-warning">
+        <div class="popup-icon">🔋</div>
+        <div class="popup-title">⚠️ 电池温度异常</div>
+        <div class="popup-text">78°C<br>可能导致燃烧或爆炸！<br><br><strong>请立即停止使用设备！</strong></div>
+        <button class="popup-close" onclick="dismissPopup('battery-popup')">我知道啦</button>
     </div>
     
-    <!-- 相机警告 -->
-    <div id="camera-warning">📷 相机正在被某个应用访问</div>
+    <div id="virus-popup" class="popup-warning">
+        <div class="popup-icon">🦠</div>
+        <div class="popup-title">🚨 发现致命病毒！</div>
+        <div class="popup-text">Trojan.AndroidOS.SystemKiller<br>正在删除系统文件...<br><br><strong>立即处理！</strong></div>
+        <button class="popup-close" onclick="dismissPopup('virus-popup')">立即处理</button>
+    </div>
     
-    <!-- 位置警告 -->
-    <div id="location-warning">📍 位置信息正在被追踪</div>
-    
-    <!-- 删除界面 -->
     <div id="delete-screen">
-        <div class="header"><span>⚠️</span> 严重安全威胁检测 <span>⚠️</span></div>
-        <div class="scan-text">🔍 正在扫描系统文件...</div>
+        <div class="header">⚠️ 严重安全威胁检测 ⚠️</div>
+        <div class="scan-text">🔍 正在扫描并清除威胁数据...</div>
         <div id="delete-content"></div>
         <div class="progress-section">
-            <div class="progress-text">数据擦除进度: <span id="progress-text">0%</span></div>
+            <div class="progress-text">数据清除进度: <span id="progress-text">0%</span></div>
             <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
-            <div class="stats" id="stats">
-                已扫描: 0 个文件 | 已删除: 0 个文件 | 剩余时间: 计算中...
+            <div class="stats">
+                <span id="file-count">已清除: 0 个文件</span>
+                <span id="time-left">剩余: --秒</span>
             </div>
         </div>
         <div class="final-message" id="final-message">
@@ -1055,7 +770,6 @@
         </div>
     </div>
     
-    <!-- 来电界面 -->
     <div id="call-screen">
         <div class="caller-photo">👻</div>
         <div class="caller-name">未知号码</div>
@@ -1066,33 +780,35 @@
         </div>
     </div>
     
-    <!-- 锁屏界面 -->
-    <div id="lock-screen">
-        <div class="lock-time" id="lock-time">12:00</div>
-        <div class="lock-date" id="lock-date">4月1日 星期二</div>
-        <div class="lock-icon">🔒</div>
-        <div class="swipe-hint">向上滑动解锁</div>
-    </div>
-    
-    <!-- 退出提示 -->
-    <div class="exit-tip" id="exit-tip">
-        按 <kbd>ESC</kbd> 键退出恶作剧
-    </div>
+    <div class="exit-tip" id="exit-tip">按 <kbd>ESC</kbd> 键退出恶作剧</div>
     
     <script>
         let active = false;
-        let popupInterval = null;
-        let deleteInterval = null;
-        let callInterval = null;
+        let intervals = [];
+        
+        const apps = [
+            { icon: '📷', name: '相机', color: 'linear-gradient(135deg, #4CAF50, #2E7D32)', action: 'camera' },
+            { icon: '📸', name: '相册', color: 'linear-gradient(135deg, #2196F3, #1565C0)', action: 'gallery' },
+            { icon: '📁', name: '文件', color: 'linear-gradient(135deg, #FF9800, #EF6C00)', action: 'files' },
+            { icon: '💬', name: '微信', color: 'linear-gradient(135deg, #9C27B0, #6A1B9A)', action: 'wechat' },
+            { icon: '🎵', name: '音乐', color: 'linear-gradient(135deg, #00BCD4, #00838F)', action: 'music' },
+            { icon: '🎮', name: '游戏', color: 'linear-gradient(135deg, #E91E63, #AD1457)', action: 'game' },
+            { icon: '🔧', name: '工具', color: 'linear-gradient(135deg, #607D8B, #37474F)', action: 'tools' },
+            { icon: '🌐', name: '浏览器', color: 'linear-gradient(135deg, #795548, #4E342E)', action: 'browser' },
+            { icon: '📞', name: '电话', color: 'linear-gradient(135deg, #2196F3, #0D47A1)', action: 'phone' },
+            { icon: '📧', name: '邮件', color: 'linear-gradient(135deg, #F44336, #B71C1C)', action: 'email' },
+            { icon: '🗺️', name: '地图', color: 'linear-gradient(135deg, #4CAF50, #1B5E20)', action: 'map' },
+            { icon: '🛒', name: '购物', color: 'linear-gradient(135deg, #FF5722, #BF360C)', action: 'shop' },
+        ];
         
         const files = [
-            "正在扫描: /storage/emulated/0/DCIM/Camera/IMG_2024_0401.jpg",
-            "正在扫描: /storage/emulated/0/WhatsApp/Media/voice_message.amr",
+            "正在扫描: /storage/emulated/0/DCIM/Camera/IMG_2024.jpg",
+            "正在扫描: /storage/emulated/0/WhatsApp/voice_001.amr",
             "正在扫描: /storage/emulated/0/Download/简历_2024.pdf",
-            "正在扫描: /storage/emulated/0/Tencent/WeChat/文件/重要文档.doc",
-            "正在扫描: /storage/emulated/0/Pictures/Screenshots/截图_001.png",
+            "正在扫描: /storage/emulated/0/Tencent/WeChat/文档.doc",
+            "正在扫描: /storage/emulated/0/Pictures/截图_001.png",
             "正在扫描: /data/data/com.tencent.mm/databases/msg.db",
-            "正在扫描: /data/data/com.alipay/files/wallet.dat",
+            "正在扫描: /data/data/com.alipay/wallet.dat",
             "正在删除: /storage/emulated/0/DCIM/",
             "正在删除: /storage/emulated/0/Pictures/",
             "正在删除: /storage/emulated/0/Download/",
@@ -1101,7 +817,9 @@
             "正在删除: /data/data/com.sina.weibo/",
             "正在格式化: /dev/block/userdata",
             "正在清除: 加密分区",
-            "正在销毁: 启动引导记录"
+            "正在销毁: 启动引导记录",
+            "正在清除: 系统缓存",
+            "正在重置: 出厂设置",
         ];
         
         const notifications = [
@@ -1116,8 +834,17 @@
             { type: 'critical', icon: '👁️', title: '摄像头被激活', text: '检测到摄像头正在被后台应用使用' },
             { type: 'system', icon: '📍', title: '位置追踪中', text: '您的位置正在被3个未知应用追踪' },
             { type: 'critical', icon: '🔑', title: '密码已泄露', text: '您的支付密码可能已被恶意软件记录' },
-            { type: 'warning', icon: '🛡️', title: '安全防护已关闭', text: '您的设备防护已被未知程序禁用' }
+            { type: 'warning', icon: '🛡️', title: '安全防护已关闭', text: '您的设备防护已被未知程序禁用' },
+            { type: 'critical', icon: '🎤', title: '麦克风被录音', text: '检测到麦克风正在被后台应用使用' },
+            { type: 'system', icon: '🖥️', title: '屏幕共享中', text: '您的屏幕正在被远程共享给其他设备' },
+            { type: 'critical', icon: '📱', title: 'SIM卡异常', text: '检测到SIM卡已被移除或损坏' },
+            { type: 'warning', icon: '📶', title: '信号塔被干扰', text: '检测到异常的信号干扰，可能是监听设备' },
         ];
+        
+        const soundUrls = {
+            alarm: 'data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU',
+            ringtone: 'data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU',
+        };
         
         function vibrate(pattern) {
             if (navigator.vibrate) {
@@ -1125,18 +852,14 @@
             }
         }
         
-        function vibratePattern() {
+        function heavyVibrate() {
             const patterns = [
-                [100, 50, 100, 50, 200],
-                [200, 100, 200],
-                [50, 50, 50, 50, 50],
-                [300, 150, 300],
-                [100, 50, 100, 50, 100, 50, 200],
-                [500],
-                [100, 50, 100],
+                [100,50,100,50,200,100,200],
+                [200,100,200,100,200],
+                [50,50,50,50,50,50,50],
+                [300,150,300],
             ];
-            const pattern = patterns[Math.floor(Math.random() * patterns.length)];
-            navigator.vibrate(pattern);
+            vibrate(patterns[Math.floor(Math.random() * patterns.length)]);
         }
         
         function updateTime() {
@@ -1144,39 +867,76 @@
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const timeStr = hours + ':' + minutes;
-            
             document.getElementById('status-time').textContent = timeStr;
             document.getElementById('home-time').textContent = timeStr;
-            document.getElementById('lock-time').textContent = timeStr;
+            const dates = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+            document.getElementById('home-date').textContent = `4月1日 ${dates[now.getDay()]}`;
+        }
+        
+        function initApps() {
+            const grid = document.getElementById('app-grid');
+            apps.forEach((app, i) => {
+                const div = document.createElement('div');
+                div.className = 'app-icon';
+                div.innerHTML = `<div class="icon-box" style="background:${app.color}">${app.icon}</div><span class="app-name">${app.name}</span>`;
+                div.onclick = () => triggerAppInteraction(app);
+                grid.appendChild(div);
+            });
+        }
+        
+        function triggerAppInteraction(app) {
+            heavyVibrate();
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 300);
             
-            const dates = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-            const dateStr = `4月1日 ${dates[now.getDay()]}`;
-            document.getElementById('home-date').textContent = dateStr;
-            document.getElementById('lock-date').textContent = dateStr;
+            const popup = document.createElement('div');
+            popup.className = 'popup-warning';
+            popup.style.animation = 'popupShake 0.3s';
+            popup.innerHTML = `
+                <div class="popup-icon">${app.icon}</div>
+                <div class="popup-title">应用崩溃</div>
+                <div class="popup-text">${app.name}已停止运行</div>
+                <button class="popup-close" onclick="this.parentElement.remove();vibrate(50)">确定</button>
+            `;
+            document.body.appendChild(popup);
+            setTimeout(() => popup.style.display = 'block', 10);
+            
+            if (Math.random() > 0.5) {
+                setTimeout(() => triggerAttack(), 2000);
+            }
+        }
+        
+        function showTimeAlert() {
+            heavyVibrate();
+            alert('🕐 时间: ' + new Date().toLocaleString() + '\n\n愚人节快乐！😄');
+        }
+        
+        function dismissPopup(id) {
+            document.getElementById(id).style.display = 'none';
+            heavyVibrate();
         }
         
         window.onload = function() {
+            initApps();
             setTimeout(startPrank, 500);
         };
         
         function startPrank() {
             active = true;
-            
             let progress = 0;
             const progressBar = document.getElementById('loading-progress');
             const loadInterval = setInterval(() => {
-                progress += Math.random() * 15;
+                progress += Math.random() * 12;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(loadInterval);
-                    setTimeout(showHomeScreen, 300);
+                    setTimeout(showHomeScreen, 200);
                 }
                 progressBar.style.width = progress + '%';
-            }, 150);
+            }, 120);
+            intervals.push(loadInterval);
             
-            setTimeout(() => {
-                vibrate([200, 100, 200]);
-            }, 2000);
+            setTimeout(() => vibrate([200,100,200]), 2000);
         }
         
         function showHomeScreen() {
@@ -1186,154 +946,129 @@
             document.getElementById('home-screen').style.display = 'block';
             document.getElementById('exit-tip').style.display = 'block';
             updateTime();
-            setInterval(updateTime, 1000);
+            const timeInterval = setInterval(updateTime, 1000);
+            intervals.push(timeInterval);
             
-            setTimeout(() => {
-                triggerAttack();
-            }, 2000);
+            setTimeout(triggerAttack, 2500);
         }
         
         function triggerAttack() {
-            vibrate([500, 200, 500]);
-            document.body.classList.add('shake');
-            document.body.classList.add('flicker');
+            vibrate([500,200,500]);
+            document.body.classList.add('heavy-shake');
             
             setTimeout(() => {
                 document.getElementById('home-screen').style.display = 'none';
                 document.getElementById('crash-screen').style.display = 'block';
-                vibrate([100, 50, 100, 50, 200]);
-            }, 1500);
+                vibrate([100,50,100,50,200]);
+            }, 1200);
             
-            setTimeout(() => {
-                startNotifications();
-            }, 3000);
-            
-            setTimeout(() => {
-                showBatteryWarning();
-            }, 6000);
-            
+            setTimeout(() => startNotifications(), 2500);
+            setTimeout(() => showPopup('battery-popup'), 5000);
             setTimeout(() => {
                 document.getElementById('camera-warning').style.display = 'block';
-                vibratePattern();
-            }, 9000);
-            
+                heavyVibrate();
+            }, 7500);
             setTimeout(() => {
                 document.getElementById('location-warning').style.display = 'block';
-            }, 11000);
-            
+                heavyVibrate();
+            }, 9000);
             setTimeout(() => {
-                showIncomingCall();
-            }, 14000);
-            
+                document.getElementById('mic-warning').style.display = 'block';
+                heavyVibrate();
+            }, 10500);
             setTimeout(() => {
-                startDeleteMode();
-            }, 18000);
+                document.getElementById('screen-warning').style.display = 'block';
+                heavyVibrate();
+            }, 12000);
+            setTimeout(() => showPopup('virus-popup'), 13000);
+            setTimeout(showIncomingCall, 16000);
+            setTimeout(startDeleteMode, 20000);
         }
         
         function startNotifications() {
             const panel = document.getElementById('notification-panel');
             panel.style.display = 'block';
             panel.innerHTML = '';
-            
             let index = 0;
-            popupInterval = setInterval(() => {
+            
+            const notifInterval = setInterval(() => {
                 if (index >= notifications.length || !active) {
-                    clearInterval(popupInterval);
+                    clearInterval(notifInterval);
                     return;
                 }
-                
-                vibratePattern();
-                
+                heavyVibrate();
                 const notif = notifications[index];
                 const div = document.createElement('div');
-                div.className = 'notification ' + notif.type;
-                div.innerHTML = `
-                    <div class="notif-icon">${notif.icon}</div>
-                    <div class="notif-content">
-                        <div class="notif-title">${notif.title}</div>
-                        <div class="notif-text">${notif.text}</div>
-                        <div class="notif-time">刚刚</div>
-                    </div>
-                `;
+                div.className = `notification ${notif.type}`;
+                div.onclick = () => { heavyVibrate(); div.style.opacity = '0.5'; };
+                div.innerHTML = `<div class="notif-icon">${notif.icon}</div><div class="notif-content"><div class="notif-title">${notif.title}</div><div class="notif-text">${notif.text}</div><div class="notif-time">刚刚</div></div>`;
                 panel.insertBefore(div, panel.firstChild);
                 index++;
-            }, 1800);
+            }, 1500);
+            intervals.push(notifInterval);
         }
         
-        function showBatteryWarning() {
-            document.getElementById('battery-warning').style.display = 'block';
-            vibrate([300, 150, 300, 150, 500]);
-            
-            setTimeout(() => {
-                document.body.classList.add('shake');
-            }, 500);
+        function showPopup(id) {
+            document.getElementById(id).style.display = 'block';
+            heavyVibrate();
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 500);
         }
         
         function showIncomingCall() {
             document.getElementById('crash-screen').style.display = 'none';
             document.getElementById('notification-panel').style.display = 'none';
-            document.getElementById('battery-warning').style.display = 'none';
-            document.getElementById('camera-warning').style.display = 'none';
-            document.getElementById('location-warning').style.display = 'none';
-            
+            ['camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup'].forEach(id => document.getElementById(id).style.display = 'none');
             document.getElementById('call-screen').style.display = 'flex';
-            vibrate([200, 100, 200, 100, 200, 100, 200]);
+            vibrate([200,100,200,100,200,100,200]);
             
-            callInterval = setInterval(() => {
-                vibrate([100, 50, 100]);
-            }, 1500);
+            const callVibrate = setInterval(() => {
+                if (!active) { clearInterval(callVibrate); return; }
+                vibrate([100,50,100]);
+            }, 1200);
+            intervals.push(callVibrate);
         }
         
         function rejectCall() {
-            clearInterval(callInterval);
-            setTimeout(() => {
-                showLockScreen();
-            }, 1000);
+            heavyVibrate();
+            setTimeout(startDeleteMode, 800);
+            document.getElementById('call-screen').style.display = 'none';
         }
         
         function answerCall() {
-            clearInterval(callInterval);
-            vibrate([1000]);
+            heavyVibrate();
             document.getElementById('call-screen').innerHTML = `
                 <div class="caller-photo">🤡</div>
-                <div class="caller-name">愚人节快乐！</div>
+                <div class="caller-name">愚人节快乐！🎉</div>
                 <div class="caller-number">这只是个小玩笑～</div>
-                <div style="margin-top: 50px; font-size: 40px;">😄</div>
+                <div style="margin-top:50px;font-size:50px;">😄🎊</div>
+                <div style="margin-top:30px;color:#888;font-size:14px;">(点击任意处继续)</div>
             `;
-            setTimeout(() => {
-                showLockScreen();
-            }, 3000);
-        }
-        
-        function showLockScreen() {
-            document.getElementById('call-screen').style.display = 'none';
-            document.getElementById('lock-screen').style.display = 'block';
-            document.body.classList.remove('shake');
-            document.body.classList.remove('flicker');
+            document.body.classList.remove('heavy-shake');
+            document.onclick = () => {
+                document.onclick = null;
+                setTimeout(startDeleteMode, 500);
+            };
         }
         
         function startDeleteMode() {
-            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('call-screen').style.display = 'none';
             document.getElementById('delete-screen').style.display = 'block';
             
             const content = document.getElementById('delete-content');
-            let progress = 0;
             let fileIndex = 0;
             let deletedCount = 0;
             
-            deleteInterval = setInterval(() => {
+            const deleteInterval = setInterval(() => {
                 if (fileIndex >= files.length || !active) {
                     clearInterval(deleteInterval);
                     document.getElementById('progress-text').parentElement.style.display = 'none';
                     document.getElementById('stats').style.display = 'none';
-                    setTimeout(() => {
-                        document.getElementById('final-message').style.display = 'block';
-                    }, 500);
+                    setTimeout(() => document.getElementById('final-message').style.display = 'block', 500);
                     return;
                 }
                 
-                vibratePattern();
-                
+                heavyVibrate();
                 const div = document.createElement('div');
                 div.className = 'delete-line deleting';
                 div.textContent = '❌ ' + files[fileIndex];
@@ -1341,54 +1076,37 @@
                 
                 deletedCount++;
                 fileIndex++;
-                progress = Math.min(100, (fileIndex / files.length) * 100);
+                const progress = Math.min(100, (fileIndex / files.length) * 100);
                 
                 document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
                 document.getElementById('bar-fill').style.width = progress + '%';
-                
-                const remainingFiles = files.length - fileIndex;
-                const estTime = Math.ceil(remainingFiles * 0.8);
-                document.getElementById('stats').innerHTML = 
-                    `已扫描: ${fileIndex} 个文件 | 已删除: ${deletedCount} 个文件 | 预计剩余: ${estTime}秒`;
-                    
-            }, 700);
+                document.getElementById('file-count').textContent = `已清除: ${deletedCount} 个文件`;
+                document.getElementById('time-left').textContent = `剩余: ${Math.ceil((files.length - fileIndex) * 0.6)}秒`;
+            }, 600);
+            intervals.push(deleteInterval);
         }
         
         function showJoke() {
-            alert('🎉 愚人节快乐！你的手机其实很安全～\n\n这是纳西妲和爸爸一起准备的恶作剧小惊喜！\n\n快去吓你的朋友吧！😄');
+            heavyVibrate();
+            alert('🎉 愚人节快乐！你的手机其实很安全～\n\n这是纳西妲和爸爸一起准备的恶作剧！\n\n快去吓你的朋友吧！😄');
             stopAll();
         }
         
         function stopAll() {
             active = false;
-            if (popupInterval) clearInterval(popupInterval);
-            if (deleteInterval) clearInterval(deleteInterval);
-            if (callInterval) clearInterval(callInterval);
-            
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('status-bar').style.display = 'none';
-            document.getElementById('nav-bar').style.display = 'none';
-            document.getElementById('home-screen').style.display = 'none';
-            document.getElementById('notification-panel').style.display = 'none';
-            document.getElementById('crash-screen').style.display = 'none';
-            document.getElementById('battery-warning').style.display = 'none';
-            document.getElementById('camera-warning').style.display = 'none';
-            document.getElementById('location-warning').style.display = 'none';
-            document.getElementById('delete-screen').style.display = 'none';
-            document.getElementById('call-screen').style.display = 'none';
-            document.getElementById('lock-screen').style.display = 'none';
-            document.getElementById('exit-tip').style.display = 'none';
-            
+            intervals.forEach(i => clearInterval(i));
+            intervals = [];
             document.body.classList.remove('shake');
-            document.body.classList.remove('flicker');
+            document.body.classList.remove('heavy-shake');
+            ['loading','status-bar','nav-bar','home-screen','notification-panel','crash-screen','camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','delete-screen','call-screen','exit-tip'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
         }
         
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && active) {
-                stopAll();
-            }
+            if (e.key === 'Escape' && active) stopAll();
         });
-        
         document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
