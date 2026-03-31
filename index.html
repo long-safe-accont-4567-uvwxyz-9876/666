@@ -12,6 +12,7 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
         
         html, body {
@@ -19,7 +20,8 @@
             height: 100%;
             overflow: hidden;
             background: #000;
-            font-family: 'Roboto', 'Microsoft YaHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Microsoft YaHei', sans-serif;
+            touch-action: manipulation;
         }
         
         body.shake {
@@ -46,7 +48,6 @@
             100% { transform: translate(5px, -5px); }
         }
         
-        /* 开场日期显示 */
         #april-fool-intro {
             position: fixed;
             top: 0;
@@ -63,8 +64,8 @@
         }
         
         #april-fool-intro .date-box {
-            width: 200px;
-            height: 200px;
+            width: 180px;
+            height: 180px;
             border: 4px solid #3DDC84;
             border-radius: 20px;
             display: flex;
@@ -75,140 +76,72 @@
             box-shadow: 0 0 40px rgba(61, 220, 132, 0.3);
         }
         
-        #april-fool-intro .month {
-            font-size: 28px;
-            color: #3DDC84;
-            font-weight: bold;
-            letter-spacing: 3px;
-        }
+        #april-fool-intro .month { font-size: 24px; color: #3DDC84; font-weight: bold; letter-spacing: 2px; }
+        #april-fool-intro .day { font-size: 64px; font-weight: 300; margin-top: -5px; }
+        #april-fool-intro .festival { font-size: 22px; margin-top: 20px; color: #ff6b6b; font-weight: bold; animation: blink 1s infinite; }
         
-        #april-fool-intro .day {
-            font-size: 72px;
-            font-weight: 300;
-            margin-top: -5px;
-        }
-        
-        #april-fool-intro .festival {
-            font-size: 24px;
-            margin-top: 20px;
-            color: #ff6b6b;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         
         #april-fool-intro .tip {
             position: absolute;
-            bottom: 80px;
+            bottom: 15%;
             color: rgba(255,255,255,0.4);
             font-size: 14px;
         }
         
-        /* 状态栏 */
-        .status-bar {
+        .status-bar, .nav-bar {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 28px;
             background: rgba(0, 0, 0, 0.95);
             z-index: 999999;
+        }
+        
+        .status-bar {
+            top: 0; left: 0;
+            width: 100%; height: 28px;
             justify-content: space-between;
             align-items: center;
             padding: 0 15px;
             font-size: 13px;
             color: #fff;
-            font-family: 'Roboto', sans-serif;
         }
         
-        .status-bar .left, .status-bar .right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .status-bar .left, .status-bar .right { display: flex; align-items: center; gap: 8px; }
         
-        .status-bar .time { font-weight: 500; }
-        
-        .status-bar .battery {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-        
-        .status-bar .battery-icon {
-            width: 22px;
-            height: 10px;
+        .battery-icon {
+            width: 22px; height: 10px;
             border: 1px solid #fff;
             border-radius: 2px;
             position: relative;
         }
         
-        .status-bar .battery-icon::after {
-            content: '';
-            position: absolute;
-            right: -3px;
-            top: 2px;
-            width: 2px;
-            height: 4px;
-            background: #fff;
-            border-radius: 1px;
+        .battery-icon::after {
+            content: ''; position: absolute; right: -3px; top: 2px;
+            width: 2px; height: 4px; background: #fff; border-radius: 1px;
         }
         
-        .status-bar .battery-level {
-            position: absolute;
-            left: 1px;
-            top: 1px;
-            bottom: 1px;
-            width: 80%;
-            background: #fff;
-            border-radius: 1px;
+        .battery-level {
+            position: absolute; left: 1px; top: 1px; bottom: 1px;
+            width: 80%; background: #fff; border-radius: 1px;
         }
         
-        /* 导航栏 */
         .nav-bar {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 56px;
+            bottom: 0; left: 0;
+            width: 100%; height: 56px;
             background: rgba(30, 30, 30, 0.95);
-            z-index: 999999;
-            display: flex;
             justify-content: space-around;
             align-items: center;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
         
-        .nav-bar .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: rgba(255,255,255,0.6);
-            font-size: 10px;
-            gap: 4px;
-        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.6); font-size: 10px; gap: 4px; }
+        .nav-icon { font-size: 22px; }
         
-        .nav-bar .nav-icon { font-size: 24px; }
-        
-        /* 加载动画 */
         #loading {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: #000;
             z-index: 99999;
             display: flex;
@@ -218,10 +151,9 @@
         }
         
         #loading .android-logo {
-            width: 100px;
-            height: 100px;
+            width: 90px; height: 90px;
             background: #3DDC84;
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -229,311 +161,199 @@
             box-shadow: 0 10px 40px rgba(61, 220, 132, 0.4);
         }
         
-        #loading .android-logo span {
-            color: white;
-            font-size: 50px;
-            font-weight: bold;
-        }
-        
-        #loading .loading-text {
-            color: #fff;
-            margin-top: 40px;
-            font-size: 18px;
-        }
-        
-        #loading .loading-sub {
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
-            margin-top: 10px;
-        }
+        #loading .android-logo span { color: white; font-size: 45px; font-weight: bold; }
+        #loading .loading-text { color: #fff; margin-top: 35px; font-size: 17px; }
+        #loading .loading-sub { color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 8px; }
         
         #loading .loading-bar {
-            width: 280px;
-            height: 6px;
+            width: 260px; height: 5px;
             background: rgba(255,255,255,0.15);
             border-radius: 3px;
-            margin-top: 30px;
+            margin-top: 25px;
             overflow: hidden;
         }
         
         #loading .loading-progress {
             height: 100%;
             background: linear-gradient(90deg, #3DDC84, #00ff88);
-            width: 0%;
-            border-radius: 3px;
+            width: 0%; border-radius: 3px;
             transition: width 0.3s;
         }
         
-        /* 主屏幕 */
         #home-screen {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             z-index: 99998;
-            padding-top: 28px;
-            padding-bottom: 56px;
+            padding-top: 28px; padding-bottom: 56px;
         }
         
         .clock-widget {
-            position: absolute;
-            top: 80px;
-            left: 20px;
-            color: #fff;
-            cursor: pointer;
-            transition: transform 0.1s;
+            position: absolute; top: 60px; left: 20px;
+            color: #fff; cursor: pointer;
         }
         
-        .clock-widget:active { transform: scale(0.95); }
-        
-        .clock-widget .time { font-size: 56px; font-weight: 300; letter-spacing: -2px; }
-        .clock-widget .date { font-size: 14px; opacity: 0.7; margin-top: 5px; }
+        .clock-widget .time { font-size: 48px; font-weight: 300; letter-spacing: -2px; }
+        .clock-widget .date { font-size: 13px; opacity: 0.7; margin-top: 4px; }
         
         #home-screen .app-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            padding: 30px 20px;
+            gap: 20px;
+            padding: 25px 15px;
         }
         
-        #home-screen .app-icon {
+        .app-icon {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
-            transition: transform 0.15s;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        #home-screen .app-icon:active {
-            transform: scale(0.85);
-        }
-        
-        #home-screen .icon-box {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
+        .icon-box {
+            width: 54px; height: 54px;
+            border-radius: 14px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 28px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.35);
-            transition: transform 0.1s, box-shadow 0.1s;
+            font-size: 26px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
         }
         
-        #home-screen .app-icon:active .icon-box {
-            transform: scale(0.9);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
+        .app-icon:active .icon-box { transform: scale(0.9); }
+        .app-name { color: #fff; font-size: 11px; text-align: center; }
         
-        #home-screen .app-name {
-            color: #fff;
-            font-size: 12px;
-            text-align: center;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-        }
-        
-        /* 通知中心 */
         #notification-panel {
             display: none;
             position: fixed;
-            top: 28px;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 84px);
+            top: 28px; left: 0;
+            width: 100%; height: calc(100% - 84px);
             background: rgba(0,0,0,0.98);
             z-index: 99997;
-            padding: 15px;
+            padding: 12px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .notification {
             background: #1a1a1a;
-            border-radius: 14px;
-            padding: 18px;
-            margin-bottom: 14px;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
             display: flex;
             align-items: flex-start;
             cursor: pointer;
-            transition: transform 0.1s;
-            animation: notifSlide 0.3s ease-out;
-        }
-        
-        .notification:active { transform: scale(0.98); }
-        
-        @keyframes notifSlide {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            -webkit-tap-highlight-color: transparent;
         }
         
         .notification .notif-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
+            width: 38px; height: 38px;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 22px;
-            margin-right: 14px;
-            flex-shrink: 0;
+            font-size: 18px;
+            margin-right: 10px;
         }
         
         .notification .notif-content { flex: 1; }
-        .notification .notif-title { font-size: 15px; font-weight: bold; margin-bottom: 5px; }
-        .notification .notif-text { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
-        .notification .notif-time { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 6px; }
+        .notification .notif-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+        .notification .notif-text { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .notification .notif-time { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
         
-        .notification.critical { border-left: 5px solid #f44336; background: linear-gradient(90deg, rgba(244,67,54,0.25), #1a1a1a); }
-        .notification.critical .notif-icon { background: #f44336; animation: criticalPulse 1s infinite; }
-        
-        @keyframes criticalPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
-            50% { box-shadow: 0 0 0 12px rgba(244, 67, 54, 0); }
-        }
-        
-        .notification.warning { border-left: 5px solid #ff9800; }
+        .notification.critical { border-left: 4px solid #f44336; }
+        .notification.critical .notif-icon { background: #f44336; }
+        .notification.warning { border-left: 4px solid #ff9800; }
         .notification.warning .notif-icon { background: #ff9800; }
         .notification.system .notif-icon { background: #2196f3; }
         
-        /* 崩溃界面 */
         #crash-screen {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
             color: #fff;
             z-index: 99998;
             overflow-y: auto;
-            padding: 25px;
-            font-family: 'Roboto', sans-serif;
+            padding: 20px;
+            -webkit-overflow-scrolling: touch;
         }
         
-        .crash-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        .crash-header { display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         
         .crash-icon {
-            width: 65px;
-            height: 65px;
+            width: 55px; height: 55px;
             background: linear-gradient(135deg, #f44336, #d32f2f);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 35px;
-            margin-right: 18px;
-            animation: crashPulse 0.5s infinite;
+            font-size: 28px;
+            margin-right: 15px;
         }
         
-        @keyframes crashPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
+        .crash-title { font-size: 20px; font-weight: 500; color: #f44336; text-transform: uppercase; }
+        .crash-subtitle { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
         
-        .crash-title { font-size: 22px; font-weight: 500; color: #f44336; text-transform: uppercase; letter-spacing: 1px; }
-        .crash-subtitle { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
-        
-        .system-info {
-            background: rgba(255,255,255,0.05);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 25px;
-            font-size: 13px;
-            font-family: 'monospace';
-        }
-        
-        .system-info .info-title { color: #3DDC84; font-weight: bold; margin-bottom: 15px; font-size: 14px; }
-        .info-row { display: flex; margin: 8px 0; }
-        .info-label { color: rgba(255,255,255,0.5); width: 140px; flex-shrink: 0; }
+        .system-info { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; margin-bottom: 20px; font-size: 12px; font-family: monospace; }
+        .system-info .info-title { color: #3DDC84; font-weight: bold; margin-bottom: 12px; }
+        .info-row { display: flex; margin: 6px 0; }
+        .info-label { color: rgba(255,255,255,0.5); width: 120px; }
         
         .error-details {
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(244, 67, 54, 0.3);
-            border-radius: 14px;
-            padding: 18px;
-            margin-bottom: 25px;
-            font-family: 'monospace';
-            font-size: 12px;
-            line-height: 1.8;
-            max-height: 280px;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 11px;
+            line-height: 1.6;
+            max-height: 200px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             color: #bbb;
         }
         
-        .error-title { color: #f44336; font-weight: bold; margin-bottom: 12px; font-size: 13px; }
+        .error-title { color: #f44336; font-weight: bold; margin-bottom: 8px; }
         
         .btn-restart {
             background: linear-gradient(135deg, #3DDC84, #00b377);
             color: #000;
             border: none;
-            padding: 18px 60px;
-            border-radius: 35px;
-            font-size: 17px;
+            padding: 16px 50px;
+            border-radius: 30px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             display: block;
-            margin: 35px auto;
-            box-shadow: 0 8px 30px rgba(61, 220, 132, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 30px auto;
+            box-shadow: 0 6px 25px rgba(61, 220, 132, 0.4);
+            -webkit-tap-highlight-color: transparent;
         }
         
-        .btn-restart:hover {
-            transform: scale(1.02);
-            box-shadow: 0 12px 40px rgba(61, 220, 132, 0.5);
-        }
+        .warning-text { text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 25px; }
         
-        .btn-restart:active { transform: scale(0.98); }
-        
-        .warning-text { text-align: center; color: rgba(255,255,255,0.4); font-size: 12px; margin-top: 30px; line-height: 1.6; }
-        
-        /* 弹窗警告 - 加大加逼真 */
         .popup-warning {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
-            border: 3px solid #f44336;
-            border-radius: 24px;
-            padding: 35px 40px;
+            border: 2px solid #f44336;
+            border-radius: 20px;
+            padding: 28px 32px;
             z-index: 99996;
             text-align: center;
-            max-width: 380px;
-            box-shadow: 
-                0 25px 80px rgba(244, 67, 54, 0.6),
-                0 0 0 1px rgba(255,255,255,0.1) inset,
-                0 -5px 20px rgba(0,0,0,0.5) inset;
+            max-width: 340px;
+            box-shadow: 0 20px 60px rgba(244, 67, 54, 0.5);
             animation: popupShake 0.3s;
-        }
-        
-        .popup-warning::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            border-radius: 26px;
-            background: linear-gradient(45deg, #f44336, #ff9800, #f44336);
-            z-index: -1;
-            animation: borderGlow 2s linear infinite;
-        }
-        
-        @keyframes borderGlow {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
         }
         
         @keyframes popupShake {
@@ -542,181 +362,122 @@
             75% { transform: translate(-48%, -52%) scale(0.98); }
         }
         
-        .popup-warning .popup-icon { font-size: 60px; margin-bottom: 18px; animation: iconPulse 1s infinite; }
+        .popup-warning .popup-icon { font-size: 50px; margin-bottom: 14px; }
+        .popup-warning .popup-title { color: #f44336; font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .popup-warning .popup-text { color: rgba(255,255,255,0.8); font-size: 13px; line-height: 1.6; }
         
-        @keyframes iconPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .popup-warning .popup-title { color: #f44336; font-size: 22px; font-weight: bold; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .popup-warning .popup-text { color: rgba(255,255,255,0.8); font-size: 15px; line-height: 1.7; }
         .popup-warning .popup-close {
-            margin-top: 25px;
+            margin-top: 20px;
             background: linear-gradient(135deg, #f44336, #d32f2f);
             color: white;
             border: none;
-            padding: 14px 45px;
-            border-radius: 25px;
-            font-size: 16px;
+            padding: 12px 40px;
+            border-radius: 22px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
-            transition: transform 0.1s;
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+            -webkit-tap-highlight-color: transparent;
         }
         
-        .popup-warning .popup-close:hover { transform: scale(1.05); }
-        .popup-warning .popup-close:active { transform: scale(0.95); background: #b71c1c; }
-        
-        /* 顶部警告条 */
         .top-warning {
             display: none;
             position: fixed;
-            top: 40px;
-            left: 20px;
-            right: 20px;
-            padding: 16px 22px;
-            border-radius: 14px;
+            top: 35px; left: 15px; right: 15px;
+            padding: 14px 18px;
+            border-radius: 12px;
             z-index: 99999;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
             color: white;
-            animation: topWarning 0.5s;
         }
         
-        @keyframes topWarning {
-            from { transform: translateY(-120%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        .top-warning.danger { background: linear-gradient(135deg, #f44336, #d32f2f); box-shadow: 0 5px 20px rgba(244, 67, 54, 0.5); }
+        .top-warning.warning { background: linear-gradient(135deg, #ff9800, #f57c00); box-shadow: 0 5px 20px rgba(255, 152, 0, 0.5); }
         
-        .top-warning.danger { background: linear-gradient(135deg, #f44336, #d32f2f); box-shadow: 0 6px 25px rgba(244, 67, 54, 0.6); }
-        .top-warning.warning { background: linear-gradient(135deg, #ff9800, #f57c00); box-shadow: 0 6px 25px rgba(255, 152, 0, 0.6); }
-        
-        /* 删除界面 */
         #delete-screen {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: #050505;
             color: #0f0;
             font-family: 'Courier New', monospace;
             z-index: 99995;
-            padding: 30px;
-            font-size: 14px;
+            padding: 25px;
+            font-size: 13px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         #delete-screen .header {
             color: #ff3333;
-            font-size: 22px;
-            margin-bottom: 25px;
+            font-size: 20px;
+            margin-bottom: 20px;
             text-align: center;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 2px solid #333;
             animation: blink 0.4s infinite;
             font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 51, 51, 0.5);
         }
         
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         
-        #delete-screen .scan-text { color: #00ff00; margin-bottom: 20px; font-size: 16px; font-weight: bold; }
+        #delete-screen .scan-text { color: #00ff00; margin-bottom: 15px; font-size: 14px; }
         
-        .delete-line {
-            margin: 8px 0;
-            opacity: 0;
-            animation: typeIn 0.15s forwards;
-            font-size: 13px;
-        }
-        
+        .delete-line { margin: 6px 0; opacity: 0; animation: typeIn 0.12s forwards; font-size: 12px; }
         @keyframes typeIn { to { opacity: 1; } }
-        .delete-line.deleting { color: #ff4444; text-decoration: line-through; text-shadow: 0 0 10px rgba(255, 68, 68, 0.5); }
+        .delete-line.deleting { color: #ff4444; text-decoration: line-through; }
         
-        #delete-screen .progress-section {
-            margin-top: 50px;
-            padding-top: 25px;
-            border-top: 2px solid #333;
-        }
-        
-        #delete-screen .progress-text { color: #00ffff; font-size: 18px; margin-bottom: 18px; font-weight: bold; }
+        #delete-screen .progress-section { margin-top: 40px; padding-top: 20px; border-top: 2px solid #333; }
+        #delete-screen .progress-text { color: #00ffff; font-size: 16px; margin-bottom: 14px; }
         
         #delete-screen .bar {
-            width: 100%;
-            height: 40px;
+            width: 100%; height: 35px;
             background: #0a0a0a;
-            border: 3px solid #00ff00;
-            border-radius: 8px;
+            border: 2px solid #00ff00;
+            border-radius: 6px;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-        }
-        
-        #delete-screen .bar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(0,255,0,0.15) 10px,
-                rgba(0,255,0,0.15) 20px
-            );
         }
         
         #delete-screen .bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, #00ff00, #00ffff, #00ff00, #00ff00);
+            background: linear-gradient(90deg, #00ff00, #00ffff, #00ff00);
             width: 0%;
-            transition: width 0.3s;
-            position: relative;
+            transition: width 0.2s;
             animation: progressMove 0.5s linear infinite;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6) inset;
         }
         
-        @keyframes progressMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 60px 0; }
-        }
+        @keyframes progressMove { 0% { background-position: 0 0; } 100% { background-position: 50px 0; } }
         
         #delete-screen .stats {
-            margin-top: 20px;
+            margin-top: 12px;
             color: #888;
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
             justify-content: space-between;
-            font-weight: bold;
         }
         
         #delete-screen .final-message {
             display: none;
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            font-family: 'Microsoft YaHei', sans-serif;
             width: 90%;
         }
         
-        #delete-screen .final-message .icon { font-size: 100px; margin-bottom: 25px; }
-        #delete-screen .final-message .title { color: #ff4444; font-size: 32px; margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 30px rgba(255, 68, 68, 0.5); }
-        #delete-screen .final-message .joke { color: #00ff00; font-size: 28px; font-weight: bold; }
-        #delete-screen .final-message .sub { color: #666; font-size: 16px; margin-top: 25px; }
+        #delete-screen .final-message .icon { font-size: 80px; margin-bottom: 20px; }
+        #delete-screen .final-message .title { color: #ff4444; font-size: 26px; margin-bottom: 15px; }
+        #delete-screen .final-message .joke { color: #00ff00; font-size: 24px; }
+        #delete-screen .final-message .sub { color: #666; font-size: 14px; margin-top: 20px; }
         
-        /* 来电界面 */
         #call-screen {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
             z-index: 99994;
             flex-direction: column;
@@ -726,123 +487,119 @@
         }
         
         #call-screen .caller-photo {
-            width: 140px;
-            height: 140px;
+            width: 120px; height: 120px;
             border-radius: 50%;
             background: linear-gradient(135deg, #333, #555);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 60px;
-            margin-bottom: 35px;
+            font-size: 50px;
+            margin-bottom: 30px;
             animation: callRing 0.6s infinite;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
         
         @keyframes callRing {
             0%, 100% { transform: rotate(0deg) scale(1); }
-            25% { transform: rotate(12deg) scale(1.05); }
-            75% { transform: rotate(-12deg) scale(1.05); }
+            25% { transform: rotate(10deg) scale(1.03); }
+            75% { transform: rotate(-10deg) scale(1.03); }
         }
         
-        #call-screen .caller-name { font-size: 28px; font-weight: 500; margin-bottom: 12px; }
-        #call-screen .caller-number { font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 50px; }
-        #call-screen .call-time { color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 30px; }
+        #call-screen .caller-name { font-size: 24px; margin-bottom: 8px; }
+        #call-screen .caller-number { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 40px; }
         
-        #call-screen .call-actions { display: flex; gap: 60px; }
+        #call-screen .call-actions { display: flex; gap: 50px; }
         
         #call-screen .call-btn {
-            width: 80px;
-            height: 80px;
+            width: 70px; height: 70px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 32px;
+            font-size: 28px;
             cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.1s;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            -webkit-tap-highlight-color: transparent;
         }
         
-        #call-screen .call-btn:hover { transform: scale(1.1); }
-        #call-screen .call-btn:active { transform: scale(0.9); }
         #call-screen .btn-decline { background: linear-gradient(135deg, #f44336, #d32f2f); }
         #call-screen .btn-accept { background: linear-gradient(135deg, #4caf50, #388e3c); }
         
-        /* 退出提示 */
         .exit-tip {
             display: none;
             position: fixed;
-            bottom: 90px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.85);
             color: white;
-            padding: 14px 28px;
-            border-radius: 30px;
+            padding: 12px 24px;
+            border-radius: 25px;
             z-index: 10001;
-            font-size: 14px;
+            font-size: 13px;
         }
         
-        /* 结束画面 */
         #final-screen {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
             z-index: 10000;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #fff;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
+            -webkit-overflow-scrolling: touch;
         }
         
-        #final-screen .prank-icon { font-size: 80px; margin-bottom: 30px; animation: bounce 1s infinite; }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-        
-        #final-screen .prank-title { font-size: 36px; font-weight: bold; margin-bottom: 20px; color: #3DDC84; }
-        #final-screen .prank-subtitle { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 40px; line-height: 1.6; }
+        #final-screen .prank-icon { font-size: 70px; margin-bottom: 25px; }
+        #final-screen .prank-title { font-size: 28px; font-weight: bold; margin-bottom: 15px; color: #3DDC84; }
+        #final-screen .prank-subtitle { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
         
         #final-screen .prank-info {
             background: rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 25px;
-            max-width: 350px;
-            margin-bottom: 40px;
+            border-radius: 14px;
+            padding: 20px;
+            max-width: 320px;
+            margin-bottom: 30px;
         }
         
-        #final-screen .prank-info p { font-size: 15px; margin: 12px 0; color: rgba(255,255,255,0.8); line-height: 1.5; }
+        #final-screen .prank-info p { font-size: 13px; margin: 10px 0; color: rgba(255,255,255,0.8); }
         
         #final-screen .exit-btn {
             background: linear-gradient(135deg, #3DDC84, #00b377);
             color: #000;
             border: none;
-            padding: 18px 60px;
-            border-radius: 35px;
-            font-size: 18px;
+            padding: 16px 50px;
+            border-radius: 30px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 8px 30px rgba(61, 220, 132, 0.4);
-            transition: transform 0.2s;
+            box-shadow: 0 6px 25px rgba(61, 220, 132, 0.4);
+            -webkit-tap-highlight-color: transparent;
         }
         
-        #final-screen .exit-btn:hover { transform: scale(1.05); }
-        #final-screen .exit-btn:active { transform: scale(0.95); }
+        #next-step-overlay {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(61, 220, 132, 0.9);
+            color: #000;
+            padding: 14px 30px;
+            border-radius: 25px;
+            z-index: 10002;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(61, 220, 132, 0.5);
+            -webkit-tap-highlight-color: transparent;
+        }
     </style>
 </head>
 <body>
-    <audio id="alarm-sound" loop></audio>
-    <audio id="ringtone-sound" loop></audio>
-    
     <div id="april-fool-intro">
         <div class="date-box">
             <div class="month">APRIL</div>
@@ -892,56 +649,50 @@
             <div class="crash-icon">⚠️</div>
             <div>
                 <div class="crash-title">Android System</div>
-                <div class="crash-subtitle">系统遇到严重问题，需要重新启动</div>
+                <div class="crash-subtitle">系统遇到严重问题</div>
             </div>
         </div>
         <div class="system-info">
             <div class="info-title">📱 设备信息</div>
-            <div class="info-row"><span class="info-label">设备型号:</span><span>Samsung Galaxy S24 Ultra</span></div>
-            <div class="info-row"><span class="info-label">Android版本:</span><span>14 (UpsideDownCake)</span></div>
-            <div class="info-row"><span class="info-label">内核版本:</span><span>5.15.123-android14-11</span></div>
-            <div class="info-row"><span class="info-label">安全补丁:</span><span>2024年4月1日</span></div>
-            <div class="info-row"><span class="info-label">可用内存:</span><span style="color:#f44336;">87 MB (不足)</span></div>
-            <div class="info-row"><span class="info-label">存储空间:</span><span style="color:#f44336;">2.3 GB (不足)</span></div>
+            <div class="info-row"><span class="info-label">设备型号:</span><span>Samsung Galaxy S24</span></div>
+            <div class="info-row"><span class="info-label">Android版本:</span><span>14</span></div>
+            <div class="info-row"><span class="info-label">可用内存:</span><span style="color:#f44336;">87 MB</span></div>
+            <div class="info-row"><span class="info-label">存储空间:</span><span style="color:#f44336;">2.3 GB</span></div>
         </div>
         <div class="error-details">
-            <div class="error-title">☠️ FATAL EXCEPTION: main</div>
-            <div>Process: com.android.systemui, PID: 3245</div>
-            <div>java.lang.RuntimeException: 系统服务崩溃</div>
-            <div>&nbsp;&nbsp;at android.app.ActivityThread.performLaunchActivity</div>
-            <div style="color:#f44336;margin-top:12px;">Caused by: java.lang.NullPointerException</div>
-            <div style="color:#ff9800;margin-top:12px;">⚠️ 检测到恶意软件: Trojan.SystemKiller.v3</div>
-            <div style="color:#f44336;">⚠️ 检测到未授权的系统篡改</div>
-            <div style="color:#888;margin-top:12px;">[Killed] Process sent SIGKILL signal 9</div>
+            <div class="error-title">☠️ FATAL EXCEPTION</div>
+            <div>Process: com.android.systemui</div>
+            <div style="color:#f44336;">⚠️ 检测到恶意软件: Trojan.SystemKiller</div>
+            <div style="color:#ff9800;">⚠️ 系统被篡改</div>
         </div>
-        <button class="btn-restart" onclick="showJoke()">🔄 重启设备</button>
-        <div class="warning-text">⚠️ 您的设备可能存在严重安全风险<br>建议立即断开网络连接并备份数据</div>
+        <button class="btn-restart" onclick="handleRestart()">🔄 重启设备</button>
+        <div class="warning-text">⚠️ 您的设备可能存在严重安全风险</div>
     </div>
     
-    <div id="camera-warning" class="top-warning danger">📷 相机正在被某个应用访问</div>
-    <div id="location-warning" class="top-warning warning">📍 位置信息正在被追踪</div>
+    <div id="camera-warning" class="top-warning danger">📷 相机正在被访问</div>
+    <div id="location-warning" class="top-warning warning">📍 位置正在被追踪</div>
     <div id="mic-warning" class="top-warning danger">🎤 麦克风正在被录音</div>
-    <div id="screen-warning" class="top-warning danger">🖥️ 屏幕正在被远程共享</div>
+    <div id="screen-warning" class="top-warning danger">🖥️ 屏幕正在被共享</div>
     
     <div id="battery-popup" class="popup-warning">
         <div class="popup-icon">🔋</div>
         <div class="popup-title">⚠️ 电池温度异常</div>
-        <div class="popup-text">当前温度: <strong>78°C</strong><br>远超安全阈值45°C<br><br>可能导致燃烧或爆炸！<br><strong>请立即停止使用设备！</strong></div>
-        <button class="popup-close" onclick="dismissPopup('battery-popup')">我知道了</button>
+        <div class="popup-text">当前温度: <strong>78°C</strong><br>可能导致燃烧！<br><br><strong>请立即停止使用！</strong></div>
+        <button class="popup-close" onclick="handlePopupClose('battery-popup')">我知道了</button>
     </div>
     
     <div id="virus-popup" class="popup-warning">
         <div class="popup-icon">🦠</div>
         <div class="popup-title">🚨 发现致命病毒！</div>
-        <div class="popup-text">Trojan.AndroidOS.SystemKiller<br><br>正在删除系统文件...<br><br><strong>立即处理！</strong></div>
-        <button class="popup-close" onclick="dismissPopup('virus-popup')">立即处理</button>
+        <div class="popup-text">Trojan.SystemKiller<br><br>正在删除系统文件...<br><br><strong>立即处理！</strong></div>
+        <button class="popup-close" onclick="handlePopupClose('virus-popup')">立即处理</button>
     </div>
     
     <div id="storage-popup" class="popup-warning">
         <div class="popup-icon">💾</div>
-        <div class="popup-title">⚠️ 存储空间严重不足</div>
-        <div class="popup-text">可用空间: <strong>23 MB</strong><br>系统无法正常工作<br><br>建议立即清理存储空间</div>
-        <button class="popup-close" onclick="dismissPopup('storage-popup')">清理</button>
+        <div class="popup-title">⚠️ 存储空间不足</div>
+        <div class="popup-text">可用空间: <strong>23 MB</strong><br>系统无法正常工作<br><br>建议立即清理</div>
+        <button class="popup-close" onclick="handlePopupClose('storage-popup')">清理</button>
     </div>
     
     <div id="delete-screen">
@@ -968,23 +719,24 @@
         <div class="caller-photo">👻</div>
         <div class="caller-name">未知号码</div>
         <div class="caller-number">+86 138 0000 0000</div>
-        <div class="call-time" id="call-time">00:15</div>
         <div class="call-actions">
-            <div class="call-btn btn-decline" onclick="rejectCall()">📵</div>
-            <div class="call-btn btn-accept" onclick="answerCall()">📞</div>
+            <div class="call-btn btn-decline" onclick="handleRejectCall()">📵</div>
+            <div class="call-btn btn-accept" onclick="handleAnswerCall()">📞</div>
         </div>
     </div>
     
-    <div class="exit-tip" id="exit-tip">按 <kbd>ESC</kbd> 键退出恶作剧</div>
+    <div class="exit-tip" id="exit-tip">按 <kbd>ESC</kbd> 退出</div>
+    
+    <div id="next-step-overlay" onclick="continueToNextPhase()">继续下一步 ➡️</div>
     
     <div id="final-screen">
         <div class="prank-icon">🎊</div>
         <div class="prank-title">愚人节快乐！😄</div>
-        <div class="prank-subtitle">刚才的"系统崩溃"是纳西妲和爸爸一起准备的恶作剧～<br>你的手机其实很安全！</div>
+        <div class="prank-subtitle">刚才的"系统崩溃"是纳西妲和爸爸准备的恶作剧～<br>你的手机其实很安全！</div>
         <div class="prank-info">
-            <p>📱 这是一个模拟Android系统崩溃的愚人节网页</p>
-            <p>🔒 你所有的数据都完好无损</p>
-            <p>📳 手机震动是模拟效果（需要授权）</p>
+            <p>📱 这是一个模拟Android崩溃的愚人节网页</p>
+            <p>🔒 你的所有数据都完好无损</p>
+            <p>📳 手机震动需要授权才能生效</p>
         </div>
         <button class="exit-btn" onclick="exitPrank()">👋 退出恶作剧</button>
     </div>
@@ -992,106 +744,49 @@
     <script>
         let active = false;
         let intervals = [];
-        let audioInitialized = false;
+        let currentPhase = 0;
+        let waitingForUser = false;
         
         const apps = [
-            { icon: '📷', name: '相机', color: 'linear-gradient(135deg, #4CAF50, #2E7D32)', action: 'camera' },
-            { icon: '📸', name: '相册', color: 'linear-gradient(135deg, #2196F3, #1565C0)', action: 'gallery' },
-            { icon: '📁', name: '文件', color: 'linear-gradient(135deg, #FF9800, #EF6C00)', action: 'files' },
-            { icon: '💬', name: '微信', color: 'linear-gradient(135deg, #9C27B0, #6A1B9A)', action: 'wechat' },
-            { icon: '🎵', name: '音乐', color: 'linear-gradient(135deg, #00BCD4, #00838F)', action: 'music' },
-            { icon: '🎮', name: '游戏', color: 'linear-gradient(135deg, #E91E63, #AD1457)', action: 'game' },
-            { icon: '🔧', name: '工具', color: 'linear-gradient(135deg, #607D8B, #37474F)', action: 'tools' },
-            { icon: '🌐', name: '浏览器', color: 'linear-gradient(135deg, #795548, #4E342E)', action: 'browser' },
-            { icon: '📞', name: '电话', color: 'linear-gradient(135deg, #2196F3, #0D47A1)', action: 'phone' },
-            { icon: '📧', name: '邮件', color: 'linear-gradient(135deg, #F44336, #B71C1C)', action: 'email' },
-            { icon: '🗺️', name: '地图', color: 'linear-gradient(135deg, #4CAF50, #1B5E20)', action: 'map' },
-            { icon: '🛒', name: '购物', color: 'linear-gradient(135deg, #FF5722, #BF360C)', action: 'shop' },
+            { icon: '📷', name: '相机', color: 'linear-gradient(135deg, #4CAF50, #2E7D32)' },
+            { icon: '📸', name: '相册', color: 'linear-gradient(135deg, #2196F3, #1565C0)' },
+            { icon: '📁', name: '文件', color: 'linear-gradient(135deg, #FF9800, #EF6C00)' },
+            { icon: '💬', name: '微信', color: 'linear-gradient(135deg, #9C27B0, #6A1B9A)' },
+            { icon: '🎵', name: '音乐', color: 'linear-gradient(135deg, #00BCD4, #00838F)' },
+            { icon: '🎮', name: '游戏', color: 'linear-gradient(135deg, #E91E63, #AD1457)' },
+            { icon: '🔧', name: '工具', color: 'linear-gradient(135deg, #607D8B, #37474F)' },
+            { icon: '🌐', name: '浏览器', color: 'linear-gradient(135deg, #795548, #4E342E)' },
+            { icon: '📞', name: '电话', color: 'linear-gradient(135deg, #2196F3, #0D47A1)' },
+            { icon: '📧', name: '邮件', color: 'linear-gradient(135deg, #F44336, #B71C1C)' },
+            { icon: '🗺️', name: '地图', color: 'linear-gradient(135deg, #4CAF50, #1B5E20)' },
+            { icon: '🛒', name: '购物', color: 'linear-gradient(135deg, #FF5722, #BF360C)' },
         ];
         
         const files = [
-            "正在扫描: /storage/emulated/0/DCIM/Camera/IMG_2024.jpg",
+            "正在扫描: /storage/emulated/0/DCIM/IMG_2024.jpg",
             "正在扫描: /storage/emulated/0/WhatsApp/voice_001.amr",
             "正在扫描: /storage/emulated/0/Download/简历_2024.pdf",
             "正在扫描: /storage/emulated/0/Tencent/WeChat/文档.doc",
-            "正在扫描: /storage/emulated/0/Pictures/截图_001.png",
-            "正在扫描: /data/data/com.tencent.mm/databases/msg.db",
-            "正在扫描: /data/data/com.alipay/wallet.dat",
             "正在删除: /storage/emulated/0/DCIM/",
             "正在删除: /storage/emulated/0/Pictures/",
             "正在删除: /storage/emulated/0/Download/",
             "正在删除: /data/data/com.tencent.mm/",
             "正在删除: /data/data/com.alipay/",
-            "正在删除: /data/data/com.sina.weibo/",
             "正在格式化: /dev/block/userdata",
             "正在清除: 加密分区",
-            "正在销毁: 启动引导记录",
-            "正在清除: 系统缓存",
             "正在重置: 出厂设置",
         ];
         
         const notifications = [
-            { type: 'critical', icon: '🔴', title: '🚨 系统崩溃', text: 'Android系统已停止运行，所有数据可能丢失' },
-            { type: 'warning', icon: '⚠️', title: '存储设备异常', text: '检测到存储设备严重损坏，读取速度下降99%' },
-            { type: 'system', icon: '🔒', title: '安全警告', text: '检测到恶意程序正在尝试访问您的银行应用' },
-            { type: 'critical', icon: '💀', title: '数据泄露风险', text: '您的通讯录、短信、位置信息正在被上传到远程服务器' },
-            { type: 'warning', icon: '🔥', title: '电池温度异常', text: '温度达到78°C，远超安全阈值45°C' },
-            { type: 'system', icon: '📡', title: '网络异常', text: '检测到可疑的加密货币挖矿进程正在运行' },
-            { type: 'critical', icon: '⛔', title: '设备可能被远程控制', text: '检测到异常的后门连接，来源: 俄罗斯IP地址' },
-            { type: 'warning', icon: '💾', title: '磁盘即将损坏', text: '预计2分钟后磁盘将完全无法使用' },
-            { type: 'critical', icon: '👁️', title: '摄像头被激活', text: '检测到摄像头正在被后台应用使用' },
-            { type: 'system', icon: '📍', title: '位置追踪中', text: '您的位置正在被3个未知应用追踪' },
-            { type: 'critical', icon: '🔑', title: '密码已泄露', text: '您的支付密码可能已被恶意软件记录' },
-            { type: 'warning', icon: '🛡️', title: '安全防护已关闭', text: '您的设备防护已被未知程序禁用' },
-            { type: 'critical', icon: '🎤', title: '麦克风被录音', text: '检测到麦克风正在被后台应用使用' },
-            { type: 'system', icon: '🖥️', title: '屏幕共享中', text: '您的屏幕正在被远程共享给其他设备' },
-            { type: 'critical', icon: '📱', title: 'SIM卡异常', text: '检测到SIM卡已被移除或损坏' },
-            { type: 'warning', icon: '📶', title: '信号塔被干扰', text: '检测到异常的信号干扰，可能是监听设备' },
+            { type: 'critical', icon: '🔴', title: '🚨 系统崩溃', text: 'Android系统已停止运行' },
+            { type: 'warning', icon: '⚠️', title: '存储设备异常', text: '存储设备严重损坏' },
+            { type: 'system', icon: '🔒', title: '安全警告', text: '恶意程序正在尝试访问银行应用' },
+            { type: 'critical', icon: '💀', title: '数据泄露风险', text: '通讯录、短信正在被上传' },
+            { type: 'warning', icon: '🔥', title: '电池温度异常', text: '温度达到78°C' },
+            { type: 'critical', icon: '👁️', title: '摄像头被激活', text: '摄像头正在被后台应用使用' },
+            { type: 'system', icon: '📍', title: '位置追踪中', text: '位置正在被3个应用追踪' },
+            { type: 'critical', icon: '🔑', title: '密码已泄露', text: '支付密码可能被记录' },
         ];
-        
-        // 生成音效
-        function generateAlarmSound() {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.frequency.value = 800;
-            gainNode.gain.value = 0;
-            const duration = 20;
-            const now = audioCtx.currentTime;
-            for (let i = 0; i < duration; i++) {
-                gainNode.gain.setValueAtTime(0.3, now + i * 0.1);
-                gainNode.gain.setValueAtTime(0, now + i * 0.1 + 0.05);
-                oscillator.frequency.setValueAtTime(800, now + i * 0.1);
-                oscillator.frequency.setValueAtTime(600, now + i * 0.1 + 0.05);
-            }
-            oscillator.start();
-            oscillator.stop(now + duration * 0.1);
-        }
-        
-        function generateRingtone() {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const notes = [523, 659, 784, 1047];
-            let noteIndex = 0;
-            const interval = setInterval(() => {
-                if (!active || noteIndex >= 16) {
-                    clearInterval(interval);
-                    return;
-                }
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.frequency.value = notes[noteIndex % 4];
-                gainNode.gain.value = 0.3;
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.3);
-                noteIndex++;
-            }, 400);
-            intervals.push(interval);
-        }
         
         function playBeep() {
             try {
@@ -1101,7 +796,7 @@
                 oscillator.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 oscillator.frequency.value = 1000;
-                gainNode.gain.value = 0.2;
+                gainNode.gain.value = 0.15;
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
                 oscillator.start();
                 oscillator.stop(audioCtx.currentTime + 0.1);
@@ -1115,20 +810,13 @@
         }
         
         function heavyVibrate() {
-            const patterns = [
-                [100,50,100,50,200,100,200],
-                [200,100,200,100,200],
-                [50,50,50,50,50,50,50],
-                [300,150,300],
-            ];
+            const patterns = [[100,50,100,50,200], [200,100,200], [50,50,50,50]];
             vibrate(patterns[Math.floor(Math.random() * patterns.length)]);
         }
         
         function updateTime() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const timeStr = hours + ':' + minutes;
+            const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
             document.getElementById('status-time').textContent = timeStr;
             document.getElementById('home-time').textContent = timeStr;
             const dates = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
@@ -1137,7 +825,7 @@
         
         function initApps() {
             const grid = document.getElementById('app-grid');
-            apps.forEach((app, i) => {
+            apps.forEach(app => {
                 const div = document.createElement('div');
                 div.className = 'app-icon';
                 div.innerHTML = `<div class="icon-box" style="background:${app.color}">${app.icon}</div><span class="app-name">${app.name}</span>`;
@@ -1147,6 +835,7 @@
         }
         
         function triggerAppInteraction(app) {
+            if (waitingForUser) return;
             heavyVibrate();
             playBeep();
             document.body.classList.add('shake');
@@ -1154,32 +843,121 @@
             
             const popup = document.createElement('div');
             popup.className = 'popup-warning';
+            popup.id = 'app-popup-' + Date.now();
             popup.innerHTML = `
                 <div class="popup-icon">${app.icon}</div>
                 <div class="popup-title">应用崩溃</div>
-                <div class="popup-text">${app.name}已停止运行<br><br>是否强制关闭？</div>
-                <button class="popup-close" onclick="this.parentElement.remove();vibrate(50)">强制关闭</button>
+                <div class="popup-text">${app.name}已停止运行</div>
+                <button class="popup-close" onclick="dismissAppPopup('${popup.id}')">确定</button>
             `;
             document.body.appendChild(popup);
             setTimeout(() => popup.style.display = 'block', 10);
+        }
+        
+        function dismissAppPopup(id) {
+            const popup = document.getElementById(id);
+            if (popup) popup.remove();
+            heavyVibrate();
+        }
+        
+        function showNextStepButton() {
+            const btn = document.getElementById('next-step-overlay');
+            btn.style.display = 'block';
+            waitingForUser = true;
+            heavyVibrate();
+        }
+        
+        function hideNextStepButton() {
+            document.getElementById('next-step-overlay').style.display = 'none';
+            waitingForUser = false;
+        }
+        
+        function continueToNextPhase() {
+            hideNextStepButton();
+            playBeep();
             
-            if (Math.random() > 0.5) {
-                setTimeout(() => triggerAttack(), 2000);
+            switch(currentPhase) {
+                case 0:
+                    currentPhase = 1;
+                    showCrashScreen();
+                    break;
+                case 1:
+                    currentPhase = 2;
+                    startNotifications();
+                    showNextStepButton();
+                    break;
+                case 2:
+                    currentPhase = 3;
+                    showPopup('battery-popup');
+                    break;
+                case 3:
+                    currentPhase = 4;
+                    showPopup('virus-popup');
+                    break;
+                case 4:
+                    currentPhase = 5;
+                    showIncomingCall();
+                    break;
+                case 5:
+                    currentPhase = 6;
+                    startDeleteMode();
+                    break;
+                case 6:
+                    showFinalScreen();
+                    break;
             }
         }
         
-        function showTimeAlert() {
-            heavyVibrate();
-            alert('🕐 时间: ' + new Date().toLocaleString() + '\n\n愚人节快乐！😄');
-        }
-        
-        function dismissPopup(id) {
+        function handlePopupClose(id) {
             document.getElementById(id).style.display = 'none';
             heavyVibrate();
             playBeep();
+            
+            if (id === 'battery-popup') {
+                currentPhase = 3;
+                showNextStepButton();
+            } else if (id === 'virus-popup') {
+                currentPhase = 4;
+                showNextStepButton();
+            } else if (id === 'storage-popup') {
+                currentPhase = 5;
+                showNextStepButton();
+            }
         }
         
-        // 开场
+        function handleRestart() {
+            heavyVibrate();
+            playBeep();
+            currentPhase = 1;
+            showCrashScreen();
+        }
+        
+        function handleRejectCall() {
+            heavyVibrate();
+            playBeep();
+            document.getElementById('call-screen').style.display = 'none';
+            currentPhase = 5;
+            startDeleteMode();
+        }
+        
+        function handleAnswerCall() {
+            heavyVibrate();
+            playBeep();
+            document.getElementById('call-screen').innerHTML = `
+                <div class="caller-photo">🤡</div>
+                <div class="caller-name">愚人节快乐！🎉</div>
+                <div class="caller-number">这只是个小玩笑～</div>
+                <div style="margin-top:40px;font-size:40px;">😄🎊</div>
+            `;
+            setTimeout(() => {
+                document.onclick = () => {
+                    document.onclick = null;
+                    currentPhase = 5;
+                    startDeleteMode();
+                };
+            }, 500);
+        }
+        
         document.getElementById('april-fool-intro').addEventListener('click', function() {
             this.style.transition = 'opacity 0.5s';
             this.style.opacity = '0';
@@ -1198,20 +976,17 @@
             let progress = 0;
             const progressBar = document.getElementById('loading-progress');
             const loadInterval = setInterval(() => {
-                progress += Math.random() * 12;
+                progress += Math.random() * 15;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(loadInterval);
-                    setTimeout(showHomeScreen, 300);
+                    setTimeout(showHomeScreen, 200);
                 }
                 progressBar.style.width = progress + '%';
-            }, 100);
+            }, 80);
             intervals.push(loadInterval);
             
-            setTimeout(() => {
-                vibrate([200,100,200]);
-                playBeep();
-            }, 2000);
+            setTimeout(() => { vibrate([150,80,150]); playBeep(); }, 1500);
         }
         
         function showHomeScreen() {
@@ -1224,66 +999,30 @@
             const timeInterval = setInterval(updateTime, 1000);
             intervals.push(timeInterval);
             
-            setTimeout(triggerAttack, 3000);
+            setTimeout(() => {
+                currentPhase = 0;
+                showNextStepButton();
+            }, 2000);
         }
         
-        function triggerAttack() {
-            vibrate([500,200,500]);
-            playBeep();
+        function showCrashScreen() {
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('crash-screen').style.display = 'block';
             document.body.classList.add('heavy-shake');
+            vibrate([300,150,300]);
+            playBeep();
             
             setTimeout(() => {
-                document.getElementById('home-screen').style.display = 'none';
-                document.getElementById('crash-screen').style.display = 'block';
-                vibrate([100,50,100,50,200]);
+                document.body.classList.remove('heavy-shake');
             }, 1500);
-            
-            setTimeout(() => {
-                startNotifications();
-                generateAlarmSound();
-            }, 3000);
-            
-            setTimeout(() => {
-                showPopup('battery-popup');
-                generateAlarmSound();
-            }, 5500);
-            
-            setTimeout(() => {
-                showPopup('storage-popup');
-                generateAlarmSound();
-            }, 7000);
-            
-            setTimeout(() => {
-                document.getElementById('camera-warning').style.display = 'block';
-                heavyVibrate();
-                generateAlarmSound();
-            }, 8500);
-            
-            setTimeout(() => {
-                document.getElementById('location-warning').style.display = 'block';
-                heavyVibrate();
-                generateAlarmSound();
-            }, 10000);
-            
-            setTimeout(() => {
-                document.getElementById('mic-warning').style.display = 'block';
-                heavyVibrate();
-                generateAlarmSound();
-            }, 11500);
-            
-            setTimeout(() => {
-                document.getElementById('screen-warning').style.display = 'block';
-                heavyVibrate();
-                generateAlarmSound();
-            }, 13000);
-            
-            setTimeout(() => {
-                showPopup('virus-popup');
-                generateAlarmSound();
-            }, 14500);
-            
-            setTimeout(showIncomingCall, 18000);
-            setTimeout(startDeleteMode, 22000);
+        }
+        
+        function showPopup(id) {
+            const popup = document.getElementById(id);
+            popup.style.display = 'block';
+            heavyVibrate();
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 500);
         }
         
         function startNotifications() {
@@ -1298,75 +1037,34 @@
                     return;
                 }
                 heavyVibrate();
-                generateAlarmSound();
                 const notif = notifications[index];
                 const div = document.createElement('div');
                 div.className = `notification ${notif.type}`;
-                div.onclick = () => { heavyVibrate(); playBeep(); div.style.opacity = '0.5'; };
                 div.innerHTML = `<div class="notif-icon">${notif.icon}</div><div class="notif-content"><div class="notif-title">${notif.title}</div><div class="notif-text">${notif.text}</div><div class="notif-time">刚刚</div></div>`;
                 panel.insertBefore(div, panel.firstChild);
                 index++;
-            }, 1200);
+            }, 1000);
             intervals.push(notifInterval);
-        }
-        
-        function showPopup(id) {
-            document.getElementById(id).style.display = 'block';
-            heavyVibrate();
-            document.body.classList.add('shake');
-            setTimeout(() => document.body.classList.remove('shake'), 500);
         }
         
         function showIncomingCall() {
             document.getElementById('crash-screen').style.display = 'none';
             document.getElementById('notification-panel').style.display = 'none';
-            ['camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup'].forEach(id => {
+            ['camera-warning','location-warning','mic-warning','screen-warning'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
             document.getElementById('call-screen').style.display = 'flex';
+            vibrate([200,100,200,100,200]);
             
-            document.body.classList.remove('heavy-shake');
-            vibrate([200,100,200,100,200,100,200]);
-            generateRingtone();
-            
-            let callSeconds = 0;
-            const callInterval = setInterval(() => {
-                if (!active) {
-                    clearInterval(callInterval);
+            const callVibrate = setInterval(() => {
+                if (!active || document.getElementById('call-screen').style.display === 'none') {
+                    clearInterval(callVibrate);
                     return;
                 }
-                callSeconds++;
-                const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
-                const secs = String(callSeconds % 60).padStart(2, '0');
-                document.getElementById('call-time').textContent = `${mins}:${secs}`;
                 heavyVibrate();
-            }, 1000);
-            intervals.push(callInterval);
-        }
-        
-        function rejectCall() {
-            heavyVibrate();
-            playBeep();
-            setTimeout(startDeleteMode, 800);
-            document.getElementById('call-screen').style.display = 'none';
-        }
-        
-        function answerCall() {
-            heavyVibrate();
-            playBeep();
-            document.getElementById('call-screen').innerHTML = `
-                <div class="caller-photo">🤡</div>
-                <div class="caller-name">愚人节快乐！🎉</div>
-                <div class="caller-number">这只是个小玩笑～</div>
-                <div style="margin-top:50px;font-size:50px;">😄🎊</div>
-                <div style="margin-top:30px;color:#888;font-size:14px;">(点击任意处继续)</div>
-            `;
-            document.body.classList.remove('heavy-shake');
-            document.onclick = () => {
-                document.onclick = null;
-                setTimeout(startDeleteMode, 500);
-            };
+            }, 1500);
+            intervals.push(callVibrate);
         }
         
         function startDeleteMode() {
@@ -1384,9 +1082,12 @@
                     setTimeout(() => {
                         document.getElementById('final-message').style.display = 'block';
                         heavyVibrate();
-                    }, 800);
+                    }, 600);
                     
-                    setTimeout(showFinalScreen, 4000);
+                    setTimeout(() => {
+                        currentPhase = 6;
+                        showNextStepButton();
+                    }, 3000);
                     return;
                 }
                 
@@ -1404,26 +1105,20 @@
                 document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
                 document.getElementById('bar-fill').style.width = progress + '%';
                 document.getElementById('file-count').textContent = `已清除: ${deletedCount} 个文件`;
-                document.getElementById('time-left').textContent = `剩余: ${Math.ceil((files.length - fileIndex) * 0.5)}秒`;
-            }, 500);
+                document.getElementById('time-left').textContent = `剩余: ${Math.ceil((files.length - fileIndex) * 0.4)}秒`;
+            }, 400);
             intervals.push(deleteInterval);
         }
         
         function showFinalScreen() {
             document.getElementById('delete-screen').style.display = 'none';
+            document.getElementById('next-step-overlay').style.display = 'none';
             document.getElementById('final-screen').style.display = 'flex';
             playBeep();
         }
         
         function exitPrank() {
             window.location.href = 'about:blank';
-            window.close();
-        }
-        
-        function showJoke() {
-            heavyVibrate();
-            alert('🎉 愚人节快乐！你的手机其实很安全～\n\n这是纳西妲和爸爸一起准备的恶作剧！\n\n快去吓你的朋友吧！😄');
-            showFinalScreen();
         }
         
         function stopAll() {
@@ -1432,7 +1127,7 @@
             intervals = [];
             document.body.classList.remove('shake');
             document.body.classList.remove('heavy-shake');
-            ['april-fool-intro','loading','status-bar','nav-bar','home-screen','notification-panel','crash-screen','camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup','delete-screen','call-screen','exit-tip','final-screen'].forEach(id => {
+            ['april-fool-intro','loading','status-bar','nav-bar','home-screen','notification-panel','crash-screen','camera-warning','location-warning','mic-warning','screen-warning','battery-popup','virus-popup','storage-popup','delete-screen','call-screen','exit-tip','final-screen','next-step-overlay'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
@@ -1442,6 +1137,12 @@
             if (e.key === 'Escape' && active) stopAll();
         });
         document.addEventListener('contextmenu', e => e.preventDefault());
+        
+        document.addEventListener('touchmove', function(e) {
+            if (active && document.getElementById('delete-screen').style.display === 'none') {
+                e.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
