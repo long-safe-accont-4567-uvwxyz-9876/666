@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Android System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Roboto', 'Microsoft YaHei', sans-serif;
+        }
+        
+        /* 加载动画 */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #loading .android-logo {
+            width: 80px;
+            height: 80px;
+            background: #3DDC84;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 1s infinite;
+        }
+        
+        #loading .android-logo span {
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+        }
+        
+        #loading .loading-text {
+            color: #fff;
+            margin-top: 30px;
+            font-size: 16px;
+            opacity: 0.8;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.95); opacity: 0.7; }
+        }
+        
+        /* 崩溃主界面 */
+        #crash-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
+            color: #fff;
+            z-index: 99998;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .crash-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .crash-icon {
+            width: 50px;
+            height: 50px;
+            background: #f44336;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            margin-right: 15px;
+        }
+        
+        .crash-title {
+            font-size: 22px;
+            font-weight: 500;
+            color: #f44336;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .crash-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 2px;
+        }
+        
+        .system-info {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .info-row {
+            display: flex;
+            margin: 5px 0;
+        }
+        
+        .info-label {
+            color: rgba(255,255,255,0.5);
+            width: 120px;
+        }
+        
+        .error-details {
+            background: rgba(244, 67, 54, 0.1);
+            border-left: 3px solid #f44336;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .error-title {
+            color: #f44336;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .btn-restart {
+            background: #3DDC84;
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 4px 15px rgba(61, 220, 132, 0.4);
+        }
+        
+        .warning-text {
+            text-align: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        
+        /* 系统通知弹窗 */
+        #notification-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 99997;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .notification {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notif-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .notif-content {
+            flex: 1;
+        }
+        
+        .notif-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .notif-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .notif-time {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 5px;
+        }
+        
+        .critical {
+            border-left: 4px solid #f44336;
+        }
+        
+        .critical .notif-icon {
+            background: #f44336;
+        }
+        
+        .warning .notif-icon {
+            background: #ff9800;
+        }
+        
+        .system .notif-icon {
+            background: #2196f3;
+        }
+        
+        /* 电池警告 */
+        #battery-warning {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            border: 2px solid #f44336;
+            border-radius: 15px;
+            padding: 30px;
+            z-index: 99996;
+            text-align: center;
+            max-width: 300px;
+            animation: blink 0.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        #battery-warning .battery-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        
+        #battery-warning .warning-title {
+            color: #f44336;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        #battery-warning .warning-text {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+        
+        /* 震动效果 */
+        .shake {
+            animation: shake 0.1s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-3px, -3px); }
+            75% { transform: translate(3px, 3px); }
+        }
+        
+        /* 隐私相机警告 */
+        #camera-warning {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #f44336;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 99999;
+            font-weight: bold;
+            font-size: 14px;
+            animation: flash 0.5s infinite;
+        }
+        
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* 文件删除界面 */
+        #delete-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            z-index: 99995;
+            padding: 20px;
+            font-size: 14px;
+        }
+        
+        #delete-screen .header {
+            color: #ff0;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .delete-line {
+            margin: 3px 0;
+            opacity: 0;
+            animation: typeIn 0.1s forwards;
+        }
+        
+        @keyframes typeIn {
+            to { opacity: 1; }
+        }
+        
+        #delete-screen .progress {
+            margin-top: 30px;
+            color: #0ff;
+        }
+        
+        #delete-screen .bar {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            border: 1px solid #0f0;
+            margin-top: 10px;
+        }
+        
+        #delete-screen .bar-fill {
+            height: 100%;
+            background: #0f0;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        #delete-screen .final-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 20px;
+        }
+        
+        /* 模拟状态栏 */
+        .status-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            background: rgba(0,0,0,0.8);
+            z-index: 999999;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 12px;
+            color: #fff;
+        }
+        
+        .status-bar .time {
+            font-weight: bold;
+        }
+        
+        .status-bar .icons {
+            display: flex;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载界面 -->
+    <div id="loading">
+        <div class="android-logo">
+            <span>A</span>
+        </div>
+        <div class="loading-text">Android正在启动...</div>
+    </div>
+    
+    <!-- 状态栏 -->
+    <div class="status-bar" id="status-bar">
+        <div class="time">12:00</div>
+        <div class="icons">📶 🔋 100%</div>
+    </div>
+    
+    <!-- 崩溃界面 -->
+    <div id="crash-screen">
+        <div class="crash-header">
+            <div class="crash-icon">⚠️</div>
+            <div>
+                <div class="crash-title">Android System</div>
+                <div class="crash-subtitle">系统遇到问题，需要重新启动</div>
+            </div>
+        </div>
+        
+        <div class="system-info">
+            <div class="info-row">
+                <span class="info-label">设备:</span>
+                <span>Samsung Galaxy S21</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Android版本:</span>
+                <span>13</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">内核:</span>
+                <span>5.10.89-arm64</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">基带:</span>
+                <span>G995BZSJ3CVI1</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">编译号:</span>
+                <span>TP1A.220624.014</span>
+            </div>
+        </div>
+        
+        <div class="error-details">
+            <div class="error-title">FATAL EXCEPTION: main</div>
+            <div>Process: com.android.systemui, PID: 2458</div>
+            <div>java.lang.RuntimeException:的系统崩溃</div>
+            <div>at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2871)</div>
+            <div>at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2956)</div>
+            <div>at android.app.ActivityThread.-wrap11(Unknown Source:0)</div>
+            <div>at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1571)</div>
+            <div>at android.os.Handler.dispatchMessage(Handler.java:106)</div>
+            <div>at android.os.Looper.loop(Looper.java:164)</div>
+            <div>at android.app.ActivityThread.main(ActivityThread.java:6524)</div>
+            <div style="color: #f44336;">Caused by: java.lang.NullPointerException</div>
+            <div style="color: #f44336;">Attempt to invoke virtual method 'android.os.Bundle android.app.Activity.onCreate(android.os.Bundle)' on a null object reference</div>
+            <div style="margin-top: 10px;"> Killed (signal 9: SIGKILL)</div>
+        </div>
+        
+        <button class="btn-restart" onclick="showJoke()">🔄 重启设备</button>
+        
+        <div class="warning-text">
+            ⚠️ 您的设备可能存在风险，建议立即备份数据<br>
+            如果问题持续存在，请联系设备制造商
+        </div>
+    </div>
+    
+    <!-- 通知面板 -->
+    <div id="notification-panel"></div>
+    
+    <!-- 电池警告 -->
+    <div id="battery-warning">
+        <div class="battery-icon">🔋</div>
+        <div class="warning-title">电池温度异常</div>
+        <div class="warning-text">检测到电池温度过高<br>可能发生燃烧或爆炸<br><br>⚠️ 危险：立即停止使用！</div>
+    </div>
+    
+    <!-- 相机警告 -->
+    <div id="camera-warning">📷 相机正在被访问</div>
+    
+    <!-- 删除界面 -->
+    <div id="delete-screen">
+        <div class="header">⚠️ 严重安全警告 ⚠️</div>
+        <div id="delete-content"></div>
+        <div class="progress">
+            数据擦除进度: <span id="progress-text">0%</span>
+            <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+        </div>
+        <div class="final-message" id="final-message">
+            <div style="color: #f00; font-size: 24px; margin-bottom: 20px;">😱 数据已全部清除！</div>
+            <div style="color: #0f0;">愚人节快乐！这是假的！🎉</div>
+            <div style="margin-top: 30px; color: #888; font-size: 14px;">你的文件其实很安全～</div>
+        </div>
+    </div>
+    
+    <script>
+        const files = [
+            "正在扫描: /storage/emulated/0/DCIM/Camera/photo_2024.jpg",
+            "正在扫描: /storage/emulated/0/WhatsApp/Media/voice_001.amr",
+            "正在扫描: /storage/emulated/0/Download/重要文件.pdf",
+            "正在扫描: /storage/emulated/0/Tencent/WeChat/语音消息/*.amr",
+            "正在扫描: /storage/emulated/0/Alipay/账单.xlsx",
+            "正在扫描: /system/app/Chrome/Chrome.apk",
+            "正在删除: /data/data/com.tencent.mm/",
+            "正在删除: /data/data/com.alipay/",
+            "正在删除: /storage/emulated/0/Pictures/",
+            "正在格式化: /dev/block/bootloader",
+            "正在清除: Android系统分区",
+            "正在销毁: 用户数据分区"
+        ];
+        
+        const notifications = [
+            { type: 'critical', icon: '🔴', title: '系统崩溃', text: 'Android系统已停止运行，所有数据可能丢失' },
+            { type: 'warning', icon: '⚠️', title: '存储空间异常', text: '检测到存储设备严重损坏' },
+            { type: 'system', icon: '🔒', title: '安全警告', text: '检测到恶意程序试图访问敏感数据' },
+            { type: 'critical', icon: '💀', title: '数据泄露风险', text: '您的个人信息正在被上传' },
+            { type: 'warning', icon: '🔥', title: '电池过热', text: '温度达到78°C，立即停止使用' },
+            { type: 'system', icon: '📱', title: '系统更新失败', text: '关键系统文件损坏' },
+            { type: 'critical', icon: '⛔', title: '设备可能被远程控制', text: '检测到异常网络连接' },
+            { type: 'warning', icon: '💾', title: '磁盘即将损坏', text: '预计5分钟后磁盘将无法使用' }
+        ];
+        
+        // 页面加载后自动开始
+        window.onload = function() {
+            setTimeout(() => {
+                startPrank();
+            }, 1500);
+        };
+        
+        function startPrank() {
+            // 隐藏加载界面
+            document.getElementById('loading').style.display = 'none';
+            
+            // 开始震动效果
+            document.body.classList.add('shake');
+            
+            // 显示状态栏
+            setTimeout(() => {
+                document.getElementById('status-bar').style.display = 'flex';
+                updateTime();
+            }, 500);
+            
+            // 1-3秒后显示崩溃界面
+            setTimeout(() => {
+                document.getElementById('crash-screen').style.display = 'block';
+            }, 2000);
+            
+            // 3-5秒后开始大量通知弹窗
+            setTimeout(() => {
+                startNotifications();
+            }, 4000);
+            
+            // 6-8秒后显示电池警告
+            setTimeout(() => {
+                document.getElementById('battery-warning').style.display = 'block';
+                document.body.classList.add('shake');
+            }, 7000);
+            
+            // 10秒后显示相机警告
+            setTimeout(() => {
+                document.getElementById('camera-warning').style.display = 'block';
+            }, 10000);
+            
+            // 12秒后进入删除模式
+            setTimeout(() => {
+                startDeleteMode();
+            }, 13000);
+        }
+        
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.querySelector('.status-bar .time').textContent = hours + ':' + minutes;
+        }
+        
+        function startNotifications() {
+            const panel = document.getElementById('notification-panel');
+            panel.style.display = 'block';
+            panel.innerHTML = '';
+            
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index >= notifications.length) {
+                    clearInterval(interval);
+                    return;
+                }
+                
+                const notif = notifications[index];
+                const div = document.createElement('div');
+                div.className = 'notification ' + notif.type;
+                div.innerHTML = `
+                    <div class="notif-icon">${notif.icon}</div>
+                    <div class="notif-content">
+                        <div class="notif-title">${notif.title}</div>
+                        <div class="notif-text">${notif.text}</div>
+                        <div class="notif-time">刚刚</div>
+                    </div>
+                `;
+                panel.insertBefore(div, panel.firstChild);
+                index++;
+            }, 1500);
+        }
+        
+        function startDeleteMode() {
+            document.getElementById('crash-screen').style.display = 'none';
+            document.getElementById('notification-panel').style.display = 'none';
+            document.getElementById('battery-warning').style.display = 'none';
+            document.getElementById('camera-warning').style.display = 'none';
+            
+            const screen = document.getElementById('delete-screen');
+            screen.style.display = 'block';
+            
+            const content = document.getElementById('delete-content');
+            let progress = 0;
+            let fileIndex = 0;
+            
+            const interval = setInterval(() => {
+                if (fileIndex < files.length) {
+                    const div = document.createElement('div');
+                    div.className = 'delete-line';
+                    div.textContent = files[fileIndex];
+                    content.appendChild(div);
+                    fileIndex++;
+                    progress = Math.min(100, (fileIndex / files.length) * 100);
+                    document.getElementById('progress-text').textContent = Math.floor(progress) + '%';
+                    document.getElementById('bar-fill').style.width = progress + '%';
+                } else {
+                    clearInterval(interval);
+                    document.getElementById('progress-text').parentElement.style.display = 'none';
+                    document.getElementById('final-message').style.display = 'block';
+                }
+            }, 800);
+        }
+        
+        function showJoke() {
+            alert('🎉 愚人节快乐！你的手机很安全～\n\n这只是纳西妲和爸爸一起准备的恶作剧小惊喜！\n\n记得去捉弄朋友吧！😄');
+        }
+        
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        
+        // 禁用键盘快捷键
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
