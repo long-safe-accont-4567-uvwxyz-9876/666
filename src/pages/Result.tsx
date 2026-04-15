@@ -31,11 +31,35 @@ const Result: React.FC = () => {
 
   const handleCopy = async () => {
     try {
+      // 尝试使用Clipboard API
       await navigator.clipboard.writeText(confessionResult);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy: ', err);
+      console.error('Failed to copy with Clipboard API: ', err);
+      // 降级方案：使用传统的文本选择和复制
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = confessionResult;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const success = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (success) {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        } else {
+          throw new Error('Failed to copy with execCommand');
+        }
+      } catch (execErr) {
+        console.error('Failed to copy with execCommand: ', execErr);
+        // 提示用户手动复制
+        alert('复制失败，请手动复制表白话语：\n' + confessionResult);
+      }
     }
   };
 
