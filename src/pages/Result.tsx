@@ -72,10 +72,20 @@ const Result: React.FC = () => {
         });
       } catch (err) {
         console.error('Error sharing: ', err);
+        // 分享失败时回退到复制功能
+        handleCopy();
+        // 提示用户分享失败，已复制到剪贴板
+        setTimeout(() => {
+          alert('分享失败，已将表白话语复制到剪贴板，您可以手动粘贴分享');
+        }, 500);
       }
     } else {
       // 回退到复制功能
       handleCopy();
+      // 提示用户分享API不可用，已复制到剪贴板
+      setTimeout(() => {
+        alert('分享功能不可用，已将表白话语复制到剪贴板，您可以手动粘贴分享');
+      }, 500);
     }
   };
 
