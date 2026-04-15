@@ -9,6 +9,9 @@ interface Preferences {
   personality: string[];
   hobbies: string[];
   loveLanguage: string;
+  traits: string[];
+  loveStyle: string[];
+  relationshipStyle: string;
 }
 
 interface PartnerPreferences {
@@ -44,6 +47,9 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
       personality: [],
       hobbies: [],
       loveLanguage: '',
+      traits: [],
+      loveStyle: [],
+      relationshipStyle: '',
     },
     partnerPreferences: {
       idealTraits: [],
@@ -65,6 +71,9 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
         personality: [],
         hobbies: [],
         loveLanguage: '',
+        traits: [],
+        loveStyle: [],
+        relationshipStyle: '',
       },
       partnerPreferences: {
         idealTraits: [],
