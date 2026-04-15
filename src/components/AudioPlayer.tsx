@@ -37,8 +37,9 @@ export default function AudioPlayer() {
         volume={0.3}
         className="hidden"
       >
-        {/* 使用在线音频资源 */}
-        <source src="https://example.com/恋愛サーキュレーション.mp3" type="audio/mpeg" />
+        {/* 请将下方的音频URL替换为您的《恋愛サーキュレーション》音频文件的实际URL */}
+        {/* 您可以上传音频文件到云存储服务（如GitHub Pages、Vercel、Netlify等）获取公共URL */}
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
         您的浏览器不支持音频元素。
       </audio>
     </div>
