@@ -75,7 +75,7 @@ const Questionnaire: React.FC = () => {
           }
         };
       });
-    } else if (name === 'relationshipGoals') {
+    } else if (name === 'relationshipGoals' || name === 'firstImpression') {
       setUserInfo(prev => ({
         ...prev,
         partnerPreferences: {
@@ -104,11 +104,13 @@ const Questionnaire: React.FC = () => {
   const generateConfession = () => {
     // 简单的表白话语生成逻辑
     const { personalInfo, preferences, partnerPreferences } = userInfo;
-    
+
     const confessionTemplates = [
-      `嘿，我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。我喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}。我理想中的另一半是${partnerPreferences.idealTraits.join('、')}的人，希望能和你一起${partnerPreferences.relationshipGoals}。你愿意做我的另一半吗？`,
-      `你好呀！我叫${personalInfo.name}，是一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。平时我喜欢${preferences.hobbies.join('、')}，最在意的是${preferences.loveLanguage}。我觉得你就是我一直在找的人，因为你有${partnerPreferences.idealTraits.join('、')}这些我最看重的品质。我希望能和你一起${partnerPreferences.relationshipGoals}，你愿意给我这个机会吗？`,
-      `${personalInfo.gender === 'male' ? '小姐姐' : '小哥哥'}你好！我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。我喜欢${preferences.hobbies.join('、')}，最享受的是${preferences.loveLanguage}。我理想的另一半就是像你这样${partnerPreferences.idealTraits.join('、')}的人，希望能和你一起${partnerPreferences.relationshipGoals}。可以和我在一起吗？`
+      `嘿，我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。我对你${partnerPreferences.firstImpression}，我喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}。我理想中的另一半是${partnerPreferences.idealTraits.join('、')}的人，希望能和你一起${partnerPreferences.relationshipGoals}。你愿意做我的另一半吗？`,
+      `你好呀！我叫${personalInfo.name}，是一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。第一次见到你时${partnerPreferences.firstImpression}，平时我喜欢${preferences.hobbies.join('、')}，最在意的是${preferences.loveLanguage}。我觉得你就是我一直在找的人，因为你有${partnerPreferences.idealTraits.join('、')}这些我最看重的品质。我希望能和你一起${partnerPreferences.relationshipGoals}，你愿意给我这个机会吗？`,
+      `${personalInfo.gender === 'male' ? '小姐姐' : '小哥哥'}你好！我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。对你的第一印象是${partnerPreferences.firstImpression}，我喜欢${preferences.hobbies.join('、')}，最享受的是${preferences.loveLanguage}。我理想的另一半就是像你这样${partnerPreferences.idealTraits.join('、')}的人，希望能和你一起${partnerPreferences.relationshipGoals}。可以和我在一起吗？`,
+      `亲爱的，我是${personalInfo.name}。从第一次见到你时${partnerPreferences.firstImpression}，我就被你吸引了。我是一个${preferences.personality.join('、')}的人，喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}。你身上的${partnerPreferences.idealTraits.join('、')}品质让我着迷，我希望能和你一起${partnerPreferences.relationshipGoals}。做我的女朋友/男朋友好吗？`,
+      `你好，我是${personalInfo.name}。对你的第一印象是${partnerPreferences.firstImpression}，我觉得你很特别。我是一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}，喜欢${preferences.hobbies.join('、')}。我看重${preferences.loveLanguage}，希望能找到一个${partnerPreferences.idealTraits.join('、')}的另一半，和TA一起${partnerPreferences.relationshipGoals}。你愿意和我一起吗？`
     ];
 
     const randomTemplate = confessionTemplates[Math.floor(Math.random() * confessionTemplates.length)];
@@ -317,6 +319,23 @@ const Questionnaire: React.FC = () => {
                   <option value="共同成长">共同成长</option>
                   <option value="组建家庭">组建家庭</option>
                   <option value="长期稳定">长期稳定</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">对TA的第一印象</label>
+                <select
+                  name="firstImpression"
+                  value={userInfo.partnerPreferences.firstImpression}
+                  onChange={handlePartnerPreferenceChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                >
+                  <option value="">请选择</option>
+                  <option value="一见钟情">一见钟情</option>
+                  <option value="慢慢喜欢">慢慢喜欢</option>
+                  <option value="觉得有趣">觉得有趣</option>
+                  <option value="很有才华">很有才华</option>
+                  <option value="温柔体贴">温柔体贴</option>
                 </select>
               </div>
             </div>

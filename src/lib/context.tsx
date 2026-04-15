@@ -15,6 +15,7 @@ interface PartnerPreferences {
   idealTraits: string[];
   partnerInterests: string[];
   relationshipGoals: string;
+  firstImpression: string;
 }
 
 interface UserInfo {
@@ -48,6 +49,7 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
       idealTraits: [],
       partnerInterests: [],
       relationshipGoals: '',
+      firstImpression: '',
     },
   });
 
@@ -68,6 +70,7 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
         idealTraits: [],
         partnerInterests: [],
         relationshipGoals: '',
+        firstImpression: '',
       },
     });
     setConfessionResult('');
