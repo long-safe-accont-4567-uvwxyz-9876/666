@@ -37,8 +37,8 @@ export default function AudioPlayer() {
         volume={0.3}
         className="hidden"
       >
-        {/* 注意：需要将实际的音频文件放在 assets/audio/ 目录下 */}
-        <source src="/src/assets/audio/恋愛サーキュレーション.mp3" type="audio/mpeg" />
+        {/* 使用在线音频资源 */}
+        <source src="https://example.com/恋愛サーキュレーション.mp3" type="audio/mpeg" />
         您的浏览器不支持音频元素。
       </audio>
     </div>
