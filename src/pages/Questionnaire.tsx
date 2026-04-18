@@ -7,7 +7,7 @@ const Questionnaire: React.FC = () => {
   const { userInfo, setUserInfo, setConfessionResult, setPersonalityAnalysis } = useConfession();
   const [currentStep, setCurrentStep] = useState(0);
 
-  const steps = ['个人信息', '性格测试', '兴趣爱好', '爱情观', '伴侣偏好'];
+  const steps = ['个人信息', '性格测试', '兴趣爱好', '爱情观', '伴侣偏好', '理想对象'];
 
   const handlePersonalInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -55,7 +55,7 @@ const Questionnaire: React.FC = () => {
 
   const handlePartnerPreferenceChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (name === 'idealTraits' || name === 'partnerInterests') {
+    if (name === 'idealTraits' || name === 'partnerInterests' || name === 'appearanceStyle' || name === 'personalityType' || name === 'lifestyle') {
       const checked = (e.target as HTMLInputElement).checked;
       setUserInfo(prev => {
         const currentValues = [...(prev.partnerPreferences[name as keyof typeof prev.partnerPreferences] as string[])];
@@ -75,7 +75,7 @@ const Questionnaire: React.FC = () => {
           }
         };
       });
-    } else if (name === 'relationshipGoals' || name === 'firstImpression') {
+    } else if (name === 'relationshipGoals' || name === 'firstImpression' || name === 'relationshipRoles') {
       setUserInfo(prev => ({
         ...prev,
         partnerPreferences: {
@@ -157,16 +157,32 @@ const Questionnaire: React.FC = () => {
   };
 
   const generateConfession = () => {
-    // 简单的表白话语生成逻辑
     const { personalInfo, preferences, partnerPreferences } = userInfo;
 
+    const appearanceText = partnerPreferences.appearanceStyle.length > 0 
+      ? `${partnerPreferences.appearanceStyle.join('、')}的风格` 
+      : '';
+    const personalityText = partnerPreferences.personalityType.length > 0 
+      ? `${partnerPreferences.personalityType.join('、')}的性格` 
+      : '';
+    const lifestyleText = partnerPreferences.lifestyle.length > 0 
+      ? `喜欢${partnerPreferences.lifestyle.join('、')}的生活方式` 
+      : '';
+    const rolesText = partnerPreferences.relationshipRoles 
+      ? `希望在关系中${partnerPreferences.relationshipRoles}` 
+      : '';
+
+    const idealPartnerDescription = [appearanceText, personalityText, lifestyleText, rolesText]
+      .filter(text => text)
+      .join('，');
+
     const confessionTemplates = [
-      `嘿，我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。我对你${partnerPreferences.firstImpression}，我喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}，恋爱风格是${preferences.loveStyle.join('、')}。我理想中的另一半是${partnerPreferences.idealTraits.join('、')}的人，希望能和你一起${partnerPreferences.relationshipGoals}，建立${preferences.relationshipStyle}的关系。你愿意做我的另一半吗？`,
-      `你好呀！我叫${personalInfo.name}，是一个${preferences.personality.join('、')}且${preferences.traits.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。第一次见到你时${partnerPreferences.firstImpression}，平时我喜欢${preferences.hobbies.join('、')}，最在意的是${preferences.loveLanguage}。我觉得你就是我一直在找的人，因为你有${partnerPreferences.idealTraits.join('、')}这些我最看重的品质。我希望能和你一起${partnerPreferences.relationshipGoals}，你愿意给我这个机会吗？`,
-      `${personalInfo.gender === 'male' ? '小姐姐' : '小哥哥'}你好！我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。对你的第一印象是${partnerPreferences.firstImpression}，我喜欢${preferences.hobbies.join('、')}，最享受的是${preferences.loveLanguage}。我理想的另一半就是像你这样${partnerPreferences.idealTraits.join('、')}的人，希望能和你一起${partnerPreferences.relationshipGoals}。可以和我在一起吗？`,
-      `亲爱的，我是${personalInfo.name}。从第一次见到你时${partnerPreferences.firstImpression}，我就被你吸引了。我是一个${preferences.personality.join('、')}且${preferences.traits.join('、')}的人，喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}，恋爱风格是${preferences.loveStyle.join('、')}。你身上的${partnerPreferences.idealTraits.join('、')}品质让我着迷，我希望能和你一起${partnerPreferences.relationshipGoals}，建立${preferences.relationshipStyle}的关系。做我的女朋友/男朋友好吗？`,
-      `你好，我是${personalInfo.name}。对你的第一印象是${partnerPreferences.firstImpression}，我觉得你很特别。我是一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}，喜欢${preferences.hobbies.join('、')}。我看重${preferences.loveLanguage}，希望能找到一个${partnerPreferences.idealTraits.join('、')}的另一半，和TA一起${partnerPreferences.relationshipGoals}。你愿意和我一起吗？`,
-      `嗨，${personalInfo.gender === 'male' ? '女神' : '男神'}！我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。第一次见到你时${partnerPreferences.firstImpression}，我就知道你是我要找的人。我喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}，我希望能和你建立${preferences.relationshipStyle}的关系，一起${partnerPreferences.relationshipGoals}。你愿意和我在一起吗？`
+      `嘿，我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。我对你${partnerPreferences.firstImpression}，我喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}，恋爱风格是${preferences.loveStyle.join('、')}。我理想中的另一半是${partnerPreferences.idealTraits.join('、')}的人，${idealPartnerDescription}。希望能和你一起${partnerPreferences.relationshipGoals}，建立${preferences.relationshipStyle}的关系。你愿意做我的另一半吗？`,
+      `你好呀！我叫${personalInfo.name}，是一个${preferences.personality.join('、')}且${preferences.traits.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。第一次见到你时${partnerPreferences.firstImpression}，平时我喜欢${preferences.hobbies.join('、')}，最在意的是${preferences.loveLanguage}。我觉得你就是我一直在找的人，因为你有${partnerPreferences.idealTraits.join('、')}这些我最看重的品质，${idealPartnerDescription}。我希望能和你一起${partnerPreferences.relationshipGoals}，你愿意给我这个机会吗？`,
+      `${personalInfo.gender === 'male' ? '小姐姐' : '小哥哥'}你好！我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。对你的第一印象是${partnerPreferences.firstImpression}，我喜欢${preferences.hobbies.join('、')}，最享受的是${preferences.loveLanguage}。我理想的另一半就是像你这样${partnerPreferences.idealTraits.join('、')}的人，${idealPartnerDescription}。希望能和你一起${partnerPreferences.relationshipGoals}。可以和我在一起吗？`,
+      `亲爱的，我是${personalInfo.name}。从第一次见到你时${partnerPreferences.firstImpression}，我就被你吸引了。我是一个${preferences.personality.join('、')}且${preferences.traits.join('、')}的人，喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}，恋爱风格是${preferences.loveStyle.join('、')}。你身上的${partnerPreferences.idealTraits.join('、')}品质让我着迷，${idealPartnerDescription}。我希望能和你一起${partnerPreferences.relationshipGoals}，建立${preferences.relationshipStyle}的关系。做我的女朋友/男朋友好吗？`,
+      `你好，我是${personalInfo.name}。对你的第一印象是${partnerPreferences.firstImpression}，我觉得你很特别。我是一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}，喜欢${preferences.hobbies.join('、')}。我看重${preferences.loveLanguage}，希望能找到一个${partnerPreferences.idealTraits.join('、')}的另一半，${idealPartnerDescription}，和TA一起${partnerPreferences.relationshipGoals}。你愿意和我一起吗？`,
+      `嗨，${personalInfo.gender === 'male' ? '女神' : '男神'}！我是${personalInfo.name}，一个${preferences.personality.join('、')}的${personalInfo.gender === 'male' ? '男生' : '女生'}。第一次见到你时${partnerPreferences.firstImpression}，我就知道你是我要找的人。我喜欢${preferences.hobbies.join('、')}，我的爱语是${preferences.loveLanguage}，${idealPartnerDescription}。我希望能和你建立${preferences.relationshipStyle}的关系，一起${partnerPreferences.relationshipGoals}。你愿意和我在一起吗？`
     ];
 
     const randomTemplate = confessionTemplates[Math.floor(Math.random() * confessionTemplates.length)];
@@ -468,6 +484,89 @@ const Questionnaire: React.FC = () => {
                   <option value="觉得有趣">觉得有趣</option>
                   <option value="很有才华">很有才华</option>
                   <option value="温柔体贴">温柔体贴</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 理想对象步骤 */}
+        {currentStep === 5 && (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold text-gray-800">理想中的TA</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">外貌风格（可多选）</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {['清新自然', '优雅气质', '时尚潮流', '运动阳光', '文艺知性', '成熟稳重'].map(style => (
+                    <label key={style} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="appearanceStyle"
+                        value={style}
+                        checked={userInfo.partnerPreferences.appearanceStyle?.includes(style) || false}
+                        onChange={handlePartnerPreferenceChange}
+                        className="mr-2"
+                      />
+                      <span>{style}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">性格类型（可多选）</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {['活泼开朗', '温柔内向', '自信果断', '敏感细腻', '幽默风趣', '成熟稳重'].map(type => (
+                    <label key={type} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="personalityType"
+                        value={type}
+                        checked={userInfo.partnerPreferences.personalityType?.includes(type) || false}
+                        onChange={handlePartnerPreferenceChange}
+                        className="mr-2"
+                      />
+                      <span>{type}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">生活方式（可多选）</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {['宅家温馨', '爱旅行冒险', '规律作息', '随性自由', '社交达人', '安静独处'].map(lifestyle => (
+                    <label key={lifestyle} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="lifestyle"
+                        value={lifestyle}
+                        checked={userInfo.partnerPreferences.lifestyle?.includes(lifestyle) || false}
+                        onChange={handlePartnerPreferenceChange}
+                        className="mr-2"
+                      />
+                      <span>{lifestyle}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">关系中的角色</label>
+                <select
+                  name="relationshipRoles"
+                  value={userInfo.partnerPreferences.relationshipRoles || ''}
+                  onChange={handlePartnerPreferenceChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                >
+                  <option value="">请选择</option>
+                  <option value="像朋友一样平等">像朋友一样平等</option>
+                  <option value="互相照顾">互相照顾</option>
+                  <option value="TA比较依赖我">TA比较依赖我</option>
+                  <option value="我比较依赖TA">我比较依赖TA</option>
+                  <option value="彼此独立又亲密">彼此独立又亲密</option>
                 </select>
               </div>
             </div>

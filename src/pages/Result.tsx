@@ -4,7 +4,7 @@ import { useConfession } from '@/lib/context';
 
 const Result: React.FC = () => {
   const navigate = useNavigate();
-  const { confessionResult, resetData, personalityAnalysis } = useConfession();
+  const { confessionResult, resetData, personalityAnalysis, userInfo } = useConfession();
   const [copied, setCopied] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
 
@@ -201,6 +201,33 @@ const Result: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* 理想对象信息 */}
+        <div className="mt-8 p-6 bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl border border-rose-100">
+          <h2 className="text-xl font-bold text-center text-rose-600 mb-4">💑 你理想中的TA</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {userInfo.partnerPreferences.appearanceStyle.length > 0 && (
+              <div>
+                <p className="font-medium text-gray-700">外貌风格：<span className="text-rose-600">{userInfo.partnerPreferences.appearanceStyle.join('、')}</span></p>
+              </div>
+            )}
+            {userInfo.partnerPreferences.personalityType.length > 0 && (
+              <div>
+                <p className="font-medium text-gray-700">性格类型：<span className="text-pink-600">{userInfo.partnerPreferences.personalityType.join('、')}</span></p>
+              </div>
+            )}
+            {userInfo.partnerPreferences.lifestyle.length > 0 && (
+              <div>
+                <p className="font-medium text-gray-700">生活方式：<span className="text-fuchsia-600">{userInfo.partnerPreferences.lifestyle.join('、')}</span></p>
+              </div>
+            )}
+            {userInfo.partnerPreferences.relationshipRoles && (
+              <div>
+                <p className="font-medium text-gray-700">关系中的角色：<span className="text-violet-600">{userInfo.partnerPreferences.relationshipRoles}</span></p>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* 趣味提示 */}
         <div className="mt-8 p-4 bg-yellow-50 rounded-lg border border-yellow-200 text-center">

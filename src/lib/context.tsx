@@ -19,6 +19,10 @@ interface PartnerPreferences {
   partnerInterests: string[];
   relationshipGoals: string;
   firstImpression: string;
+  appearanceStyle: string[];
+  personalityType: string[];
+  lifestyle: string[];
+  relationshipRoles: string;
 }
 
 interface PersonalityAnalysis {
@@ -68,6 +72,10 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
       partnerInterests: [],
       relationshipGoals: '',
       firstImpression: '',
+      appearanceStyle: [],
+      personalityType: [],
+      lifestyle: [],
+      relationshipRoles: '',
     },
   });
 
@@ -93,6 +101,10 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
         partnerInterests: [],
         relationshipGoals: '',
         firstImpression: '',
+        appearanceStyle: [],
+        personalityType: [],
+        lifestyle: [],
+        relationshipRoles: '',
       },
     });
     setConfessionResult('');
