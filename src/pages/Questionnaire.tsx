@@ -4,7 +4,7 @@ import { useConfession } from '@/lib/context';
 
 const Questionnaire: React.FC = () => {
   const navigate = useNavigate();
-  const { userInfo, setUserInfo, setConfessionResult } = useConfession();
+  const { userInfo, setUserInfo, setConfessionResult, setPersonalityAnalysis } = useConfession();
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = ['个人信息', '性格测试', '兴趣爱好', '爱情观', '伴侣偏好'];
@@ -101,6 +101,61 @@ const Questionnaire: React.FC = () => {
     }
   };
 
+  // 人格分析函数
+  const analyzePersonality = () => {
+    const { preferences, partnerPreferences } = userInfo;
+    
+    // 基于用户回答分析人格类型
+    const personalityTypes = [
+      { type: '浪漫理想型', traits: ['温柔', '感性', '浪漫', '情感丰富'], match: (p: any) => p.loveStyle.includes('浪漫型') || p.personality.includes('温柔') },
+      { type: '理性务实型', traits: ['理性', '逻辑思维', '务实', '有责任感'], match: (p: any) => p.traits.includes('理性') || p.traits.includes('逻辑思维') || p.loveStyle.includes('务实型') },
+      { type: '活力冒险型', traits: ['开朗', '勇敢', '自信', '创造力'], match: (p: any) => p.personality.includes('开朗') || p.traits.includes('勇敢') || p.traits.includes('创造力') },
+      { type: '稳定可靠型', traits: ['耐心', '细心', '善良', '谦虚'], match: (p: any) => p.traits.includes('耐心') || p.traits.includes('细心') || p.loveStyle.includes('稳定型') },
+      { type: '自由独立型', traits: ['独立', '自信', '创造力', '直率'], match: (p: any) => p.traits.includes('独立') || p.loveStyle.includes('自由型') || p.personality.includes('直率') }
+    ];
+
+    // 确定人格类型
+    let personalityType = personalityTypes.find(type => type.match(preferences));
+    if (!personalityType) {
+      personalityType = personalityTypes[Math.floor(Math.random() * personalityTypes.length)];
+    }
+
+    // 生成优点和缺点
+    const strengthsMap: { [key: string]: string[] } = {
+      '浪漫理想型': ['情感丰富', '温柔体贴', '善于表达爱意', '富有创造力'],
+      '理性务实型': ['逻辑清晰', '责任感强', '可靠稳定', '善于解决问题'],
+      '活力冒险型': ['充满活力', '勇敢自信', '富有创造力', '善于社交'],
+      '稳定可靠型': ['耐心细致', '善良体贴', '责任感强', '值得信赖'],
+      '自由独立型': ['独立自信', '创造力强', '直率真诚', '适应性强']
+    };
+
+    const weaknessesMap: { [key: string]: string[] } = {
+      '浪漫理想型': ['有时过于感性', '可能理想化爱情', '情绪波动较大', '容易受伤'],
+      '理性务实型': ['可能过于理性', '不善于表达情感', '有时过于严肃', '对自己要求过高'],
+      '活力冒险型': ['可能缺乏耐心', '有时过于冲动', '注意力容易分散', '可能忽视细节'],
+      '稳定可靠型': ['可能过于保守', '不善于创新', '有时过于谨慎', '可能缺乏激情'],
+      '自由独立型': ['可能过于自我', '不善于妥协', '有时过于直率', '可能忽视他人感受']
+    };
+
+    const strengths = strengthsMap[personalityType.type] || ['有爱心', '善良', '真诚'];
+    const weaknesses = weaknessesMap[personalityType.type] || ['偶尔犹豫', '有时敏感', '追求完美'];
+
+    // 分析恋爱风格
+    const loveStyle = preferences.loveStyle.join('、') || '平衡型';
+
+    // 分析与理想伴侣的兼容性
+    const compatibility = `与理想中的${partnerPreferences.idealTraits.join('、')}型伴侣兼容性较高，你们可以${partnerPreferences.relationshipGoals}，建立${preferences.relationshipStyle}的关系。`;
+
+    return {
+      type: personalityType.type,
+      traits: personalityType.traits,
+      strengths,
+      weaknesses,
+      loveStyle,
+      compatibility
+    };
+  };
+
   const generateConfession = () => {
     // 简单的表白话语生成逻辑
     const { personalInfo, preferences, partnerPreferences } = userInfo;
@@ -116,8 +171,12 @@ const Questionnaire: React.FC = () => {
 
     const randomTemplate = confessionTemplates[Math.floor(Math.random() * confessionTemplates.length)];
     
-    // 存储表白结果到context
+    // 生成人格分析
+    const analysis = analyzePersonality();
+    
+    // 存储结果到context
     setConfessionResult(randomTemplate);
+    setPersonalityAnalysis(analysis);
     
     // 导航到结果页面
     navigate('/result');

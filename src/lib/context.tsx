@@ -21,10 +21,20 @@ interface PartnerPreferences {
   firstImpression: string;
 }
 
+interface PersonalityAnalysis {
+  type: string;
+  traits: string[];
+  strengths: string[];
+  weaknesses: string[];
+  loveStyle: string;
+  compatibility: string;
+}
+
 interface UserInfo {
   personalInfo: PersonalInfo;
   preferences: Preferences;
   partnerPreferences: PartnerPreferences;
+  personalityAnalysis?: PersonalityAnalysis;
 }
 
 interface ConfessionContextType {
@@ -32,6 +42,8 @@ interface ConfessionContextType {
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
   confessionResult: string;
   setConfessionResult: React.Dispatch<React.SetStateAction<string>>;
+  personalityAnalysis: PersonalityAnalysis | undefined;
+  setPersonalityAnalysis: React.Dispatch<React.SetStateAction<PersonalityAnalysis | undefined>>;
   resetData: () => void;
 }
 
@@ -60,6 +72,7 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
   });
 
   const [confessionResult, setConfessionResult] = useState<string>('');
+  const [personalityAnalysis, setPersonalityAnalysis] = useState<PersonalityAnalysis | undefined>(undefined);
 
   const resetData = () => {
     setUserInfo({
@@ -83,6 +96,7 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
       },
     });
     setConfessionResult('');
+    setPersonalityAnalysis(undefined);
   };
 
   return (
@@ -92,6 +106,8 @@ export const ConfessionProvider: React.FC<{ children: ReactNode }> = ({ children
         setUserInfo,
         confessionResult,
         setConfessionResult,
+        personalityAnalysis,
+        setPersonalityAnalysis,
         resetData,
       }}
     >

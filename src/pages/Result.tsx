@@ -4,7 +4,7 @@ import { useConfession } from '@/lib/context';
 
 const Result: React.FC = () => {
   const navigate = useNavigate();
-  const { confessionResult, resetData } = useConfession();
+  const { confessionResult, resetData, personalityAnalysis } = useConfession();
   const [copied, setCopied] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
 
@@ -174,6 +174,33 @@ const Result: React.FC = () => {
             <span>🏠</span>
           </button>
         </div>
+
+        {/* 人格分析结果 */}
+        {personalityAnalysis && (
+          <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
+            <h2 className="text-xl font-bold text-center text-blue-600 mb-4">人格分析</h2>
+            <div className="space-y-4">
+              <div>
+                <p className="font-medium text-gray-700">人格类型：<span className="text-blue-600 font-bold">{personalityAnalysis.type}</span></p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700">核心特质：<span className="text-blue-600">{personalityAnalysis.traits.join('、')}</span></p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700">优点：<span className="text-green-600">{personalityAnalysis.strengths.join('、')}</span></p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700">需要注意：<span className="text-orange-600">{personalityAnalysis.weaknesses.join('、')}</span></p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700">恋爱风格：<span className="text-purple-600">{personalityAnalysis.loveStyle}</span></p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-700">兼容性分析：<span className="text-indigo-600">{personalityAnalysis.compatibility}</span></p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* 趣味提示 */}
         <div className="mt-8 p-4 bg-yellow-50 rounded-lg border border-yellow-200 text-center">
