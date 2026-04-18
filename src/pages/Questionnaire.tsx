@@ -330,7 +330,7 @@ const Questionnaire: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">兴趣爱好（可多选）</label>
                 <div className="grid grid-cols-2 gap-2">
-                  {['编程', '游戏', '音乐', '运动', '阅读', '旅行', '美食', '电影', '摄影', '绘画', '写作', '手工'].map(hobby => (
+                  {['游戏', '音乐', '运动', '阅读', '旅行', '美食', '电影', '摄影', '绘画', '写作', '手工', '购物', '健身', '瑜伽', '园艺', '烹饪'].map(hobby => (
                     <label key={hobby} className="flex items-center">
                       <input
                         type="checkbox"
@@ -438,7 +438,7 @@ const Questionnaire: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">伴侣兴趣（可多选）</label>
                 <div className="grid grid-cols-2 gap-2">
-                  {['编程', '游戏', '音乐', '运动', '阅读', '旅行', '美食', '电影'].map(interest => (
+                  {['游戏', '音乐', '运动', '阅读', '旅行', '美食', '电影', '摄影', '绘画', '写作', '健身', '烹饪'].map(interest => (
                     <label key={interest} className="flex items-center">
                       <input
                         type="checkbox"

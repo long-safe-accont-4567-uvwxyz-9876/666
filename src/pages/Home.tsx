@@ -18,7 +18,7 @@ export default function Home() {
             <span className="inline-block animate-bounce ml-2">💖</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8">
-            专为内向腼腆的技术人员设计，通过有趣的问卷生成定制化表白话语
+            通过有趣的问卷为你生成定制化表白话语，让每个人都能轻松表达爱意
           </p>
           <button
             onClick={handleStart}
@@ -37,7 +37,7 @@ export default function Home() {
             <div className="bg-pink-50 p-6 rounded-xl text-center">
               <div className="text-4xl mb-4">🎯</div>
               <h3 className="text-xl font-semibold mb-2">我们的目标</h3>
-              <p className="text-gray-600">帮助技术人员克服表白障碍，用最真诚的话语表达爱意</p>
+              <p className="text-gray-600">帮助每个人克服表白障碍，用最真诚的话语表达爱意</p>
             </div>
             <div className="bg-teal-50 p-6 rounded-xl text-center">
               <div className="text-4xl mb-4">📝</div>
